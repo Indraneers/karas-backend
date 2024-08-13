@@ -1,0 +1,30 @@
+name: Build and Deploy Backend to Digital Ocean
+run-name: ${{ github.actor }} is deploying to production server 🚀
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Backend application on production server
+        uses: applyboy/ssh-action@v0.1.2
+        with:
+            host: ${{secrets.SSH_HOST}}
+            key: ${{secrets.SSH_KEY}}
+            username: ${{secrets.SSH_USERNAME}}
+            script: |              
+              echo "Clone repo"
+              mkdir /home/chheangg/
+              cd /home/chheangg/
+              git clone git@github.com:Indraneers/karas-backend.git
+              cd ./karas-backend
+              
+              echo "Make ENV file"
+              touch .env
+              echo "${{secrets.PROD_ENV_FILE}}" > .env
+              
+              echo "Deploy image"
+              docker-compose up --build --no-cache -d
+          
