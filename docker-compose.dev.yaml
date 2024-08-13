@@ -2,10 +2,7 @@ services:
   postgres:
     image: 'postgres:latest'
     restart: always
-    environment:
-      POSTGRES_DB: karas
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+    env_file: '.env.developmental'
     ports:
       - '5431:5432'
     volumes:
@@ -14,14 +11,17 @@ services:
     container_name: karas-backend-spring-boot
     build:
       context: .
-      dockerfile: Dockerfile
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/karas
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: secret
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      dockerfile: Dockerfile.dev
+    env_file: '.env.developmental'
     image: karas-backend-spring-boot:latest
-    ports:
-      - 8080:8080
     depends_on:
       - postgres
+    volumes:
+      - ./:/app
+      - ./.m2:/root/.m2
+    working_dir: /app
+    command: sh run.sh
+    ports:
+      - 8080:8080
+      - 35729:35729
+      - 5005:5005

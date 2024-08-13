@@ -35,3 +35,10 @@ build/
 ### PostgreSQL ###
 pgdata
 postgres-data
+
+### Hot Swapping ###
+.m2
+
+### environment variable config ###
+.env.developmental
+.env
