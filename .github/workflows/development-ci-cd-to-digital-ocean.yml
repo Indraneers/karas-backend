@@ -1,14 +1,14 @@
 name: Build and Deploy Backend to Digital Ocean
-run-name: ${{ github.actor }} is deploying to production server 🚀
+run-name: ${{ github.actor }} is deploying to development server 🚀
 on:
   push:
     branches:
-      - main
+      - development
 jobs:
   DeployToMain:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Backend application on production server
+      - name: Deploy Backend application on development server
         uses: appleboy/ssh-action@v1.0.3
         with:
             host: ${{secrets.SSH_HOST}}
