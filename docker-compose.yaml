@@ -1,9 +1,12 @@
 services:
   postgres:
     image: 'postgres:latest'
+    restart: always
     environment:
-      - 'POSTGRES_DB=postgres'
-      - 'POSTGRES_USER=postgres'
-      - 'POSTGRES_PASSWORD=secret'
+      POSTGRES_DB: karas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
     ports:
-      - '5431'
+      - '5431:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
