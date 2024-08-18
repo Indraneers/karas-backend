@@ -33,6 +33,9 @@ To rebuild the container image and deploy it, run
 docker compose -f docker-compose.dev.yaml up -d --build
 ```
 
+## Postman Collection
+Contact the owner of this repository to gain access to the Postman's collection of routes for testing purposes.
+
 ## Deployment
 TBA
 
