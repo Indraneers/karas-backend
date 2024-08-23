@@ -1,8 +1,7 @@
-package com.twistercambodia.karasbackend.auth.controllers;
+package com.twistercambodia.karasbackend.auth.controller;
 
-import com.twistercambodia.karasbackend.auth.entities.User;
-import com.twistercambodia.karasbackend.auth.repositories.UserRepository;
-import com.twistercambodia.karasbackend.auth.services.UserService;
+import com.twistercambodia.karasbackend.auth.entity.User;
+import com.twistercambodia.karasbackend.auth.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
