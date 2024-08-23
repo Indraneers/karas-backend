@@ -1,11 +1,11 @@
-package com.twistercambodia.karasbackend.Sale.entities;
+package com.twistercambodia.karasbackend.sale.entities;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "SALE", schema = "SALE")
+@Table(name = "sale", schema = "sale")
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
