@@ -18,7 +18,8 @@ public class Customer {
     @Column
     private String note;
 
-    @OneToMany(mappedBy = "vehicle")
+    @OneToMany
+    @JoinColumn(name = "customer_id")
     private Set<Vehicle> vehicles;
 
     public String getId() {

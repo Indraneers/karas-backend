@@ -10,11 +10,14 @@ public class Vehicle {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", insertable = false ,nullable = false)
     private Customer customer;
 
     @Column
     private String vinNo;
+
+    @Column
+    private String engineNo;
 
     @Column
     private String model;
@@ -53,6 +56,14 @@ public class Vehicle {
 
     public void setVinNo(String vinNo) {
         this.vinNo = vinNo;
+    }
+
+    public String getEngineNo() {
+        return engineNo;
+    }
+
+    public void setEngineNo(String engineNo) {
+        this.engineNo = engineNo;
     }
 
     public String getModel() {
@@ -101,6 +112,7 @@ public class Vehicle {
                 "Vehicle[id: '%s'," +
                         "customer: '%s'," +
                         "vinNo: '%s'," +
+                        "engineNo: '%s'," +
                         "model: '%s'," +
                         "mileage: %d," +
                         "note: '%s'," +
