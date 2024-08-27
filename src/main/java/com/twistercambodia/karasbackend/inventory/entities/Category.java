@@ -1,7 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.entities;
 
 import jakarta.persistence.*;
-import org.hibernate.mapping.Join;
 
 import java.util.List;
 
