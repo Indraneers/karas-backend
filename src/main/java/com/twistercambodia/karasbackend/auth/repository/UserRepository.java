@@ -1,6 +1,6 @@
-package com.twistercambodia.karasbackend.auth.repositories;
+package com.twistercambodia.karasbackend.auth.repository;
 
-import com.twistercambodia.karasbackend.auth.entities.User;
+import com.twistercambodia.karasbackend.auth.entity.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

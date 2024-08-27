@@ -1,7 +1,7 @@
-package com.twistercambodia.karasbackend.auth.services;
+package com.twistercambodia.karasbackend.auth.service;
 
-import com.twistercambodia.karasbackend.auth.entities.User;
-import com.twistercambodia.karasbackend.auth.repositories.UserRepository;
+import com.twistercambodia.karasbackend.auth.entity.User;
+import com.twistercambodia.karasbackend.auth.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
