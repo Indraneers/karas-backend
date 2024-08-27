@@ -1,12 +1,10 @@
 package com.twistercambodia.karasbackend;
 
-import com.twistercambodia.karasbackend.stock.repositories.CategoryRepository;
+import com.twistercambodia.karasbackend.inventory.repositories.CategoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 public class KarasBackendApplication {
