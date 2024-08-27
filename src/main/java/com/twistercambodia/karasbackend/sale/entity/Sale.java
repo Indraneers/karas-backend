@@ -1,4 +1,4 @@
-package com.twistercambodia.karasbackend.sale.entities;
+package com.twistercambodia.karasbackend.sale.entity;
 
 import jakarta.persistence.*;
 
