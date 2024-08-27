@@ -3,7 +3,6 @@ package com.twistercambodia.karasbackend.customer.entity;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
