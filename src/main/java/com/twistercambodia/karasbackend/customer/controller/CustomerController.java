@@ -12,8 +12,8 @@ import java.util.List;
 @RequestMapping("customers")
 public class CustomerController {
     private final CustomerService customerService;
-    public CustomerController(CustomerService customerService, CustomerService customerService1) {
-        this.customerService = customerService1;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping
