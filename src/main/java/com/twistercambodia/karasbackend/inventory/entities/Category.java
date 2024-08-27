@@ -1,34 +1,25 @@
 package com.twistercambodia.karasbackend.inventory.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.mapping.Join;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
-@Table(name="category")
 public class Category {
 
     // define fields
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Column
     private String name;
 
-    private Product[] products;
-
-    private int productTotal;
-
-    // define constructors
-
-    public Category() {}
-
-    public Category(String name, Product[] products, int productTotal) {
-        this.name = name;
-        this.products = products;
-        this.productTotal = productTotal;
-    }
+    @OneToMany
+    @JoinColumn(name="category_id")
+    private List<Product> products;
 
     // define getters/setters
 
@@ -48,20 +39,12 @@ public class Category {
         this.name = name;
     }
 
-    public Product[] getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Product[] products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
-    }
-
-    public int getProductTotal() {
-        return productTotal;
-    }
-
-    public void setProductTotal(int productTotal) {
-        this.productTotal = productTotal;
     }
 
     // define toString() method
@@ -71,8 +54,7 @@ public class Category {
         return "Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", products=" + Arrays.toString(products) +
-                ", productTotal=" + productTotal +
+                ", products=" + products +
                 '}';
     }
 }
