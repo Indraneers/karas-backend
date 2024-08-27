@@ -12,16 +12,12 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+    private String id;
 
-    @Column(name="name")
     private String name;
 
-    @Column(name="product")
     private Product[] products;
 
-    @Column(name="product_total")
     private int productTotal;
 
     // define constructors
@@ -36,11 +32,11 @@ public class Category {
 
     // define getters/setters
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
