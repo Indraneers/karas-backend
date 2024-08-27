@@ -2,10 +2,9 @@ package com.twistercambodia.karasbackend.inventory.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
-@Table(name="product")
 public class Product {
 
     // define fields
@@ -14,27 +13,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Column
     private String name;
 
-    private Unit[] units;
+    @OneToMany
+    private List<Unit> units;
 
-    private int unitTotal;
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    // define constructors
-
-    public Product() {}
-
-    public Product(String name, Unit[] units, int unitTotal, Category category) {
-        this.name = name;
-        this.units = units;
-        this.unitTotal = unitTotal;
-        this.category = category;
-    }
-
     // define getters/setters
-
 
     public String getId() {
         return id;
@@ -52,20 +41,12 @@ public class Product {
         this.name = name;
     }
 
-    public Unit[] getUnits() {
+    public List<Unit> getUnits() {
         return units;
     }
 
-    public void setUnits(Unit[] units) {
+    public void setUnits(List<Unit> units) {
         this.units = units;
-    }
-
-    public int getUnitTotal() {
-        return unitTotal;
-    }
-
-    public void setUnitTotal(int unitTotal) {
-        this.unitTotal = unitTotal;
     }
 
     public Category getCategory() {
@@ -78,14 +59,12 @@ public class Product {
 
     // define toString() method
 
-
     @Override
     public String toString() {
         return "Product{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", units=" + Arrays.toString(units) +
-                ", unitTotal=" + unitTotal +
+                ", units=" + units +
                 ", category=" + category +
                 '}';
     }
