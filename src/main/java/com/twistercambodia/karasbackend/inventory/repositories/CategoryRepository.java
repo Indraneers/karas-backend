@@ -1,9 +1,12 @@
 package com.twistercambodia.karasbackend.inventory.repositories;
 
 import com.twistercambodia.karasbackend.inventory.entities.Category;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
-public interface CategoryRepository {
+import java.util.List;
 
-    void save(Category category);
-
+public interface CategoryRepository extends CrudRepository<Category, Long> {
+    @Query("select c from Category c")
+    List<Category> findAll();
 }
