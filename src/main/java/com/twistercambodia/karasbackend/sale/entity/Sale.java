@@ -36,9 +36,10 @@ public class Sale {
     @JoinColumn(name="customer_id")
     private Customer customer;
 
-//    private Set<Vehicle> vehicles;
 
-    @OneToOne
+    //private Set<Vehicle> vehicles;
+
+    @OneToMany
     @JoinColumn(name = "status_id")
     private Status status;
 

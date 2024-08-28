@@ -13,7 +13,7 @@ public class Status {
     @Column
     private String name;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "status_id")
     private Sale sale;
 }
