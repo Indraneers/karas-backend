@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,9 +22,9 @@ public class Sale {
     @Column
     private LocalDateTime dueDate;
 
-    @OneToOne
-    @JoinColumn(name="item_id")
-    private Set<Item> items;
+    @OneToMany
+    @JoinColumn(name="sale_id")
+    private List<Item> items;
 
     @Column
     private int discount;
@@ -31,11 +32,15 @@ public class Sale {
 
 //    private User user;
 
-//    private Customer customer;
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    private Customer customer;
 
 //    private Set<Vehicle> vehicles;
-//
-//    private Status status;
+
+    @OneToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     public String getId() {
         return id;
@@ -77,13 +82,13 @@ public class Sale {
 //        this.user = user;
 //    }
 //
-//    public Customer getCustomer() {
-//        return customer;
-//    }
-//
-//    public void setCustomer(Customer customer) {
-//        this.customer = customer;
-//    }
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
 //    public Set<Vehicle> getVehicles() {
 //        return vehicles;
@@ -93,13 +98,24 @@ public class Sale {
 //        this.vehicles = vehicles;
 //    }
 //
-//    public Status getStatus() {
-//        return status;
-//    }
 
-//    public void setStatus(Status status) {
-//        this.status = status;
-//    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {
@@ -107,11 +123,10 @@ public class Sale {
                 "id='" + id + '\'' +
                 ", date=" + date +
                 ", dueDate=" + dueDate +
+                ", items=" + items +
                 ", discount=" + discount +
-//                ", user=" + user +
-//                ", customer=" + customer +
-//                ", vehicles=" + vehicles +
-//                ", status=" + status +
+                ", customer=" + customer +
+                ", status=" + status +
                 '}';
     }
 }
