@@ -21,7 +21,7 @@ public class Customer {
 
     @OneToMany
     @JoinColumn(name = "customer_id")
-    private List<Vehicle> vehicles;
+    private Set<Vehicle> vehicles;
 
     @OneToMany
     @JoinColumn(name="customer_id")
@@ -55,11 +55,11 @@ public class Customer {
         this.note = note;
     }
 
-    public List<Vehicle> getVehicles() {
+    public Set<Vehicle> getVehicles() {
         return vehicles;
     }
 
-    public void setVehicles(List<Vehicle> vehicles) {
+    public void setVehicles(Set<Vehicle> vehicles) {
         this.vehicles = vehicles;
     }
 
