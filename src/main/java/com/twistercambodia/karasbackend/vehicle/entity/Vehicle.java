@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.vehicle.entity;
 
 import com.twistercambodia.karasbackend.customer.entity.Customer;
+import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import jakarta.persistence.*;
 
 @Entity
@@ -33,6 +34,9 @@ public class Vehicle {
 
     @Column
     private String makeAndModel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Maintenance maintenance;
 
     public String getId() {
         return id;
