@@ -31,6 +31,8 @@ public class Customer {
         this.sales = sales;
     }
 
+    public Customer() {}
+
     public String getId() {
         return id;
     }

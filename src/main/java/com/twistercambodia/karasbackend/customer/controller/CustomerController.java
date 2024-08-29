@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.customer.controller;
 
+import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,9 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
-        return this.customerService.findAll();
+    public List<CustomerDto> getAllCustomers() {
+        return this.customerService.convertToCustomerDto(
+                this.customerService.findAll()
+        );
     }
 }

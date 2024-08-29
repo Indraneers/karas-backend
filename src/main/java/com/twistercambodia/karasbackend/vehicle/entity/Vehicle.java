@@ -10,7 +10,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", insertable = false ,nullable = false)
     private Customer customer;
 
@@ -35,7 +35,7 @@ public class Vehicle {
     @Column
     private String makeAndModel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Maintenance maintenance;
 
     public String getId() {
