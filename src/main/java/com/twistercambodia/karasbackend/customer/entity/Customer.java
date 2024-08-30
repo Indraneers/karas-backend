@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.customer.entity;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,10 @@ public class Customer {
     @Column
     private String note;
 
-    @OneToMany
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL
+    )
     @JoinColumn(name = "customer_id")
     private Set<Vehicle> vehicles;
 

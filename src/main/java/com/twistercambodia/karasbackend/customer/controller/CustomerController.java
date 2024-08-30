@@ -38,4 +38,12 @@ public class CustomerController {
         Customer customer = this.customerService.update(id, customerDto);
         return this.customerService.convertToCustomerDto(customer);
     }
+
+    @DeleteMapping("{id}")
+    public CustomerDto deleteCustomer(
+            @PathVariable("id") String id
+    ) throws Exception {
+        Customer customer = this.customerService.delete(id);
+        return this.customerService.convertToCustomerDto(customer);
+    }
 }

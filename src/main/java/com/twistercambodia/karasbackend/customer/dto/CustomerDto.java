@@ -1,14 +1,32 @@
 package com.twistercambodia.karasbackend.customer.dto;
 
+import com.twistercambodia.karasbackend.customer.entity.Customer;
+import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
+import org.modelmapper.ModelMapper;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CustomerDto {
     private String id;
     private String name;
     private String note;
-    private Set<Vehicle> vehicles;
+    private Set<VehicleDto> vehicles;
+
+    public CustomerDto() {}
+
+    public CustomerDto(Customer customer) {
+        ModelMapper modelMapper = new ModelMapper();
+        this.name = customer.getId();
+        this.name = customer.getName();
+        this.note = customer.getNote();
+        this.vehicles = customer
+                .getVehicles()
+                .stream()
+                .map((v) -> modelMapper.map(v, VehicleDto.class))
+                .collect(Collectors.toSet());
+    }
 
     public String getId() {
         return id;
@@ -34,11 +52,11 @@ public class CustomerDto {
         this.note = note;
     }
 
-    public Set<Vehicle> getVehicles() {
+    public Set<VehicleDto> getVehicles() {
         return vehicles;
     }
 
-    public void setVehicles(Set<Vehicle> vehicles) {
+    public void setVehicles(Set<VehicleDto> vehicles) {
         this.vehicles = vehicles;
     }
 }

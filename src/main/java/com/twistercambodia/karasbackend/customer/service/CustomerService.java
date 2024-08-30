@@ -62,4 +62,18 @@ public class CustomerService {
 
         return customer;
     }
+
+    public Customer delete(String id) throws Exception {
+        Optional<Customer> customerExists = this.customerRepository.findById(id);
+
+        if (customerExists.isEmpty()) {
+            throw new Exception("ERROR: TBA");
+        }
+
+        Customer customer = customerExists.get();
+
+        this.customerRepository.delete(customer);
+        System.out.println(customer);
+        return customer;
+    }
 }
