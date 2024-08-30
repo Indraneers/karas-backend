@@ -22,24 +22,14 @@ public class CustomerService {
         this.modelMapper = modelMapper;
     }
 
-    public CustomerDto convertToCustomerDto(Customer customer) {
-        return modelMapper.map(customer, CustomerDto.class);
-    }
-
-
-    public List<CustomerDto> convertToCustomerDto(List<Customer> customers) {
-        return customers
-                .stream()
-                .map((customer) -> modelMapper.map(customer, CustomerDto.class))
-                .collect(Collectors.toList());
-    }
-
-    public Customer convertToCustomer(CustomerDto customerDto) {
-        return modelMapper.map(customerDto, Customer.class);
-    }
-
     public List<Customer> findAll() {
         return this.customerRepository.findAll();
+    }
+
+    public Customer findById(String id) throws RuntimeException {
+        return this.customerRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
     }
 
     public Customer create(CustomerDto customerDto) {
@@ -67,5 +57,21 @@ public class CustomerService {
 
         this.customerRepository.delete(customer);
         return customer;
+    }
+
+    public CustomerDto convertToCustomerDto(Customer customer) {
+        return modelMapper.map(customer, CustomerDto.class);
+    }
+
+
+    public List<CustomerDto> convertToCustomerDto(List<Customer> customers) {
+        return customers
+                .stream()
+                .map((customer) -> modelMapper.map(customer, CustomerDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public Customer convertToCustomer(CustomerDto customerDto) {
+        return modelMapper.map(customerDto, Customer.class);
     }
 }

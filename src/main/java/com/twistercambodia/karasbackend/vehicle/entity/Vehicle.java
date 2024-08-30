@@ -11,7 +11,6 @@ public class Vehicle {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", insertable = false ,nullable = false)
     private Customer customer;
 
     @Column
@@ -19,9 +18,6 @@ public class Vehicle {
 
     @Column
     private String engineNo;
-
-    @Column
-    private String model;
 
     @Column
     private int mileage;
@@ -70,14 +66,6 @@ public class Vehicle {
         this.engineNo = engineNo;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public int getMileage() {
         return mileage;
     }
@@ -117,7 +105,6 @@ public class Vehicle {
                 ", customer=" + customer +
                 ", vinNo='" + vinNo + '\'' +
                 ", engineNo='" + engineNo + '\'' +
-                ", model='" + model + '\'' +
                 ", mileage=" + mileage +
                 ", note='" + note + '\'' +
                 ", plateNumber='" + plateNumber + '\'' +

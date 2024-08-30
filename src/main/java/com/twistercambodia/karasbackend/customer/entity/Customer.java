@@ -24,7 +24,6 @@ public class Customer {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
     )
-    @JoinColumn(name = "customer_id")
     private Set<Vehicle> vehicles;
 
     @OneToMany

@@ -1,4 +1,4 @@
-package com.twistercambodia.karasbackend.exception;
+package com.twistercambodia.karasbackend.exception.dto;
 
 public class ErrorResponse {
     private int statusCode;

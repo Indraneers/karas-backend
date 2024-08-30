@@ -4,7 +4,7 @@ import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.exception.CustomerNotFoundException;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
-import com.twistercambodia.karasbackend.exception.ErrorResponse;
+import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
