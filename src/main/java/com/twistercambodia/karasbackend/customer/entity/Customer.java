@@ -72,12 +72,12 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format(
-                "Customer[id: '%s'," +
-                        "name: '%s'," +
-                        "note: '%s'," +
-                        "vehicles: [%s]]",
-                id, name, note, vehicles
-        );
+        return "Customer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", note='" + note + '\'' +
+                ", vehicles=" + vehicles +
+                ", sales=" + sales +
+                '}';
     }
 }

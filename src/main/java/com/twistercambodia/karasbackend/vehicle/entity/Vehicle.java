@@ -112,17 +112,17 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return String.format(
-                "Vehicle[id: '%s'," +
-                        "customer: '%s'," +
-                        "vinNo: '%s'," +
-                        "engineNo: '%s'," +
-                        "model: '%s'," +
-                        "mileage: %d," +
-                        "note: '%s'," +
-                        "plateNumber: '%s'," +
-                        "makeAndModeL '%s']",
-                id, vinNo, model, mileage, note, plateNumber
-        );
+        return "Vehicle{" +
+                "id='" + id + '\'' +
+                ", customer=" + customer +
+                ", vinNo='" + vinNo + '\'' +
+                ", engineNo='" + engineNo + '\'' +
+                ", model='" + model + '\'' +
+                ", mileage=" + mileage +
+                ", note='" + note + '\'' +
+                ", plateNumber='" + plateNumber + '\'' +
+                ", makeAndModel='" + makeAndModel + '\'' +
+                ", maintenance=" + maintenance +
+                '}';
     }
 }
