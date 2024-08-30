@@ -29,4 +29,13 @@ public class CustomerController {
         Customer customer = this.customerService.create(customerDto);
         return this.customerService.convertToCustomerDto(customer);
     }
+
+    @PutMapping("{id}")
+    public CustomerDto updateCustomer(
+            @RequestBody CustomerDto customerDto,
+            @PathVariable("id") String id
+    ) throws Exception {
+        Customer customer = this.customerService.update(id, customerDto);
+        return this.customerService.convertToCustomerDto(customer);
+    }
 }

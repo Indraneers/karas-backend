@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,5 +44,22 @@ public class CustomerService {
     public Customer create(CustomerDto customerDto) {
         Customer customer = this.convertToCustomer(customerDto);
         return this.customerRepository.save(customer);
+    }
+
+    public Customer update(String id, CustomerDto customerDto) throws Exception {
+        Optional<Customer> customerExists = this.customerRepository.findById(id);
+
+        if (customerExists.isEmpty()) {
+            throw new Exception("ERROR: TBA");
+        }
+
+        Customer customer = customerExists.get();
+
+        customer.setName(customerDto.getName());
+        customer.setNote(customerDto.getNote());
+
+        this.customerRepository.save(customer);
+
+        return customer;
     }
 }
