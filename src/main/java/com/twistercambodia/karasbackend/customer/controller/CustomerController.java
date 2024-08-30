@@ -60,7 +60,7 @@ public class CustomerController {
     @ExceptionHandler(value = CustomerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleCustomerNotFound(CustomerNotFoundException exception) {
-        this.logger.info("Throwing CustomerNotFoundException with message={}", exception.getMessage());
+        this.logger.error("Throwing CustomerNotFoundException with message={}", exception.getMessage());
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exception.getMessage()

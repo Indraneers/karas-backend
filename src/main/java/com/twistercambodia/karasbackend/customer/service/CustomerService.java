@@ -38,16 +38,12 @@ public class CustomerService {
     }
 
     public Customer update(String id, CustomerDto customerDto) throws RuntimeException {
-        Customer customer = this.customerRepository
-                .findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
+        Customer customer = findById(id);
 
         customer.setName(customerDto.getName());
         customer.setNote(customerDto.getNote());
 
-        this.customerRepository.save(customer);
-
-        return customer;
+        return this.customerRepository.save(customer);
     }
 
     public Customer delete(String id) throws RuntimeException {

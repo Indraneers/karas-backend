@@ -22,7 +22,8 @@ public class Customer {
 
     @OneToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            mappedBy = "customer"
     )
     private Set<Vehicle> vehicles;
 
