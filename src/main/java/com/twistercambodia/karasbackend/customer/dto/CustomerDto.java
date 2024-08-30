@@ -10,6 +10,8 @@ public class CustomerDto {
     private String note;
     private Set<Vehicle> vehicles;
 
+    public CustomerDto() {}
+
     public CustomerDto(String name, String note) {
         this.name = name;
         this.note = note;

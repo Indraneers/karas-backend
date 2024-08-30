@@ -27,11 +27,12 @@ public class Customer {
     @JoinColumn(name="customer_id")
     private List<Sale> sales;
 
-    public Customer(List<Sale> sales) {
-        this.sales = sales;
-    }
-
     public Customer() {}
+
+    public Customer(String name, String note) {
+        this.name = name;
+        this.note = note;
+    }
 
     public String getId() {
         return id;

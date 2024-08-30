@@ -24,6 +24,7 @@ public class CustomerService {
         return modelMapper.map(customer, CustomerDto.class);
     }
 
+
     public List<CustomerDto> convertToCustomerDto(List<Customer> customers) {
         return customers
                 .stream()
@@ -31,7 +32,16 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
+    public Customer convertToCustomer(CustomerDto customerDto) {
+        return modelMapper.map(customerDto, Customer.class);
+    }
+
     public List<Customer> findAll() {
         return this.customerRepository.findAll();
+    }
+
+    public Customer create(CustomerDto customerDto) {
+        Customer customer = this.convertToCustomer(customerDto);
+        return this.customerRepository.save(customer);
     }
 }

@@ -3,9 +3,7 @@ package com.twistercambodia.karasbackend.customer.controller;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,13 @@ public class CustomerController {
         return this.customerService.convertToCustomerDto(
                 this.customerService.findAll()
         );
+    }
+
+    @PostMapping
+    public CustomerDto createCustomer(
+            @RequestBody CustomerDto customerDto
+    ) {
+        Customer customer = this.customerService.create(customerDto);
+        return this.customerService.convertToCustomerDto(customer);
     }
 }
