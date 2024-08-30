@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend.customer.service;
 
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
+import com.twistercambodia.karasbackend.customer.exception.CustomerNotFoundException;
 import com.twistercambodia.karasbackend.customer.repository.CustomerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -46,14 +47,10 @@ public class CustomerService {
         return this.customerRepository.save(customer);
     }
 
-    public Customer update(String id, CustomerDto customerDto) throws Exception {
-        Optional<Customer> customerExists = this.customerRepository.findById(id);
-
-        if (customerExists.isEmpty()) {
-            throw new Exception("ERROR: TBA");
-        }
-
-        Customer customer = customerExists.get();
+    public Customer update(String id, CustomerDto customerDto) throws RuntimeException {
+        Customer customer = this.customerRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
 
         customer.setName(customerDto.getName());
         customer.setNote(customerDto.getNote());
@@ -63,17 +60,12 @@ public class CustomerService {
         return customer;
     }
 
-    public Customer delete(String id) throws Exception {
-        Optional<Customer> customerExists = this.customerRepository.findById(id);
-
-        if (customerExists.isEmpty()) {
-            throw new Exception("ERROR: TBA");
-        }
-
-        Customer customer = customerExists.get();
+    public Customer delete(String id) throws RuntimeException {
+        Customer customer = this.customerRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
 
         this.customerRepository.delete(customer);
-        System.out.println(customer);
         return customer;
     }
 }
