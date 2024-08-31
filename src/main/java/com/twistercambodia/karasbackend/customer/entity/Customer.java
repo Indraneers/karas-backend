@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.customer.entity;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 
 import java.util.List;
 import java.util.Set;
@@ -19,16 +20,22 @@ public class Customer {
     @Column
     private String note;
 
-    @OneToMany
-    @JoinColumn(name = "customer_id")
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            mappedBy = "customer"
+    )
     private Set<Vehicle> vehicles;
 
     @OneToMany
     @JoinColumn(name="customer_id")
     private List<Sale> sales;
 
-    public Customer(List<Sale> sales) {
-        this.sales = sales;
+    public Customer() {}
+
+    public Customer(String name, String note) {
+        this.name = name;
+        this.note = note;
     }
 
     public String getId() {
@@ -65,12 +72,12 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format(
-                "Customer[id: '%s'," +
-                        "name: '%s'," +
-                        "note: '%s'," +
-                        "vehicles: [%s]]",
-                id, name, note, vehicles
-        );
+        return "Customer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", note='" + note + '\'' +
+                ", vehicles=" + vehicles +
+                ", sales=" + sales +
+                '}';
     }
 }

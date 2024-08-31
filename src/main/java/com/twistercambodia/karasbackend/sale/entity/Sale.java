@@ -29,19 +29,16 @@ public class Sale {
     @Column
     private int discount;
 
-
 //    private User user;
 
     @ManyToOne
     @JoinColumn(name="customer_id")
     private Customer customer;
 
-
     //private Set<Vehicle> vehicles;
 
-    @OneToMany
-    @JoinColumn(name = "status_id")
-    private Status status;
+    @ManyToMany
+    private Set<Status> status;
 
     public String getId() {
         return id;
@@ -100,6 +97,13 @@ public class Sale {
 //    }
 //
 
+    public Set<Status> getStatus() {
+        return status;
+    }
+
+    public void setStatus(Set<Status> status) {
+        this.status = status;
+    }
 
     public List<Item> getItems() {
         return items;
@@ -107,15 +111,6 @@ public class Sale {
 
     public void setItems(List<Item> items) {
         this.items = items;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     @Override

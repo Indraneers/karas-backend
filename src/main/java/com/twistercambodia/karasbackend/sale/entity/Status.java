@@ -2,6 +2,8 @@ package com.twistercambodia.karasbackend.sale.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "status")
 public class Status {
@@ -13,7 +15,6 @@ public class Status {
     @Column
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private Sale sale;
+    @ManyToMany
+    private Set<Sale> sales;
 }
