@@ -26,7 +26,7 @@ public class CustomerService {
         return this.customerRepository.findAll();
     }
 
-    public Customer findById(String id) throws RuntimeException {
+    public Customer findByIdOrThrowError(String id) throws RuntimeException {
         return this.customerRepository
                 .findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
@@ -38,7 +38,7 @@ public class CustomerService {
     }
 
     public Customer update(String id, CustomerDto customerDto) throws RuntimeException {
-        Customer customer = findById(id);
+        Customer customer = findByIdOrThrowError(id);
 
         customer.setName(customerDto.getName());
         customer.setNote(customerDto.getNote());
@@ -47,9 +47,7 @@ public class CustomerService {
     }
 
     public Customer delete(String id) throws RuntimeException {
-        Customer customer = this.customerRepository
-                .findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
+        Customer customer = this.findByIdOrThrowError(id);
 
         this.customerRepository.delete(customer);
         return customer;

@@ -24,7 +24,7 @@ public class VehicleService {
         this.modelMapper = modelMapper;
     }
 
-    public Vehicle findVehicleById(String id) {
+    public Vehicle findVehicleByIdOrThrowException(String id) {
         return this.vehicleRepository
                 .findById(id)
                 .orElseThrow(() -> new VehicleNotFoundException("Vehicle Not Found with ID=" + id));
@@ -32,13 +32,13 @@ public class VehicleService {
 
     public Vehicle create(VehicleDto vehicleDto) {
         Vehicle vehicle = convertToVehicle(vehicleDto);
-        Customer customer = this.customerService.findById(vehicleDto.getCustomerId());
+        Customer customer = this.customerService.findByIdOrThrowError(vehicleDto.getCustomerId());
         vehicle.setCustomer(customer);
         return this.vehicleRepository.save(vehicle);
     }
 
     public Vehicle update(String id, VehicleDto vehicleDto) {
-        Vehicle vehicle = this.findVehicleById(id);
+        Vehicle vehicle = this.findVehicleByIdOrThrowException(id);
 
         vehicle.setVinNo(vehicleDto.getVinNo());
         vehicle.setEngineNo(vehicleDto.getEngineNo());
@@ -48,6 +48,13 @@ public class VehicleService {
         vehicle.setMakeAndModel(vehicleDto.getMakeAndModel());
 
         return this.vehicleRepository.save(vehicle);
+    }
+
+    public Vehicle delete(String id) {
+        Vehicle vehicle = this.findVehicleByIdOrThrowException(id);
+
+        this.vehicleRepository.delete(vehicle);
+        return vehicle;
     }
 
     public Vehicle convertToVehicle(VehicleDto vehicleDto) {

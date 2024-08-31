@@ -1,6 +1,5 @@
 package com.twistercambodia.karasbackend.vehicle.controller;
 
-import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
@@ -35,6 +34,14 @@ public class VehicleController {
     ) {
         Vehicle vehicle = this.vehicleService.update(id, vehicleDto);
         this.logger.info("Updating vehicle={}", vehicle);
+        return this.vehicleService.convertToVehicleDto(vehicle);
+    }
+
+    @DeleteMapping("{id}")
+    public VehicleDto deleteVehicle(
+            @PathVariable("id") String id
+    ) {
+        Vehicle vehicle = this.vehicleService.delete(id);
         return this.vehicleService.convertToVehicleDto(vehicle);
     }
 
