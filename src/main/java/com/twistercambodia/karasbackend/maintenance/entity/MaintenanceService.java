@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.maintenance.entity;
 
+import com.twistercambodia.karasbackend.autoService.entity.AutoService;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,7 +13,7 @@ public class MaintenanceService {
     private Maintenance maintenance;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Service service;
+    private AutoService autoService;
 
     public String getId() {
         return id;
@@ -30,12 +31,12 @@ public class MaintenanceService {
         this.maintenance = maintenance;
     }
 
-    public Service getService() {
-        return service;
+    public AutoService getService() {
+        return autoService;
     }
 
-    public void setService(Service service) {
-        this.service = service;
+    public void setService(AutoService autoService) {
+        this.autoService = autoService;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class MaintenanceService {
         return "MaintenanceService{" +
                 "id='" + id + '\'' +
                 ", maintenance=" + maintenance +
-                ", service=" + service +
+                ", service=" + autoService +
                 '}';
     }
 }

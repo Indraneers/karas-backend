@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.maintenance.entity;
 
+import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
@@ -26,6 +27,14 @@ public class Maintenance {
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<MaintenanceService> maintenanceServices;
+
+    public Maintenance() {}
+
+    public Maintenance(MaintenanceDto maintenanceDto) {
+        this.createdAt = maintenanceDto.getCreatedAt();
+        this.mileage = maintenanceDto.getMileage();
+        this.note = maintenanceDto.getNote();
+    }
 
     public String getId() {
         return id;

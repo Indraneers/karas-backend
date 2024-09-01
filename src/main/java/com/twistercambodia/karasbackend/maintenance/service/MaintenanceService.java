@@ -24,6 +24,10 @@ public class MaintenanceService {
         return this.maintenanceRepository.findAll();
     }
 
+    public Maintenance convertToMaintenance(MaintenanceDto maintenanceDto) {
+        return this.modelMapper.map(maintenanceDto, Maintenance.class);
+    }
+
     public MaintenanceDto convertToMaintenanceDto(Maintenance maintenance) {
         return this.modelMapper.map(maintenance, MaintenanceDto.class);
     }
