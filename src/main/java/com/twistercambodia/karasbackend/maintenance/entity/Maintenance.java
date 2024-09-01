@@ -4,7 +4,7 @@ import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Maintenance {
@@ -12,7 +12,7 @@ public class Maintenance {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Vehicle vehicle;
 
     @Column
@@ -25,7 +25,7 @@ public class Maintenance {
     private String note;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<MaintenanceService> maintenanceService;
+    private Set<MaintenanceService> maintenanceServices;
 
     public String getId() {
         return id;
@@ -67,12 +67,12 @@ public class Maintenance {
         this.note = note;
     }
 
-    public List<MaintenanceService> getMaintenanceService() {
-        return maintenanceService;
+    public Set<MaintenanceService> getMaintenanceServices() {
+        return maintenanceServices;
     }
 
-    public void setMaintenanceService(List<MaintenanceService> maintenanceService) {
-        this.maintenanceService = maintenanceService;
+    public void setMaintenanceServices(Set<MaintenanceService> maintenanceServices) {
+        this.maintenanceServices = maintenanceServices;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Maintenance {
                 ", createdAt=" + createdAt +
                 ", mileage=" + mileage +
                 ", note='" + note + '\'' +
-                ", maintenanceService=" + maintenanceService +
+                ", maintenanceService=" + maintenanceServices +
                 '}';
     }
 }

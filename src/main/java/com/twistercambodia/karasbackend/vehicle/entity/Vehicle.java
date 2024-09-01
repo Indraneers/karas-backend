@@ -3,6 +3,9 @@ package com.twistercambodia.karasbackend.vehicle.entity;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+
+import java.util.Set;
 
 @Entity
 public class Vehicle {
@@ -32,8 +35,11 @@ public class Vehicle {
     @Column
     private String makeAndModel;
 
-    @ManyToOne
-    private Maintenance maintenance;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Maintenance futureMaintenance;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Maintenance> maintenances;
 
     public String getId() {
         return id;
@@ -99,6 +105,22 @@ public class Vehicle {
         this.makeAndModel = makeAndModel;
     }
 
+    public Maintenance getFutureMaintenance() {
+        return futureMaintenance;
+    }
+
+    public void setFutureMaintenance(Maintenance futureMaintenance) {
+        this.futureMaintenance = futureMaintenance;
+    }
+
+    public Set<Maintenance> getMaintenances() {
+        return maintenances;
+    }
+
+    public void setMaintenances(Set<Maintenance> maintenances) {
+        this.maintenances = maintenances;
+    }
+
     @Override
     public String toString() {
         return "Vehicle{" +
@@ -110,7 +132,8 @@ public class Vehicle {
                 ", note='" + note + '\'' +
                 ", plateNumber='" + plateNumber + '\'' +
                 ", makeAndModel='" + makeAndModel + '\'' +
-                ", maintenance=" + maintenance +
+                ", futureMaintenance=" + futureMaintenance +
+                ", maintenances=" + maintenances +
                 '}';
     }
 }
