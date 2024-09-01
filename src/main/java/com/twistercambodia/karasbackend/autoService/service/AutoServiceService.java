@@ -23,6 +23,15 @@ public class AutoServiceService {
         return this.autoServiceRepository.findAll();
     }
 
+    public AutoService create(AutoServiceDto autoServiceDto) {
+        AutoService autoService = this.convertToAutoService(autoServiceDto);
+        return this.autoServiceRepository.save(autoService);
+    }
+
+    public AutoService convertToAutoService(AutoServiceDto autoServiceDto) {
+        return this.modelMapper.map(autoServiceDto, AutoService.class);
+    }
+
     public AutoServiceDto convertToAutoServiceDto(AutoService autoService) {
         return this.modelMapper.map(autoService, AutoServiceDto.class);
     }
