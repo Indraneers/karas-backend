@@ -11,7 +11,7 @@ public class MaintenanceService {
     @ManyToOne(fetch = FetchType.LAZY)
     private Maintenance maintenance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Service service;
 
     public String getId() {

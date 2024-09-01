@@ -24,7 +24,7 @@ public class Maintenance {
     @Column
     private String note;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<MaintenanceService> maintenanceService;
 
     public String getId() {
