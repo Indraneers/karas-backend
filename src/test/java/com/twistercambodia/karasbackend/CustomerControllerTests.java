@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.configuration.MockConfig;
 import com.twistercambodia.karasbackend.customer.controller.CustomerController;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
@@ -20,12 +21,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -95,6 +97,76 @@ public class CustomerControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
                                 .exists()
+                );
+    }
+
+    @Test
+    void updateCustomer_ShouldUpdateCustomer_Status200() throws Exception {
+        CustomerDto customerDto = new CustomerDto();
+
+        customerDto.setName("Car Person A");
+        customerDto.setNote("Give them a discount next time!");
+
+        String json = objectMapper.writeValueAsString(customerDto);
+
+       MvcResult mvcResult = this.mockMvc.perform(
+                        post("/customers")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                ).andReturn();
+
+       String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        customerDto.setId(id);
+        customerDto.setName("Car Person B");
+        String updatedJson = objectMapper.writeValueAsString(customerDto);
+
+        this.mockMvc.perform(
+                        put("/customers/" + id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updatedJson)
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.name")
+                                .value((customerDto.getName()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.note")
+                                .value((customerDto.getNote()))
+                );
+    }
+
+    @Test
+    void deleteCustomer_ShouldDeleteCustomer_Status200() throws Exception {
+        CustomerDto customerDto = new CustomerDto();
+
+        customerDto.setName("Car Person A");
+        customerDto.setNote("Give them a discount next time!");
+
+        String json = objectMapper.writeValueAsString(customerDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/customers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        customerDto.setId(id);
+
+        this.mockMvc.perform(
+                        delete("/customers/" + id)
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.name")
+                                .value((customerDto.getName()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.note")
+                                .value((customerDto.getNote()))
                 );
     }
 }
