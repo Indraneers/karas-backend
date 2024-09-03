@@ -2,19 +2,11 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.twistercambodia.karasbackend.configuration.MockConfig;
-import com.twistercambodia.karasbackend.customer.controller.CustomerController;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
-import com.twistercambodia.karasbackend.customer.entity.Customer;
-import com.twistercambodia.karasbackend.customer.repository.CustomerRepository;
-import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -96,7 +87,7 @@ public class CustomerControllerTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .exists()
+                                .value("Customer with the same name already exist")
                 );
     }
 
@@ -119,12 +110,12 @@ public class CustomerControllerTests {
 
         customerDto.setId(id);
         customerDto.setName("Car Person B");
-        String updatedJson = objectMapper.writeValueAsString(customerDto);
+        json = objectMapper.writeValueAsString(customerDto);
 
         this.mockMvc.perform(
                         put("/customers/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(updatedJson)
+                                .content(json)
                 )
                 .andExpect(status().isOk())
                 .andExpect(

@@ -17,22 +17,22 @@ public class Vehicle {
     @JoinColumn(name="customer_id", nullable=false)
     private Customer customer;
 
-    @Column
+    @Column(unique = true)
     private String vinNo;
 
-    @Column
+    @Column(unique = true)
     private String engineNo;
 
-    @Column
+    @Column(unique = true)
     private int mileage;
 
     @Column
     private String note;
 
-    @Column
+    @Column(unique = true)
     private String plateNumber;
 
-    @Column
+    @Column(unique = true)
     private String makeAndModel;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -125,7 +125,6 @@ public class Vehicle {
     public String toString() {
         return "Vehicle{" +
                 "id='" + id + '\'' +
-                ", customer=" + customer +
                 ", vinNo='" + vinNo + '\'' +
                 ", engineNo='" + engineNo + '\'' +
                 ", mileage=" + mileage +

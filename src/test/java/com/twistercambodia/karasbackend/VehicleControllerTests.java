@@ -25,8 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Collections;
 import java.util.Set;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -84,6 +83,162 @@ public class VehicleControllerTests {
                         post("/vehicles")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.customerId")
+                                .value((vehicleDto.getCustomerId()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.engineNo")
+                                .value((vehicleDto.getEngineNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.makeAndModel")
+                                .value((vehicleDto.getMakeAndModel()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.mileage")
+                                .value((vehicleDto.getMileage()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.note")
+                                .value((vehicleDto.getNote()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.plateNumber")
+                                .value((vehicleDto.getPlateNumber()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vinNo")
+                                .value((vehicleDto.getVinNo()))
+                );
+    }
+
+    @Test
+    void createVehicle_DuplicateVehicleException_status400() throws Exception {
+        VehicleDto vehicleDto = new VehicleDto();
+
+        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setEngineNo("Engine No 1");
+        vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
+        vehicleDto.setMileage(65000);
+        vehicleDto.setNote("Give it a bath next time!");
+        vehicleDto.setPlateNumber("126 - 629");
+        vehicleDto.setVinNo("JX12345678");
+
+        String json = objectMapper.writeValueAsString(vehicleDto);
+
+        this.mockMvc.perform(
+                        post("/vehicles")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                );
+
+        this.mockMvc.perform(
+                        post("/vehicles")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Vehicle with the same attributes already exist")
+                );
+    }
+
+    @Test
+    void updateVehicle_ShouldUpdateVehicle_status200() throws Exception {
+        VehicleDto vehicleDto = new VehicleDto();
+
+        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setEngineNo("Engine No 1");
+        vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
+        vehicleDto.setMileage(65000);
+        vehicleDto.setNote("Give it a bath next time!");
+        vehicleDto.setPlateNumber("126 - 629");
+        vehicleDto.setVinNo("JX12345678");
+
+        String json = objectMapper.writeValueAsString(vehicleDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/vehicles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        vehicleDto.setId(id);
+        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setEngineNo("Engine No 2");
+        vehicleDto.setMakeAndModel("Toyota Camry 2022 Hybrid");
+        vehicleDto.setMileage(75000);
+        vehicleDto.setNote("Give it an oil change next time!");
+        vehicleDto.setPlateNumber("126 - 6294");
+        vehicleDto.setVinNo("JX12345679");
+
+        json = objectMapper.writeValueAsString(vehicleDto);
+
+        this.mockMvc.perform(
+                        put("/vehicles/" + id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.customerId")
+                                .value((vehicleDto.getCustomerId()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.engineNo")
+                                .value((vehicleDto.getEngineNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.makeAndModel")
+                                .value((vehicleDto.getMakeAndModel()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.mileage")
+                                .value((vehicleDto.getMileage()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.note")
+                                .value((vehicleDto.getNote()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.plateNumber")
+                                .value((vehicleDto.getPlateNumber()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vinNo")
+                                .value((vehicleDto.getVinNo()))
+                );
+    }
+
+    @Test
+    void deleteVehicle_ShouldDeleteVehicle_status200() throws Exception {
+        VehicleDto vehicleDto = new VehicleDto();
+
+        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setEngineNo("Engine No 1");
+        vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
+        vehicleDto.setMileage(65000);
+        vehicleDto.setNote("Give it a bath next time!");
+        vehicleDto.setPlateNumber("126 - 629");
+        vehicleDto.setVinNo("JX12345678");
+
+        String json = objectMapper.writeValueAsString(vehicleDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/vehicles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        this.mockMvc.perform(
+                        delete("/vehicles/" + id)
                 )
                 .andExpect(status().isOk())
                 .andExpect(
