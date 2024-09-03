@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twistercambodia.karasbackend.configuration.MockConfig;
 import com.twistercambodia.karasbackend.customer.controller.CustomerController;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
@@ -33,11 +34,14 @@ public class CustomerControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    private ObjectMapper objectMapper;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -47,10 +51,12 @@ public class CustomerControllerTests {
         customerDto.setName("Car Person A");
         customerDto.setNote("Give them a discount next time!");
 
+        String json = objectMapper.writeValueAsString(customerDto);
+
         this.mockMvc.perform(
                 post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Car Person A\", \"note\":\"Give them a discount next time!\" }")
+                .content(json)
         )
                 .andExpect(status().isOk())
                 .andExpect(
