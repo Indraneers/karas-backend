@@ -6,9 +6,6 @@ import java.util.List;
 
 @Entity
 public class Category {
-
-    // define fields
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

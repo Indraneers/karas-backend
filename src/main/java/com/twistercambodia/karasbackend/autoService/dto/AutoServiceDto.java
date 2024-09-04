@@ -1,21 +1,21 @@
-package com.twistercambodia.karasbackend.maintenance.entity;
+package com.twistercambodia.karasbackend.autoService.dto;
 
-import jakarta.persistence.*;
+import com.twistercambodia.karasbackend.autoService.entity.AutoService;
 
-@Entity
-public class Service {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class AutoServiceDto {
     private String id;
-
-    @Column(nullable = false, unique = true)
     private String name;
-
-    @Column(nullable = false)
     private boolean isActive;
-
-    @Column
     private int originalPrice;
+
+    public AutoServiceDto() {}
+
+    public AutoServiceDto(AutoService autoService) {
+        this.id = autoService.getId();
+        this.name = autoService.getName();
+        this.isActive = autoService.isActive();
+        this.originalPrice = autoService.getOriginalPrice();
+    }
 
     public String getId() {
         return id;
@@ -47,15 +47,5 @@ public class Service {
 
     public void setOriginalPrice(int originalPrice) {
         this.originalPrice = originalPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "Service{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", isActive=" + isActive +
-                ", originalPrice=" + originalPrice +
-                '}';
     }
 }

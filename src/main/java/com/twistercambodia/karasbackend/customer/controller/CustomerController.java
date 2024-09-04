@@ -7,6 +7,7 @@ import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +64,17 @@ public class CustomerController {
         this.logger.error("Throwing CustomerNotFoundException with message={}", exception.getMessage());
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
-                exception.getMessage()
+                "Customer not found"
+        );
+    }
+
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException exception) {
+        this.logger.error("Throwing DataIntegrityViolationException with message={}", exception.getMessage());
+        return new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Customer with the same name already exist"
         );
     }
 }

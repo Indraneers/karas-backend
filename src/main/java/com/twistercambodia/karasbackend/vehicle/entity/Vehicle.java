@@ -3,6 +3,9 @@ package com.twistercambodia.karasbackend.vehicle.entity;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+
+import java.util.Set;
 
 @Entity
 public class Vehicle {
@@ -14,26 +17,29 @@ public class Vehicle {
     @JoinColumn(name="customer_id", nullable=false)
     private Customer customer;
 
-    @Column
+    @Column(unique = true)
     private String vinNo;
 
-    @Column
+    @Column(unique = true)
     private String engineNo;
 
-    @Column
+    @Column(unique = true)
     private int mileage;
 
     @Column
     private String note;
 
-    @Column
+    @Column(unique = true)
     private String plateNumber;
 
-    @Column
+    @Column(unique = true)
     private String makeAndModel;
 
-    @ManyToOne
-    private Maintenance maintenance;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Maintenance futureMaintenance;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Maintenance> maintenances;
 
     public String getId() {
         return id;
@@ -99,18 +105,34 @@ public class Vehicle {
         this.makeAndModel = makeAndModel;
     }
 
+    public Maintenance getFutureMaintenance() {
+        return futureMaintenance;
+    }
+
+    public void setFutureMaintenance(Maintenance futureMaintenance) {
+        this.futureMaintenance = futureMaintenance;
+    }
+
+    public Set<Maintenance> getMaintenances() {
+        return maintenances;
+    }
+
+    public void setMaintenances(Set<Maintenance> maintenances) {
+        this.maintenances = maintenances;
+    }
+
     @Override
     public String toString() {
         return "Vehicle{" +
                 "id='" + id + '\'' +
-                ", customer=" + customer +
                 ", vinNo='" + vinNo + '\'' +
                 ", engineNo='" + engineNo + '\'' +
                 ", mileage=" + mileage +
                 ", note='" + note + '\'' +
                 ", plateNumber='" + plateNumber + '\'' +
                 ", makeAndModel='" + makeAndModel + '\'' +
-                ", maintenance=" + maintenance +
+                ", futureMaintenance=" + futureMaintenance +
+                ", maintenances=" + maintenances +
                 '}';
     }
 }

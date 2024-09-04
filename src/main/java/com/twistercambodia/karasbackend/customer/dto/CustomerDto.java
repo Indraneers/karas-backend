@@ -28,6 +28,11 @@ public class CustomerDto {
                 .collect(Collectors.toSet());
     }
 
+    public CustomerDto(String name, String note) {
+        this.name = name;
+        this.note = note;
+    }
+
     public String getId() {
         return id;
     }
