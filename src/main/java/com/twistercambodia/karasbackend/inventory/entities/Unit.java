@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.entities;
 
+import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,8 +25,6 @@ public class Unit {
 
     @Column
     private int price;
-
-    // define getters/setters
 
     public String getId() {
         return id;

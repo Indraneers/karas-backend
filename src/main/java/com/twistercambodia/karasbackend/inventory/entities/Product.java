@@ -6,9 +6,6 @@ import java.util.List;
 
 @Entity
 public class Product {
-
-    // define fields
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -22,8 +19,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    // define getters/setters
 
     public String getId() {
         return id;
