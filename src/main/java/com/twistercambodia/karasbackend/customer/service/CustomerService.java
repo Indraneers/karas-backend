@@ -55,7 +55,6 @@ public class CustomerService {
         return modelMapper.map(customer, CustomerDto.class);
     }
 
-
     public List<CustomerDto> convertToCustomerDto(List<Customer> customers) {
         return customers
                 .stream()
