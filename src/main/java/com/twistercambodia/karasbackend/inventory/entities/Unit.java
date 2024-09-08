@@ -13,7 +13,7 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Column
