@@ -1,6 +1,5 @@
 package com.twistercambodia.karasbackend.inventory.entities;
 
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import jakarta.persistence.*;
 
 @Entity
