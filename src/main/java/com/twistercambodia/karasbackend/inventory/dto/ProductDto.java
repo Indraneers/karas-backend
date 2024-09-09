@@ -1,7 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.dto;
 
 import com.twistercambodia.karasbackend.inventory.entities.Product;
-import com.twistercambodia.karasbackend.inventory.entities.Unit;
 
 import java.util.List;
 
@@ -10,6 +9,7 @@ public class ProductDto {
     private String name;
     private List<String> unitIds;
     private String categoryId;
+    private int unitTotal;
 
     public ProductDto() {}
 
@@ -34,10 +34,6 @@ public class ProductDto {
         this.name = name;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
     public List<String> getUnitIds() {
         return unitIds;
     }
@@ -46,7 +42,19 @@ public class ProductDto {
         this.unitIds = unitIds;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public int getUnitTotal() {
+        return unitTotal;
+    }
+
+    public void setUnitTotal(int unitTotal) {
+        this.unitTotal = unitTotal;
     }
 }

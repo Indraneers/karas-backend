@@ -2,7 +2,6 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +41,7 @@ public class UnitControllerTests {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        ProductDto productDto = new ProductDto();
-
+        productDto = new ProductDto();
         productDto.setName("Twister Engine Oil A");
 
         String json = objectMapper.writeValueAsString(productDto);
@@ -135,7 +133,7 @@ public class UnitControllerTests {
         String json = objectMapper.writeValueAsString(unitDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/product")
+                post("/units")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andReturn();
@@ -148,10 +146,10 @@ public class UnitControllerTests {
         unitDto.setPrice(200);
         unitDto.setQuantity(25);
 
-        json = objectMapper.writeValueAsString(productDto);
+        json = objectMapper.writeValueAsString(unitDto);
 
         this.mockMvc.perform(
-                        post("/units")
+                        put("/units/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )
@@ -194,7 +192,7 @@ public class UnitControllerTests {
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         this.mockMvc.perform(
-                        post("/units" + id)
+                        delete("/units/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )

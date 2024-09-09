@@ -10,12 +10,14 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @OneToMany
     @JoinColumn(name="category_id")
     private List<Product> products;
+
+    private int productCount;
 
     // define getters/setters
 
@@ -43,14 +45,25 @@ public class Category {
         this.products = products;
     }
 
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
+    }
+
+
     // define toString() method
+
 
     @Override
     public String toString() {
         return "Category{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", products=" + products +
+                ", productCount=" + productCount +
                 '}';
     }
 }

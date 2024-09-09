@@ -10,15 +10,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @OneToMany
     private List<Unit> units;
 
+    private int unitTotal;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    // Getters/Setters
 
     public String getId() {
         return id;
@@ -44,6 +48,14 @@ public class Product {
         this.units = units;
     }
 
+    public int getUnitTotal() {
+        return unitTotal;
+    }
+
+    public void setUnitTotal(int unitTotal) {
+        this.unitTotal = unitTotal;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -60,6 +72,7 @@ public class Product {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", units=" + units +
+                ", unitTotal=" + unitTotal +
                 ", category=" + category +
                 '}';
     }

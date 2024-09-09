@@ -1,6 +1,5 @@
 package com.twistercambodia.karasbackend.inventory.entities;
 
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +12,7 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Column

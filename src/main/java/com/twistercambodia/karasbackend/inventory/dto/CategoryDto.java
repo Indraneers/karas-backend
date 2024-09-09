@@ -8,6 +8,7 @@ public class CategoryDto {
     private String id;
     private String name;
     private List<String> productIds;
+    private int productCount;
 
     public CategoryDto() {}
 
@@ -38,5 +39,13 @@ public class CategoryDto {
 
     public void setProductIds(List<String> productIds) {
         this.productIds = productIds;
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }
