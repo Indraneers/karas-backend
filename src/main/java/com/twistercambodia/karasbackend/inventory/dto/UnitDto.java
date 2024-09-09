@@ -1,6 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.dto;
 
-import com.twistercambodia.karasbackend.inventory.entities.Unit;
+import com.twistercambodia.karasbackend.inventory.entity.Unit;
 
 public class UnitDto {
     private String id;

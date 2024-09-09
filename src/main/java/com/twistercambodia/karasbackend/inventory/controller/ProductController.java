@@ -2,7 +2,7 @@ package com.twistercambodia.karasbackend.inventory.controller;
 
 import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
-import com.twistercambodia.karasbackend.inventory.entities.Product;
+import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.exception.ProductNotFoundException;
 import com.twistercambodia.karasbackend.inventory.service.ProductService;
 import org.slf4j.Logger;

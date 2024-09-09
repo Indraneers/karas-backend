@@ -1,6 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.dto;
 
-import com.twistercambodia.karasbackend.inventory.entities.Category;
+import com.twistercambodia.karasbackend.inventory.entity.Category;
 
 import java.util.List;
 

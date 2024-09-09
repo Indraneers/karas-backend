@@ -1,9 +1,9 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
-import com.twistercambodia.karasbackend.inventory.entities.Unit;
+import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.exception.UnitNotFoundException;
-import com.twistercambodia.karasbackend.inventory.repositories.UnitRepository;
+import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

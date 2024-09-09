@@ -1,10 +1,8 @@
 package com.twistercambodia.karasbackend.sale.entity;
 
 import com.twistercambodia.karasbackend.autoService.entity.AutoService;
-import com.twistercambodia.karasbackend.inventory.entities.Product;
+import com.twistercambodia.karasbackend.inventory.entity.Product;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name = "item")

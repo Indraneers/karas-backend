@@ -1,9 +1,9 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
-import com.twistercambodia.karasbackend.inventory.entities.Product;
+import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.exception.ProductNotFoundException;
-import com.twistercambodia.karasbackend.inventory.repositories.ProductRepository;
+import com.twistercambodia.karasbackend.inventory.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

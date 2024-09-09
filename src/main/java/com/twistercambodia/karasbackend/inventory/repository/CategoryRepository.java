@@ -1,6 +1,6 @@
-package com.twistercambodia.karasbackend.inventory.repositories;
+package com.twistercambodia.karasbackend.inventory.repository;
 
-import com.twistercambodia.karasbackend.inventory.entities.Category;
+import com.twistercambodia.karasbackend.inventory.entity.Category;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

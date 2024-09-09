@@ -1,7 +1,7 @@
 package com.twistercambodia.karasbackend.sale.service;
 
 import com.twistercambodia.karasbackend.sale.entity.Sale;
-import com.twistercambodia.karasbackend.sale.repositories.SaleRepository;
+import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
