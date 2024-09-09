@@ -1,6 +1,10 @@
 package com.twistercambodia.karasbackend.sale.entity;
 
+import com.twistercambodia.karasbackend.autoService.entity.AutoService;
+import com.twistercambodia.karasbackend.inventory.entities.Product;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name = "item")
@@ -9,10 +13,6 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    // private ItemType itemType;
-
-    //private Unit unit;
 
     @Column
     private int price;
@@ -23,9 +23,15 @@ public class Item {
     @Column
     private int discount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id")
     private Sale sale;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private AutoService service;
 
     public String getId() {
         return id;
@@ -57,5 +63,42 @@ public class Item {
 
     public void setDiscount(int discount) {
         this.discount = discount;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public AutoService getService() {
+        return service;
+    }
+
+    public void setService(AutoService service) {
+        this.service = service;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id='" + id + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", discount=" + discount +
+                ", sale=" + sale +
+                ", product=" + product +
+                ", service=" + service +
+                '}';
     }
 }

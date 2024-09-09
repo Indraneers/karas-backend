@@ -22,7 +22,7 @@ public class Sale {
     @Column
     private LocalDateTime dueDate;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="sale_id")
     private List<Item> items;
 
@@ -37,7 +37,7 @@ public class Sale {
 
     //private Set<Vehicle> vehicles;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Status> status;
 
     public String getId() {

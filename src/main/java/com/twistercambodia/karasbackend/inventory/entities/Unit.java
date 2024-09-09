@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 public class Unit {
 
     // define fields
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
