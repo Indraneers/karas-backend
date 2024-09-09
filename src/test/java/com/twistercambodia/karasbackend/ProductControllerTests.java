@@ -42,7 +42,6 @@ public class ProductControllerTests {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
         categoryDto = new CategoryDto();
-
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
@@ -64,7 +63,6 @@ public class ProductControllerTests {
 
         productDto.setName("Twister Engine Oil A");
         productDto.setCategoryId(this.categoryDto.getId());
-
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -120,7 +118,7 @@ public class ProductControllerTests {
         String json = objectMapper.writeValueAsString(productDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/product")
+                post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andReturn();
