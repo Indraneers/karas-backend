@@ -26,9 +26,11 @@ public class Item {
     private Sale sale;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "autoservice_id")
     private AutoService service;
 
     public String getId() {
