@@ -102,7 +102,7 @@ public class SaleDto {
     public void setVehicleId(String vehicleId) {
         this.vehicleId = vehicleId;
     }
-    
+
     public StatusDto getStatus() {
         return status;
     }

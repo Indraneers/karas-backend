@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,8 @@ public class UnitControllerTests {
 
     private MockMvc mockMvc;
 
+    CategoryDto categoryDto;
+
     private ProductDto productDto;
 
     @BeforeEach
@@ -41,20 +44,36 @@ public class UnitControllerTests {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
+        categoryDto = new CategoryDto();
+        categoryDto.setName("Engine Oil");
+
+        String categoryDtoJson = objectMapper.writeValueAsString(categoryDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryDtoJson)
+        ).andReturn();
+
+        String categoryId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        productDto = new ProductDto();
+
+        productDto.setCategoryId(categoryId);
         productDto = new ProductDto();
         productDto.setName("Twister Engine Oil A");
 
-        String json = objectMapper.writeValueAsString(productDto);
+        String productDtoJson = objectMapper.writeValueAsString(productDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(
+        mvcResult = this.mockMvc.perform(
                 post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                        .content(productDtoJson)
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        String productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        productDto.setId(id);
+        productDto.setId(productId);
     }
 
     @Test
@@ -90,34 +109,6 @@ public class UnitControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.quantity")
                                 .value((unitDto.getQuantity()))
-                );
-    }
-
-    @Test
-    void createUnit_DuplicateUnitException_status400() throws Exception {
-        UnitDto unitDto = new UnitDto();
-
-        unitDto.setName("1L");
-        unitDto.setProductId(this.productDto.getId());
-        unitDto.setPrice(100);
-        unitDto.setQuantity(50);
-
-        String json = objectMapper.writeValueAsString(unitDto);
-
-        this.mockMvc.perform(
-                post("/units")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-        );
-
-        this.mockMvc.perform(
-                        post("/units")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Unit with the same attributes already exist")
                 );
     }
 

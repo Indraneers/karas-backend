@@ -67,14 +67,4 @@ public class UnitController {
                 "Unit not found"
         );
     }
-
-    @ExceptionHandler(value = DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException exception) {
-        this.logger.error("Throwing DataIntegrityViolationException with message={}", exception.getMessage());
-        return new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Unit with the same attributes already exist"
-        );
-    }
 }
