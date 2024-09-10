@@ -80,6 +80,20 @@ public class ProductControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((productDto.getName()))
                 );
+
+        this.mockMvc.perform(
+                get("/categories/" + categoryDto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.productCount")
+                                .value(1)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.products[0].name")
+                                .value(productDto.getName())
+                );
     }
 
     @Test

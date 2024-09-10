@@ -30,6 +30,15 @@ public class CategoryController {
         );
     }
 
+    @GetMapping("{id}")
+    public CategoryDto getAllCategory(
+            @PathVariable("id") String id
+    ) {
+        return this.categoryService.convertToCategoryDto(
+                this.categoryService.findByIdOrThrowError(id)
+        );
+    }
+
     @PostMapping
     public CategoryDto createCategory(
             @RequestBody CategoryDto categoryDto

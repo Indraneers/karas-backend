@@ -7,7 +7,7 @@ import java.util.List;
 public class ProductDto {
     private String id;
     private String name;
-    private List<String> unitIds;
+    private List<UnitDto> units;
     private String categoryId;
     private int unitTotal;
 
@@ -34,12 +34,12 @@ public class ProductDto {
         this.name = name;
     }
 
-    public List<String> getUnitIds() {
-        return unitIds;
+    public List<UnitDto> getUnits() {
+        return units;
     }
 
-    public void setUnitIds(List<String> unitIds) {
-        this.unitIds = unitIds;
+    public void setUnits(List<UnitDto> units) {
+        this.units = units;
     }
 
     public String getCategoryId() {

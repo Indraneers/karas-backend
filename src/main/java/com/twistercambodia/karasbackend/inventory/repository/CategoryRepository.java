@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface CategoryRepository extends CrudRepository<Category, String> {
-    @Query("select c, size(c.products) as productCount from Category c")
+    @Query("select c as productCount from Category c")
     List<Category> findAll();
 }

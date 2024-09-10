@@ -45,7 +45,6 @@ public class CategoryControllerTests {
 
         categoryDto.setName("Engine Oil");
 
-
         String json = objectMapper.writeValueAsString(categoryDto);
 
         this.mockMvc.perform(
