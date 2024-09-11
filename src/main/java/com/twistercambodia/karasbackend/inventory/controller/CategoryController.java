@@ -31,7 +31,7 @@ public class CategoryController {
     }
 
     @GetMapping("{id}")
-    public CategoryDto getAllCategory(
+    public CategoryDto getCategoryById(
             @PathVariable("id") String id
     ) {
         return this.categoryService.convertToCategoryDto(

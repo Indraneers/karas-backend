@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Formula;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class Category {
     @Column(unique = true)
     private String name;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="category_id")
     private List<Product> products;
 

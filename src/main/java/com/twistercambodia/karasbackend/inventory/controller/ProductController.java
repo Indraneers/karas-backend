@@ -30,6 +30,15 @@ public class ProductController {
         );
     }
 
+    @GetMapping("{id}")
+    public ProductDto getProductById(
+            @PathVariable("id") String id
+    ) {
+        return this.productService.convertToProductDto(
+                this.productService.findByIdOrThrowError(id)
+        );
+    }
+
     @PostMapping
     public ProductDto createProduct(
             @RequestBody ProductDto productDto

@@ -60,7 +60,6 @@ public class UnitControllerTests {
         productDto = new ProductDto();
 
         productDto.setCategoryId(categoryId);
-        productDto = new ProductDto();
         productDto.setName("Twister Engine Oil A");
 
         String productDtoJson = objectMapper.writeValueAsString(productDto);
@@ -109,6 +108,20 @@ public class UnitControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.quantity")
                                 .value((unitDto.getQuantity()))
+                );
+
+        this.mockMvc.perform(
+                        get("/products/" + productDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.unitCount")
+                                .value(1)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.units[0].name")
+                                .value(unitDto.getName())
                 );
     }
 
@@ -203,6 +216,20 @@ public class UnitControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.quantity")
                                 .value((unitDto.getQuantity()))
+                );
+
+        this.mockMvc.perform(
+                        get("/products/" + productDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.unitCount")
+                                .value(0)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.units")
+                                .isEmpty()
                 );
     }
 }
