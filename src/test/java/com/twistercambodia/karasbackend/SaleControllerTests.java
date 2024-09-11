@@ -42,6 +42,7 @@ public class SaleControllerTests {
 
     public void setupProducts() throws Exception {
         for (ProductDto productDto : productDtos) {
+            System.out.println(productDto.getName());
             String json = objectMapper.writeValueAsString(productDto);
 
             MvcResult mvcResult = this.mockMvc.perform(
@@ -110,8 +111,8 @@ public class SaleControllerTests {
         productDtos.add(productDtoOne);
 
         ProductDto productDtoTwo = new ProductDto();
-        productDtoOne.setCategoryId(categoryId);
-        productDtoOne.setName("Engine Oil B");
+        productDtoTwo.setCategoryId(categoryId);
+        productDtoTwo.setName("Engine Oil B");
 
         productDtos.add(productDtoTwo);
 

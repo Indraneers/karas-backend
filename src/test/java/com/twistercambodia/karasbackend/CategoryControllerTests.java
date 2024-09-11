@@ -81,7 +81,7 @@ public class CategoryControllerTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value("Category with the same name already exist")
+                                .value("Invalid Data")
                 );
     }
 

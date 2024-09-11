@@ -1,14 +1,10 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
-import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
-import com.twistercambodia.karasbackend.inventory.exception.UnitNotFoundException;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,15 +52,5 @@ public class UnitController {
         Unit unit = this.unitService.delete(id);
         this.logger.info("Deleting unit={}", unit);
         return this.unitService.convertToUnitDto(unit);
-    }
-
-    @ExceptionHandler(value = UnitNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUnitNotFound(UnitNotFoundException exception) {
-        this.logger.error("Throwing UnitNotFoundException with message={}", exception.getMessage());
-        return new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Unit not found"
-        );
     }
 }

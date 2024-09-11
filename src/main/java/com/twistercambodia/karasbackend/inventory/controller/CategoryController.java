@@ -1,14 +1,10 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
-import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.entity.Category;
-import com.twistercambodia.karasbackend.inventory.exception.CategoryNotFoundException;
 import com.twistercambodia.karasbackend.inventory.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,25 +61,5 @@ public class CategoryController {
         Category category = this.categoryService.delete(id);
         this.logger.info("Deleting category={}", category);
         return this.categoryService.convertToCategoryDto(category);
-    }
-
-    @ExceptionHandler(value = CategoryNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleCategoryNotFound(CategoryNotFoundException exception) {
-        this.logger.error("Throwing CategoryNotFoundException with message={}", exception.getMessage());
-        return new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Category not found"
-        );
-    }
-
-    @ExceptionHandler(value = DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException exception) {
-        this.logger.error("Throwing DataIntegrityViolationException with message={}", exception.getMessage());
-        return new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Category with the same name already exist"
-        );
     }
 }

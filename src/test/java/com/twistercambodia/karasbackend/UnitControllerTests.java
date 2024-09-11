@@ -126,7 +126,7 @@ public class UnitControllerTests {
     }
 
     @Test
-    void updateProduct_ShouldUpdateProduct_status200() throws Exception {
+    void updateUnit_ShouldUpdateProduct_status200() throws Exception {
         UnitDto unitDto = new UnitDto();
 
         unitDto.setName("1L");
@@ -177,7 +177,7 @@ public class UnitControllerTests {
     }
 
     @Test
-    void deleteProduct_ShouldDeleteProduct_status200() throws Exception {
+    void deleteUnit_ShouldDeleteProduct_status200() throws Exception {
         UnitDto unitDto = new UnitDto();
 
         unitDto.setName("1L");

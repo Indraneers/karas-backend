@@ -72,6 +72,7 @@ public class Unit {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
+                ", product=" + product +
                 ", price=" + price +
                 '}';
     }

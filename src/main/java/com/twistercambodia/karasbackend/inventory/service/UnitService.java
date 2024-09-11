@@ -1,8 +1,8 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
+import com.twistercambodia.karasbackend.exception.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
-import com.twistercambodia.karasbackend.inventory.exception.UnitNotFoundException;
 import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class UnitService {
     public Unit findByIdOrThrowError(String id) throws RuntimeException {
         return this.unitRepository
                 .findById(id)
-                .orElseThrow(() -> new UnitNotFoundException("Unit Not Found with ID=" + id));
+                .orElseThrow(() -> new NotFoundException("Unit Not Found with ID=" + id));
     }
 
     public Unit create(UnitDto unitDto) {

@@ -118,7 +118,7 @@ public class ProductControllerTests {
         )
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Product with the same attributes already exist")
+                        .value("Invalid Data")
                 );
     }
 

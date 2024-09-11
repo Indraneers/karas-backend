@@ -87,7 +87,7 @@ public class CustomerControllerTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value("Customer with the same name already exist")
+                                .value("Invalid Data")
                 );
     }
 
