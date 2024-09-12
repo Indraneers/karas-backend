@@ -1,20 +1,28 @@
 package com.twistercambodia.karasbackend.inventory.dto;
 
-import com.twistercambodia.karasbackend.inventory.entities.Category;
+import com.twistercambodia.karasbackend.inventory.entity.Category;
+import com.twistercambodia.karasbackend.inventory.entity.Product;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CategoryDto {
     private String id;
     private String name;
-    private List<String> productIds;
+    private List<ProductDto> products;
     private int productCount;
 
     public CategoryDto() {}
 
     public CategoryDto(Category category) {
+        ModelMapper modelMapper = new ModelMapper();
         this.id = category.getId();
         this.name = category.getName();
+        this.products = category.getProducts().stream()
+                .map((p) -> modelMapper.map(p, ProductDto.class))
+                .collect(Collectors.toList());
+        this.productCount = category.getProductCount();
     }
 
     public String getId() {
@@ -33,12 +41,12 @@ public class CategoryDto {
         this.name = name;
     }
 
-    public List<String> getProductIds() {
-        return productIds;
+    public List<ProductDto> getProducts() {
+        return products;
     }
 
-    public void setProductIds(List<String> productIds) {
-        this.productIds = productIds;
+    public void setProducts(List<ProductDto> products) {
+        this.products = products;
     }
 
     public int getProductCount() {

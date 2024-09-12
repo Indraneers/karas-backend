@@ -1,6 +1,7 @@
-package com.twistercambodia.karasbackend.inventory.entities;
+package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
 import java.util.List;
 
@@ -13,13 +14,15 @@ public class Product {
     @Column(unique = true)
     private String name;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="product_id")
     private List<Unit> units;
 
-    private int unitTotal;
+    @Formula("(select count(*) from unit u where u.product_id = id)")
+    private int unitCount;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     // Getters/Setters
@@ -48,12 +51,12 @@ public class Product {
         this.units = units;
     }
 
-    public int getUnitTotal() {
-        return unitTotal;
+    public int getUnitCount() {
+        return unitCount;
     }
 
-    public void setUnitTotal(int unitTotal) {
-        this.unitTotal = unitTotal;
+    public void setUnitCount(int unitTotal) {
+        this.unitCount = unitTotal;
     }
 
     public Category getCategory() {
@@ -72,7 +75,7 @@ public class Product {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", units=" + units +
-                ", unitTotal=" + unitTotal +
+                ", unitCount=" + unitCount +
                 ", category=" + category +
                 '}';
     }

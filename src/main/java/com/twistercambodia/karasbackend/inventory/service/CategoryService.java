@@ -1,9 +1,9 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
-import com.twistercambodia.karasbackend.customer.exception.CustomerNotFoundException;
+import com.twistercambodia.karasbackend.exception.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
-import com.twistercambodia.karasbackend.inventory.entities.Category;
-import com.twistercambodia.karasbackend.inventory.repositories.CategoryRepository;
+import com.twistercambodia.karasbackend.inventory.entity.Category;
+import com.twistercambodia.karasbackend.inventory.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class CategoryService {
     public Category findByIdOrThrowError(String id) throws RuntimeException {
         return this.categoryRepository
                 .findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException("Category Not Found with ID=" + id));
+                .orElseThrow(() -> new NotFoundException("Category Not Found with ID=" + id));
     }
 
     public Category create(CategoryDto categoryDto) {

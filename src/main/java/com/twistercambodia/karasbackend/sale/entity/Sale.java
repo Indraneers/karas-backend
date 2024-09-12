@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "sale")
@@ -17,28 +16,30 @@ public class Sale {
     private String id;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDateTime created;
 
     @Column
     private LocalDateTime dueDate;
 
-    @OneToMany
-    @JoinColumn(name="sale_id")
-    private List<Item> items;
-
     @Column
     private int discount;
 
-//    private User user;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="sale_id")
+    private List<Item> items;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
 
     @ManyToOne
     @JoinColumn(name="customer_id")
     private Customer customer;
 
-    //private Set<Vehicle> vehicles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Vehicle vehicle;
 
-    @ManyToMany
-    private Set<Status> status;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Status status;
 
     public String getId() {
         return id;
@@ -48,12 +49,12 @@ public class Sale {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getCreated() {
+        return created;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public LocalDateTime getDueDate() {
@@ -72,13 +73,13 @@ public class Sale {
         this.discount = discount;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 //
     public Customer getCustomer() {
         return customer;
@@ -88,20 +89,20 @@ public class Sale {
         this.customer = customer;
     }
 
-//    public Set<Vehicle> getVehicles() {
-//        return vehicles;
-//    }
-//
-//    public void setVehicles(Set<Vehicle> vehicles) {
-//        this.vehicles = vehicles;
-//    }
-//
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
 
-    public Set<Status> getStatus() {
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Set<Status> status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -117,7 +118,7 @@ public class Sale {
     public String toString() {
         return "Sale{" +
                 "id='" + id + '\'' +
-                ", date=" + date +
+                ", date=" + created +
                 ", dueDate=" + dueDate +
                 ", items=" + items +
                 ", discount=" + discount +

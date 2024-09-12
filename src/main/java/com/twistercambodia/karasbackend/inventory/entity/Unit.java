@@ -1,4 +1,4 @@
-package com.twistercambodia.karasbackend.inventory.entities;
+package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
 
@@ -7,19 +7,18 @@ import jakarta.persistence.*;
 public class Unit {
 
     // define fields
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
     @Column
     private int quantity;
 
-    @ManyToOne
-    @JoinColumn(name="product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="product_id", nullable = false)
     private Product product;
 
     @Column

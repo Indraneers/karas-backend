@@ -2,9 +2,9 @@ package com.twistercambodia.karasbackend.vehicle.service;
 
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
+import com.twistercambodia.karasbackend.exception.NotFoundException;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
-import com.twistercambodia.karasbackend.vehicle.exception.VehicleNotFoundException;
 import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class VehicleService {
     public Vehicle findVehicleByIdOrThrowException(String id) {
         return this.vehicleRepository
                 .findById(id)
-                .orElseThrow(() -> new VehicleNotFoundException("Vehicle Not Found with ID=" + id));
+                .orElseThrow(() -> new NotFoundException("Vehicle Not Found with ID=" + id));
     }
 
     public Vehicle create(VehicleDto vehicleDto) {

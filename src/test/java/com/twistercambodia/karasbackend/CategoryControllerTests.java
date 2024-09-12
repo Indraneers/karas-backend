@@ -45,7 +45,6 @@ public class CategoryControllerTests {
 
         categoryDto.setName("Engine Oil");
 
-
         String json = objectMapper.writeValueAsString(categoryDto);
 
         this.mockMvc.perform(
@@ -82,7 +81,7 @@ public class CategoryControllerTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value("Category with the same name already exist")
+                                .value("Invalid Data")
                 );
     }
 

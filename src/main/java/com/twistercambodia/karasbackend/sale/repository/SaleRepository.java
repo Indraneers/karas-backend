@@ -1,4 +1,4 @@
-package com.twistercambodia.karasbackend.sale.repositories;
+package com.twistercambodia.karasbackend.sale.repository;
 
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import org.springframework.data.jpa.repository.Query;
