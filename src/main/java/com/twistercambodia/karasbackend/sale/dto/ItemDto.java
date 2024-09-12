@@ -7,7 +7,7 @@ public class ItemDto {
     private int price;
     private int quantity;
     private int discount;
-    private String productId;
+    private String unitId;
     private String serviceId;
 
     public ItemDto() {}
@@ -18,8 +18,8 @@ public class ItemDto {
         this.quantity = item.getQuantity();;
         this.discount = item.getDiscount();
 
-        if (item.getProduct() != null) {
-            this.productId = item.getProduct().getId();
+        if (item.getUnit() != null) {
+            this.unitId = item.getUnit().getId();
         } else {
             this.serviceId = item.getService().getId();
         }
@@ -57,12 +57,8 @@ public class ItemDto {
         this.discount = discount;
     }
 
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public String getUnitId() {
+        return unitId;
     }
 
     public String getServiceId() {
