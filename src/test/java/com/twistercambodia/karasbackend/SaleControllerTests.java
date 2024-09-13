@@ -1,8 +1,9 @@
 package com.twistercambodia.karasbackend;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
@@ -50,6 +51,8 @@ public class SaleControllerTests {
     CustomerDto customerDto;
 
     VehicleDto vehicleDto;
+
+    UserDto userDto;
 
     public void setupProducts() throws Exception {
         for (ProductDto productDto : productDtos) {
@@ -150,6 +153,24 @@ public class SaleControllerTests {
         this.unitDtos = new ArrayList<>();
         this.setupProductsWithUnits(unitDtoMocks);
 
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+
+        json = objectMapper.writeValueAsString(userDto);
+
+        mvcResult = this.mockMvc.perform(
+                post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
+
         // Create Customer
         customerDto = new CustomerDto();
 
@@ -164,7 +185,7 @@ public class SaleControllerTests {
                         .content(json)
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         customerDto.setId(id);
 
@@ -198,6 +219,7 @@ public class SaleControllerTests {
 
         saleDto.setCustomerId(customerDto.getId());
         saleDto.setVehicleId(vehicleDto.getId());
+        saleDto.setUserId(userDto.getId());
         saleDto.setCreated(LocalDateTime.now());
         saleDto.setDueDate(LocalDateTime.now());
         saleDto.setDiscount(100); // $1 Discount
@@ -218,7 +240,7 @@ public class SaleControllerTests {
         String json = objectMapper.writeValueAsString(saleDto);
 
         this.mockMvc.perform(
-                post("/vehicles")
+                post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpectAll(
@@ -226,6 +248,8 @@ public class SaleControllerTests {
                         .value(saleDto.getCustomerId()),
                 MockMvcResultMatchers.jsonPath("$.vehicleId")
                         .value(saleDto.getVehicleId()),
+                MockMvcResultMatchers.jsonPath("$.userId")
+                        .value(saleDto.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.created")
                         .value(saleDto.getCreated().toString()),
                 MockMvcResultMatchers.jsonPath("$.dueDate")

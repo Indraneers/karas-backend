@@ -14,7 +14,7 @@ public class User {
     @Column(nullable = false ,unique = true)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private UserRole role;
 
     protected User() {}
