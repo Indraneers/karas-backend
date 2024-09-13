@@ -2,7 +2,7 @@ package com.twistercambodia.karasbackend.vehicle.service;
 
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
-import com.twistercambodia.karasbackend.exception.NotFoundException;
+import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
@@ -24,7 +24,7 @@ public class VehicleService {
         this.modelMapper = modelMapper;
     }
 
-    public Vehicle findVehicleByIdOrThrowException(String id) {
+    public Vehicle findByIdOrThrowException(String id) {
         return this.vehicleRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vehicle Not Found with ID=" + id));
@@ -38,7 +38,7 @@ public class VehicleService {
     }
 
     public Vehicle update(String id, VehicleDto vehicleDto) {
-        Vehicle vehicle = this.findVehicleByIdOrThrowException(id);
+        Vehicle vehicle = this.findByIdOrThrowException(id);
 
         vehicle.setVinNo(vehicleDto.getVinNo());
         vehicle.setEngineNo(vehicleDto.getEngineNo());
@@ -51,7 +51,7 @@ public class VehicleService {
     }
 
     public Vehicle delete(String id) {
-        Vehicle vehicle = this.findVehicleByIdOrThrowException(id);
+        Vehicle vehicle = this.findByIdOrThrowException(id);
 
         this.vehicleRepository.delete(vehicle);
         return vehicle;

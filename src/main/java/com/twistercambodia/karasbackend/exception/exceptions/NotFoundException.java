@@ -1,4 +1,4 @@
-package com.twistercambodia.karasbackend.exception;
+package com.twistercambodia.karasbackend.exception.exceptions;
 
 public class NotFoundException extends RuntimeException {
     private String message;
