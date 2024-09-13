@@ -25,6 +25,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User create(UserDto userDto) {
+        User user = this.convertToUser(userDto);
+        return this.userRepository.save(user);
+    }
+
     public UserDto convertToUserDto(User user) {
         return this.modelMapper.map(user, UserDto.class);
     }
@@ -34,5 +39,9 @@ public class UserService {
                 .stream()
                 .map(this::convertToUserDto)
                 .collect(Collectors.toList());
+    }
+
+    public User convertToUser(UserDto userDto) {
+        return modelMapper.map(userDto, User.class);
     }
 }
