@@ -1,6 +1,6 @@
 package com.twistercambodia.karasbackend.auth.controller;
 
-import com.twistercambodia.karasbackend.auth.entity.User;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.findAll();
+    public List<UserDto> getUsers() {
+        return this.userService.convertToUserDto(
+                this.userService.findAll()
+        );
     }
 }
