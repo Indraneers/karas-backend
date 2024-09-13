@@ -93,6 +93,25 @@ public class AuthControllerTests {
     }
 
     @Test
+    void createUser_EmptyUserRoleException_Status400() throws Exception {
+        UserDto userDto = new UserDto();
+
+        userDto.setUsername("User A");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        this.mockMvc.perform(
+                post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value("Invalid Data")
+                );    }
+
+    @Test
     void updateUser_ShouldUpdateUser_Status200() throws Exception {
         UserDto userDto = new UserDto();
 
