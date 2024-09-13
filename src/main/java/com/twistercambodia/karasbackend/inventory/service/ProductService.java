@@ -1,6 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
-import com.twistercambodia.karasbackend.exception.NotFoundException;
+import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.repository.ProductRepository;

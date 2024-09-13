@@ -1,6 +1,6 @@
 package com.twistercambodia.karasbackend.exception.advice;
 
-import com.twistercambodia.karasbackend.exception.NotFoundException;
+import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.exception.dto.ExceptionResponse;
 import com.twistercambodia.karasbackend.exception.dto.ExceptionType;
 import org.slf4j.Logger;
