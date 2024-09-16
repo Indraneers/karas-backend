@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "item")
 public class Item {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -22,15 +21,15 @@ public class Item {
     @Column
     private int discount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "unit_id")
     private Unit unit;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "autoservice_id")
     private AutoService service;
 
@@ -97,7 +96,6 @@ public class Item {
                 ", price=" + price +
                 ", quantity=" + quantity +
                 ", discount=" + discount +
-                ", sale=" + sale +
                 ", unit=" + unit +
                 ", service=" + service +
                 '}';

@@ -5,9 +5,7 @@ import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.service.SaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +25,14 @@ public class SaleController {
         return this.saleService.convertToSaleDto(
                 this.saleService.findAll()
         );
+    }
+
+    @PostMapping
+    public SaleDto createSale(
+            @RequestBody SaleDto saleDto
+    ) throws Exception {
+        Sale sale = this.saleService.create(saleDto);
+        this.logger.info("Creating Sale={}", sale);
+        return this.saleService.convertToSaleDto(sale);
     }
 }

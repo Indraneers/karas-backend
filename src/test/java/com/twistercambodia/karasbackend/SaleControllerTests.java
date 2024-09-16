@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
@@ -10,7 +11,10 @@ import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleDto;
+import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
+import org.h2.tools.Server;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +30,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +60,12 @@ public class SaleControllerTests {
 
     UserDto userDto;
 
+    @BeforeAll
+    public static void init() throws SQLException {
+        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
+                .start();
+    }
+
     public void setupProducts() throws Exception {
         for (ProductDto productDto : productDtos) {
             System.out.println(productDto.getName());
@@ -69,6 +81,12 @@ public class SaleControllerTests {
 
             productDto.setId(id);
         }
+    }
+
+    public void setupObjectMapper() {
+        this.objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.findAndRegisterModules();
     }
 
     public void setupProductsWithUnits(List<UnitDto> mockedUnitDtos) throws Exception {
@@ -100,7 +118,7 @@ public class SaleControllerTests {
 
     @BeforeEach
     public void setup() throws Exception {
-        this.objectMapper = new ObjectMapper();
+        this.setupObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
         // Create Category
@@ -220,18 +238,21 @@ public class SaleControllerTests {
         saleDto.setCustomerId(customerDto.getId());
         saleDto.setVehicleId(vehicleDto.getId());
         saleDto.setUserId(userDto.getId());
-        saleDto.setCreated(LocalDateTime.now());
-        saleDto.setDueDate(LocalDateTime.now());
+        saleDto.setCreated(LocalDateTime.now().toString());
+        saleDto.setDueDate(LocalDateTime.now().toString());
         saleDto.setDiscount(100); // $1 Discount
+        saleDto.setStatus(SaleStatus.PAID);
 
         List<ItemDto> itemDtos = new ArrayList<>();
+
         // Create item
         for (int i = 0; i < unitDtos.size(); ++i) {
             // Create Items
             ItemDto itemDto = new ItemDto();
 
-            itemDto.setPrice(unitDtos.get(0).getPrice());
-            itemDto.setQuantity(1);
+            itemDto.setUnitId(unitDtos.get(i).getId());
+            itemDto.setPrice(unitDtos.get(i).getPrice());
+            itemDto.setQuantity(2);
             itemDtos.add(itemDto);
         }
 
@@ -256,10 +277,12 @@ public class SaleControllerTests {
                         .value(saleDto.getDueDate().toString()),
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleDto.getDiscount()),
-                MockMvcResultMatchers.jsonPath("$.items[0].id")
-                        .value(saleDto.getItems().get(0).getId()),
-                MockMvcResultMatchers.jsonPath("$.items[1].id")
-                        .value(saleDto.getItems().get(1).getId())
+                MockMvcResultMatchers.jsonPath("$.items[0].unitId")
+                        .value(saleDto.getItems().get(0).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.items[1].unitId")
+                        .value(saleDto.getItems().get(1).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(saleDto.getStatus().toString())
         );
     }
 }

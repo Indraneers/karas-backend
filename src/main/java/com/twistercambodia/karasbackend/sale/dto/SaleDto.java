@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend.sale.dto;
 
 import com.twistercambodia.karasbackend.sale.entity.Item;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
+import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,21 +11,21 @@ import java.util.stream.Collectors;
 
 public class SaleDto {
     private String id;
-    private LocalDateTime created;
-    private LocalDateTime dueDate;
+    private String created;
+    private String dueDate;
     private int discount;
     private List<ItemDto> items;
     private String userId;
     private String customerId;
     private String vehicleId;
-    private StatusDto status;
+    private SaleStatus status;
 
     public SaleDto() {}
 
     public SaleDto(Sale sale) {
         this.id = sale.getId();
-        this.created = sale.getCreated();
-        this.dueDate = sale.getDueDate();
+        this.created = sale.getCreated().toString();
+        this.dueDate = sale.getDueDate().toString();
         this.discount = sale.getDiscount();
 
         this.items = sale.getItems()
@@ -35,8 +36,7 @@ public class SaleDto {
         this.userId = sale.getUser().getId();
         this.customerId = sale.getCustomer().getId();
         this.vehicleId = sale.getVehicle().getId();
-
-        this.status = new StatusDto(sale.getStatus());
+        this.status = sale.getStatus();
     }
 
     public String getId() {
@@ -47,19 +47,19 @@ public class SaleDto {
         this.id = id;
     }
 
-    public LocalDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
-    public LocalDateTime getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -103,11 +103,11 @@ public class SaleDto {
         this.vehicleId = vehicleId;
     }
 
-    public StatusDto getStatus() {
+    public SaleStatus getStatus() {
         return status;
     }
 
-    public void setStatus(StatusDto status) {
+    public void setStatus(SaleStatus status) {
         this.status = status;
     }
 }
