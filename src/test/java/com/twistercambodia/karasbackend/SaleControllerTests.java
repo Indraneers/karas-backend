@@ -36,7 +36,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {KarasBackendApplication.class})
@@ -272,15 +275,109 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.userId")
                         .value(saleDto.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.created")
-                        .value(saleDto.getCreated().toString()),
+                        .value(saleDto.getCreated()),
                 MockMvcResultMatchers.jsonPath("$.dueDate")
-                        .value(saleDto.getDueDate().toString()),
+                        .value(saleDto.getDueDate()),
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleDto.getDiscount()),
                 MockMvcResultMatchers.jsonPath("$.items[0].unitId")
                         .value(saleDto.getItems().get(0).getUnitId()),
                 MockMvcResultMatchers.jsonPath("$.items[1].unitId")
                         .value(saleDto.getItems().get(1).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.items", hasSize(4)),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(saleDto.getStatus().toString())
+        );
+    }
+
+    @Test
+    public void updateSale_shouldReturnUpdatedSaleAndPruneOldItems_status200() throws Exception {
+        SaleDto saleDto = new SaleDto();
+
+        saleDto.setCustomerId(customerDto.getId());
+        saleDto.setVehicleId(vehicleDto.getId());
+        saleDto.setUserId(userDto.getId());
+        saleDto.setCreated(LocalDateTime.now().toString());
+        saleDto.setDueDate(LocalDateTime.now().toString());
+        saleDto.setDiscount(100); // $1 Discount
+        saleDto.setStatus(SaleStatus.PAID);
+
+        List<ItemDto> itemDtos = new ArrayList<>();
+
+        // Create item
+        for (int i = 0; i < unitDtos.size(); ++i) {
+            // Create Items
+            ItemDto itemDto = new ItemDto();
+
+            itemDto.setUnitId(unitDtos.get(i).getId());
+            itemDto.setPrice(unitDtos.get(i).getPrice());
+            itemDto.setQuantity(2);
+            itemDtos.add(itemDto);
+        }
+
+        saleDto.setItems(itemDtos);
+
+        String json = objectMapper.writeValueAsString(saleDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/sales")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String itemIdOne = JsonPath.read(
+                mvcResult.getResponse().getContentAsString(), "$.items[0].id"
+        );
+
+        String itemIdTwo = JsonPath.read(
+                mvcResult.getResponse().getContentAsString(), "$.items[1].id"
+                );
+
+        String saleId = JsonPath.read(
+                mvcResult.getResponse().getContentAsString(), "$.id"
+        );
+
+        itemDtos.clear();
+
+        // Update new items
+        for (int i = 0; i < unitDtos.size(); ++i) {
+            ItemDto itemDto = new ItemDto();
+
+            itemDto.setUnitId(unitDtos.get(i).getId());
+            itemDto.setPrice(unitDtos.get(i).getPrice());
+            itemDto.setQuantity(3);
+            itemDtos.add(itemDto);
+        }
+
+        saleDto.setItems(itemDtos);
+
+        json = objectMapper.writeValueAsString(saleDto);
+
+        this.mockMvc.perform(
+                put("/sales/" + saleId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpectAll(
+                MockMvcResultMatchers.jsonPath("$.customerId")
+                        .value(saleDto.getCustomerId()),
+                MockMvcResultMatchers.jsonPath("$.vehicleId")
+                        .value(saleDto.getVehicleId()),
+                MockMvcResultMatchers.jsonPath("$.userId")
+                        .value(saleDto.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.created")
+                        .value(saleDto.getCreated()),
+                MockMvcResultMatchers.jsonPath("$.dueDate")
+                        .value(saleDto.getDueDate()),
+                MockMvcResultMatchers.jsonPath("$.discount")
+                        .value(saleDto.getDiscount()),
+                MockMvcResultMatchers.jsonPath("$.items[0].unitId")
+                        .value(saleDto.getItems().get(0).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.items[0].unitId")
+                        .value(not(itemIdOne)),
+                MockMvcResultMatchers.jsonPath("$.items[1].unitId")
+                        .value(saleDto.getItems().get(1).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.items[1].unitId")
+                        .value(not(itemIdTwo)),
                 MockMvcResultMatchers.jsonPath("$.status")
                         .value(saleDto.getStatus().toString())
         );

@@ -35,4 +35,14 @@ public class SaleController {
         this.logger.info("Creating Sale={}", sale);
         return this.saleService.convertToSaleDto(sale);
     }
+
+    @PutMapping("{id}")
+    public SaleDto updateSale(
+            @PathVariable("id") String id,
+            @RequestBody SaleDto saleDto
+    ) throws Exception {
+        Sale sale = this.saleService.update(id, saleDto);
+        this.logger.info("Updating Sale={}", sale);
+        return this.saleService.convertToSaleDto(sale);
+    }
 }

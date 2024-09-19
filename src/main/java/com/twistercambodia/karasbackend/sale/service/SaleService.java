@@ -4,6 +4,7 @@ import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.auth.service.UserService;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
+import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
 import com.twistercambodia.karasbackend.sale.dto.ItemDto;
@@ -54,8 +55,14 @@ public class SaleService {
         return this.saleRepository.findAll();
     }
 
+    public Sale findByIdOrThrowException(String id) throws Exception {
+        return this.saleRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Sale not found with ID={}" + id)
+        );
+    }
+
     public Sale create(SaleDto saleDto) throws Exception {
-        Sale sale = this.modelMapper.map(saleDto, Sale.class);
+        Sale sale = this.convertToSale(saleDto);
 
         User user = this.userService.findByIdOrThrowError(saleDto.getUserId());
         Customer customer = this.customerService.findByIdOrThrowError(saleDto.getCustomerId());
@@ -80,7 +87,34 @@ public class SaleService {
 
         sale.setItems(items);
 
-        System.out.println(sale);
+        return this.saleRepository.save(sale);
+    }
+
+    public Sale update(String id, SaleDto saleDto) throws Exception {
+        Sale sale = this.findByIdOrThrowException(id);
+
+        User user = this.userService.findByIdOrThrowError(saleDto.getUserId());
+        Customer customer = this.customerService.findByIdOrThrowError(saleDto.getCustomerId());
+        Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleDto.getVehicleId());
+
+        sale.setCreated(LocalDateTime.parse(saleDto.getCreated()));
+        sale.setDueDate(LocalDateTime.parse(saleDto.getDueDate()));
+        sale.setUser(user);
+        sale.setCustomer(customer);
+        sale.setVehicle(vehicle);
+
+        sale.getItems().clear();
+
+        List<Item> items = new ArrayList<>();
+        for (ItemDto itemDto : saleDto.getItems()) {
+            Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
+            Item item = this.modelMapper.map(itemDto, Item.class);
+
+            item.setUnit(unit);
+            items.add(item);
+        }
+
+        sale.getItems().addAll(items);
 
         return this.saleRepository.save(sale);
     }
