@@ -36,10 +36,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {KarasBackendApplication.class})
@@ -380,6 +379,58 @@ public class SaleControllerTests {
                         .value(not(itemIdTwo)),
                 MockMvcResultMatchers.jsonPath("$.status")
                         .value(saleDto.getStatus().toString())
+        );
+    }
+
+    @Test
+    public void deleteSale_shouldDeleteSale_status400() throws Exception {
+        SaleDto saleDto = new SaleDto();
+
+        saleDto.setCustomerId(customerDto.getId());
+        saleDto.setVehicleId(vehicleDto.getId());
+        saleDto.setUserId(userDto.getId());
+        saleDto.setCreated(LocalDateTime.now().toString());
+        saleDto.setDueDate(LocalDateTime.now().toString());
+        saleDto.setDiscount(100); // $1 Discount
+        saleDto.setStatus(SaleStatus.PAID);
+
+        List<ItemDto> itemDtos = new ArrayList<>();
+
+        // Create item
+        for (int i = 0; i < unitDtos.size(); ++i) {
+            // Create Items
+            ItemDto itemDto = new ItemDto();
+
+            itemDto.setUnitId(unitDtos.get(i).getId());
+            itemDto.setPrice(unitDtos.get(i).getPrice());
+            itemDto.setQuantity(2);
+            itemDtos.add(itemDto);
+        }
+
+        saleDto.setItems(itemDtos);
+
+        String json = objectMapper.writeValueAsString(saleDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/sales")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(
+                mvcResult.getResponse().getContentAsString(), "$.id"
+        );
+
+        this.mockMvc.perform(
+                delete("/sales/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        );
+
+        this.mockMvc.perform(
+                get("/sales/" + id)
+        ).andExpect(
+                status().isNotFound()
         );
     }
 }

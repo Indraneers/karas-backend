@@ -27,6 +27,15 @@ public class SaleController {
         );
     }
 
+    @GetMapping("{id}")
+    public SaleDto getAllSales(
+            @PathVariable("id") String id
+    ) throws Exception {
+        return this.saleService.convertToSaleDto(
+                this.saleService.findByIdOrThrowException(id)
+        );
+    }
+
     @PostMapping
     public SaleDto createSale(
             @RequestBody SaleDto saleDto
@@ -43,6 +52,15 @@ public class SaleController {
     ) throws Exception {
         Sale sale = this.saleService.update(id, saleDto);
         this.logger.info("Updating Sale={}", sale);
+        return this.saleService.convertToSaleDto(sale);
+    }
+
+    @DeleteMapping("{id}")
+    public SaleDto updateSale(
+            @PathVariable("id") String id
+    ) throws Exception {
+        Sale sale = this.saleService.delete(id);
+        this.logger.info("Deleting Sale={}", sale);
         return this.saleService.convertToSaleDto(sale);
     }
 }

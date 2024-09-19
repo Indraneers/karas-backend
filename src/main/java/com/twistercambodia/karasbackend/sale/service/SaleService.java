@@ -119,6 +119,12 @@ public class SaleService {
         return this.saleRepository.save(sale);
     }
 
+    public Sale delete(String id) throws Exception {
+        Sale sale = this.findByIdOrThrowException(id);
+        this.saleRepository.delete(sale);
+        return sale;
+    }
+
     public SaleDto convertToSaleDto(Sale sale) {
         return this.modelMapper.map(sale, SaleDto.class);
     }
