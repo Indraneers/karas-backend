@@ -24,11 +24,11 @@ public class Sale {
     @Column
     private int discount;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="sale_id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="user_id")
     private User user;
 
     @ManyToOne
@@ -36,10 +36,11 @@ public class Sale {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="vehicle_id")
     private Vehicle vehicle;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Status status;
+    @Column(nullable = false)
+    private SaleStatus status;
 
     public String getId() {
         return id;
@@ -97,15 +98,6 @@ public class Sale {
         this.vehicle = vehicle;
     }
 
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public List<Item> getItems() {
         return items;
     }
@@ -114,15 +106,25 @@ public class Sale {
         this.items = items;
     }
 
+    public SaleStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SaleStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Sale{" +
                 "id='" + id + '\'' +
-                ", date=" + created +
+                ", created=" + created +
                 ", dueDate=" + dueDate +
-                ", items=" + items +
                 ", discount=" + discount +
+                ", items=" + items +
+                ", user=" + user +
                 ", customer=" + customer +
+                ", vehicle=" + vehicle +
                 ", status=" + status +
                 '}';
     }

@@ -77,7 +77,6 @@ public class Customer {
                 ", name='" + name + '\'' +
                 ", note='" + note + '\'' +
                 ", vehicles=" + vehicles +
-                ", sales=" + sales +
                 '}';
     }
 }

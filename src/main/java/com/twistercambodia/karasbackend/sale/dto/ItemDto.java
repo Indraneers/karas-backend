@@ -61,6 +61,10 @@ public class ItemDto {
         return unitId;
     }
 
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
     public String getServiceId() {
         return serviceId;
     }
