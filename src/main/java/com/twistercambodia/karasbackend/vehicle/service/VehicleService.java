@@ -9,6 +9,9 @@ import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class VehicleService {
     private final VehicleRepository vehicleRepository;
@@ -22,6 +25,10 @@ public class VehicleService {
         this.vehicleRepository = vehicleRepository;
         this.customerService = customerService;
         this.modelMapper = modelMapper;
+    }
+
+    public List<Vehicle> findAll() {
+        return this.vehicleRepository.findAll();
     }
 
     public Vehicle findByIdOrThrowException(String id) {
@@ -63,5 +70,12 @@ public class VehicleService {
 
     public VehicleDto convertToVehicleDto(Vehicle vehicle) {
         return this.modelMapper.map(vehicle, VehicleDto.class);
+    }
+
+    public List<VehicleDto> convertToVehicleDto(List<Vehicle> vehicles) {
+        return vehicles
+                .stream()
+                .map((v) -> this.modelMapper.map(v, VehicleDto.class))
+                .collect(Collectors.toList());
     }
 }
