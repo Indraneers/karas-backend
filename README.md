@@ -34,7 +34,7 @@ docker compose -f docker-compose.dev.yaml up -d --build
 ```
 
 ## Postman Collection
-Contact the owner of this repository to be added to the Postman's collection of routes for testing purposes.
+Contact the owner of this repository to gain access to the Postman's collection of routes for testing purposes.
 
 ## Deployment
 TBA
