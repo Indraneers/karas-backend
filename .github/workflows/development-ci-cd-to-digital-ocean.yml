@@ -18,8 +18,8 @@ jobs:
               echo "Clone repo"
               git clone git@github.com:Indraneers/karas-backend.git
               cd ./karas-backend
-              git pull
               git checkout development
+              git pull
 
               echo "Make ENV file"
               touch .env
