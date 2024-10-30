@@ -8,6 +8,7 @@ public class UnitDto {
     private int quantity;
     private String productId;
     private int price;
+    private String sku;
 
     public UnitDto() {}
 
@@ -17,6 +18,7 @@ public class UnitDto {
         this.quantity = unit.getQuantity();
         this.productId = unit.getProduct().getId();
         this.price = unit.getPrice();
+        this.sku = unit.getSku();
     }
 
     public String getId() {
@@ -57,5 +59,13 @@ public class UnitDto {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 }

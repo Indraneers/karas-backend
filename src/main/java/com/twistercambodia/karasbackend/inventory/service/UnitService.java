@@ -41,6 +41,8 @@ public class UnitService {
         unit.setName(unitDto.getName());
         unit.setQuantity(unitDto.getQuantity());
         unit.setPrice(unitDto.getPrice());
+        unit.setSku(unitDto.getSku());
+
         return this.unitRepository.save(unit);
     }
 

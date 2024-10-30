@@ -24,6 +24,9 @@ public class Unit {
     @Column
     private int price;
 
+    @Column
+    private String sku;
+
     public String getId() {
         return id;
     }
@@ -64,7 +67,13 @@ public class Unit {
         this.price = price;
     }
 
-    // define toString() method
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
 
     @Override
     public String toString() {
@@ -73,6 +82,7 @@ public class Unit {
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
+                ", sku='" + sku + '\'' +
                 '}';
     }
 }
