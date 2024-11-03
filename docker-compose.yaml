@@ -7,11 +7,14 @@ services:
       - '5431:5432'
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - nginx_network
   backend:
     container_name: karas-backend-spring-boot
     build:
       context: .
       dockerfile: Dockerfile
+    user: 1000:1000
     env_file: '.env'
     image: karas-backend-spring-boot:latest
     depends_on:
@@ -19,3 +22,8 @@ services:
     working_dir: /app
     ports:
       - 8080:8080
+    networks:
+      - nginx_network
+networks:
+  nginx_network:
+    external: true

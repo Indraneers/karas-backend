@@ -26,7 +26,5 @@ jobs:
               echo "${{secrets.PROD_ENV_FILE}}" > .env
               
               echo "Deploy image"
-              docker compose down
-              docker compose build --no-cache
-              docker compose up -d
+              docker compose up -d --force-recreate --no-deps --build backend
           
