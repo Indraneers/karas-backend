@@ -6,7 +6,7 @@ services:
     ports:
       - '5431:5432'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data:z
     networks:
       - nginx_network
   backend:
