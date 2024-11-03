@@ -2,8 +2,8 @@ package com.twistercambodia.karasbackend.customer.service;
 
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
-import com.twistercambodia.karasbackend.customer.exception.CustomerNotFoundException;
 import com.twistercambodia.karasbackend.customer.repository.CustomerRepository;
+import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class CustomerService {
     public Customer findByIdOrThrowError(String id) throws RuntimeException {
         return this.customerRepository
                 .findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer Not Found with ID=" + id));
+                .orElseThrow(() -> new NotFoundException("Customer Not Found with ID=" + id));
     }
 
     public Customer create(CustomerDto customerDto) {

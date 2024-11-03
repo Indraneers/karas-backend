@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend.autoService.service;
 
 import com.twistercambodia.karasbackend.autoService.dto.AutoServiceDto;
 import com.twistercambodia.karasbackend.autoService.entity.AutoService;
+import com.twistercambodia.karasbackend.autoService.exception.AutoServiceNotFoundException;
 import com.twistercambodia.karasbackend.autoService.repository.AutoServiceRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,28 @@ public class AutoServiceService {
         this.modelMapper = modelMapper;
     }
 
+    public AutoService findByIdOrThrowError(String id) {
+        return this.autoServiceRepository
+                .findById(id)
+                .orElseThrow(() -> new AutoServiceNotFoundException("AutoService not found with ID=" + id));
+    }
+
     public List<AutoService> findAll() {
         return this.autoServiceRepository.findAll();
     }
 
     public AutoService create(AutoServiceDto autoServiceDto) {
         AutoService autoService = this.convertToAutoService(autoServiceDto);
+        return this.autoServiceRepository.save(autoService);
+    }
+
+    public AutoService update(String id, AutoServiceDto autoServiceDto) {
+        AutoService autoService = this.findByIdOrThrowError(id);
+
+        autoService.setName(autoServiceDto.getName());
+        autoService.setActive(autoServiceDto.isActive());
+        autoService.setOriginalPrice(autoServiceDto.getOriginalPrice());
+
         return this.autoServiceRepository.save(autoService);
     }
 

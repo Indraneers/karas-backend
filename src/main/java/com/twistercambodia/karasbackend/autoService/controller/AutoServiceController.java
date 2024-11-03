@@ -30,4 +30,13 @@ public class AutoServiceController {
         AutoService autoService = this.autoServiceService.create(autoServiceDto);
         return this.autoServiceService.convertToAutoServiceDto(autoService);
     }
+
+    @PutMapping(":id")
+    public AutoServiceDto updateAutoService(
+            @RequestBody AutoServiceDto autoServiceDto,
+            @PathVariable("id") String id
+    ) {
+        AutoService autoService = this.autoServiceService.update(id, autoServiceDto);
+        return this.autoServiceService.convertToAutoServiceDto(autoService);
+    }
 }

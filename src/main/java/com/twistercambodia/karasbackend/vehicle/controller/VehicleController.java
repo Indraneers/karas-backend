@@ -1,15 +1,13 @@
 package com.twistercambodia.karasbackend.vehicle.controller;
 
-import com.twistercambodia.karasbackend.exception.dto.ErrorResponse;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
-import com.twistercambodia.karasbackend.vehicle.exception.VehicleNotFoundException;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("vehicles")
@@ -19,6 +17,13 @@ public class VehicleController {
 
     public VehicleController(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
+    }
+
+    @GetMapping
+    public List<VehicleDto> getAllVehicles() {
+        return this.vehicleService.convertToVehicleDto(
+          this.vehicleService.findAll()
+        );
     }
 
     @PostMapping
@@ -44,25 +49,5 @@ public class VehicleController {
     ) {
         Vehicle vehicle = this.vehicleService.delete(id);
         return this.vehicleService.convertToVehicleDto(vehicle);
-    }
-
-    @ExceptionHandler(value = VehicleNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleVehicleNotFound(VehicleNotFoundException exception) {
-        this.logger.error("Throwing VehicleNotFoundException with message={}", exception.getMessage());
-        return new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Vehicle not found"
-        );
-    }
-
-    @ExceptionHandler(value = DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleDuplicateVehicle(DataIntegrityViolationException exception) {
-        this.logger.error("Throwing DataIntegrityViolationException with message={}", exception.getMessage());
-        return new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Vehicle with the same attributes already exist"
-        );
     }
 }

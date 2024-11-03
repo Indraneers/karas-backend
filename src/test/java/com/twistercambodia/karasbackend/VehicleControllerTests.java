@@ -142,7 +142,7 @@ public class VehicleControllerTests {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Vehicle with the same attributes already exist")
+                        .value("Invalid Data")
                 );
     }
 

@@ -14,13 +14,8 @@ public class User {
     @Column(nullable = false ,unique = true)
     private String username;
 
-    @ManyToMany
-    @JoinTable(
-            name = "User_Role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @Column(nullable = false)
+    private UserRole role;
 
     protected User() {}
 
@@ -40,19 +35,20 @@ public class User {
         this.username = username;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override
     public String toString() {
-        return String.format(
-                "User[id='%s', username='$s']",
-                id, username
-        );
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

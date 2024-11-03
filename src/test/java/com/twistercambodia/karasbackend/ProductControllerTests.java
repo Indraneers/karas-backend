@@ -80,6 +80,20 @@ public class ProductControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((productDto.getName()))
                 );
+
+        this.mockMvc.perform(
+                get("/categories/" + categoryDto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.productCount")
+                                .value(1)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.products[0].name")
+                                .value(productDto.getName())
+                );
     }
 
     @Test
@@ -104,7 +118,7 @@ public class ProductControllerTests {
         )
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Product with the same attributes already exist")
+                        .value("Invalid Data")
                 );
     }
 
@@ -174,6 +188,20 @@ public class ProductControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((productDto.getName()))
+                );
+
+        this.mockMvc.perform(
+                        get("/categories/" + categoryDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.productCount")
+                                .value(0)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.products")
+                                .isEmpty()
                 );
     }
 }

@@ -1,10 +1,11 @@
 package com.twistercambodia.karasbackend.auth.controller;
 
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.auth.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @RequestMapping("users")
 public class UserController {
     private UserService userService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public UserController(
             UserService userService
@@ -20,7 +22,34 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.findAll();
+    public List<UserDto> getUsers() {
+        return this.userService.convertToUserDto(
+                this.userService.findAll()
+        );
     }
+
+    @PostMapping
+    public UserDto createUser(@RequestBody UserDto userDto) {
+        User user = this.userService.create(userDto);
+        this.logger.info("Creating User={}", user);
+        return this.userService.convertToUserDto(user);
+    }
+
+    @PutMapping("{id}")
+    public UserDto updateUser(
+            @PathVariable String id,
+            @RequestBody UserDto userDto
+    ) throws Exception {
+        User user = this.userService.update(id, userDto);
+        this.logger.info("Updating User={}", user);
+        return this.userService.convertToUserDto(user);
+    }
+
+    @DeleteMapping("{id}")
+    public UserDto deleteUser(@PathVariable String id) throws Exception {
+        User user = this.userService.delete(id);
+        this.logger.info("Deleting User={}", user);
+        return this.userService.convertToUserDto(user);
+    }
+
 }
