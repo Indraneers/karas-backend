@@ -50,7 +50,7 @@ jobs:
             cd karas-backend
 
             touch .env
-            echo ${{ secrets.PROD_ENV_FILE }} >> .env
+            echo "${{ secrets.PROD_ENV_FILE }}" > .env
 
             echo "${{ secrets.PAT }}" | docker login ghcr.io --username "${{ github.repository_owner }}" --password-stdin
             docker compose pull
