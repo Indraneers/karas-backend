@@ -12,13 +12,13 @@ services:
     networks:
       - nginx_network
   backend:
+    image: "ghcr.io/chheangg/karas-backend:latest"
     container_name: karas-backend-spring-boot
     build:
       context: .
       dockerfile: Dockerfile
     user: 1000:1000
     env_file: '.env'
-    image: karas-backend-spring-boot:latest
     depends_on:
       - postgres
     working_dir: /app
