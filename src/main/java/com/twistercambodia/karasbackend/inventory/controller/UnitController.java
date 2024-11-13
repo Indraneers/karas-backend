@@ -26,6 +26,13 @@ public class UnitController {
         );
     }
 
+    @GetMapping("{id}")
+    public UnitDto getUnitById(@PathVariable("id") String id) throws RuntimeException {
+        return this.unitService.convertToUnitDto(
+                this.unitService.findByIdOrThrowError(id)
+        );
+    }
+
     @PostMapping
     public UnitDto createUnit(
             @RequestBody UnitDto unitDto
