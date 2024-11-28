@@ -20,9 +20,12 @@ public class UnitController {
     }
 
     @GetMapping
-    public List<UnitDto> getAllUnits() {
+    public List<UnitDto> getAllUnits(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "productId", required = false) String productId
+    ) {
         return this.unitService.convertToUnitDto(
-                this.unitService.findAll()
+                this.unitService.findAll(q, productId)
         );
     }
 

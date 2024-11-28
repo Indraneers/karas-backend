@@ -20,8 +20,8 @@ public class UnitService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Unit> findAll() {
-        return this.unitRepository.findAll();
+    public List<Unit> findAll(String query, String productId) {
+        return this.unitRepository.findAll(query, productId);
     }
 
     public Unit findByIdOrThrowError(String id) throws RuntimeException {
