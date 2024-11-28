@@ -21,10 +21,7 @@ public class CategoryService {
     }
 
     public List<Category> findAll(String query) {
-        if (query == null || query.isEmpty()) {
-            return this.categoryRepository.findAll();
-        }
-        return this.categoryRepository.findAllContaining(query);
+        return this.categoryRepository.findAll(query);
     }
 
     public Category findByIdOrThrowError(String id) throws RuntimeException {

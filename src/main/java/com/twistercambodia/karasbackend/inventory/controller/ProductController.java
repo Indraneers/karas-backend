@@ -20,9 +20,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDto> getAllProducts(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "categoryId", required = false) String categoryId
+    ) {
         return this.productService.convertToProductDto(
-                this.productService.findAll()
+                this.productService.findAll(q, categoryId)
         );
     }
 

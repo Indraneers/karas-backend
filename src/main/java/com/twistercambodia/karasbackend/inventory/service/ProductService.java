@@ -20,8 +20,8 @@ public class ProductService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Product> findAll() {
-        return this.productRepository.findAll();
+    public List<Product> findAll(String query, String categoryId) {
+        return this.productRepository.findAll(query, categoryId);
     }
 
     public Product findByIdOrThrowError(String id) throws RuntimeException {
