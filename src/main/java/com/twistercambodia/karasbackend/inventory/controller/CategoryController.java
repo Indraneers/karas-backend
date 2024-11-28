@@ -5,6 +5,7 @@ import com.twistercambodia.karasbackend.inventory.entity.Category;
 import com.twistercambodia.karasbackend.inventory.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +21,11 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryDto> getAllCategory() {
+    public List<CategoryDto> getAllCategory(
+            @RequestParam(value = "q", required = false) String q
+    ) {
         return this.categoryService.convertToCategoryDto(
-                this.categoryService.findAll()
+                this.categoryService.findAll(q)
         );
     }
 

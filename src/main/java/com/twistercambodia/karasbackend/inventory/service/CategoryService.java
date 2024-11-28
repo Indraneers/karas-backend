@@ -20,8 +20,11 @@ public class CategoryService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Category> findAll() {
-        return this.categoryRepository.findAll();
+    public List<Category> findAll(String query) {
+        if (query == null || query.isEmpty()) {
+            return this.categoryRepository.findAll();
+        }
+        return this.categoryRepository.findAllContaining(query);
     }
 
     public Category findByIdOrThrowError(String id) throws RuntimeException {
