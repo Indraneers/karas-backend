@@ -16,6 +16,7 @@ public interface UnitRepository extends CrudRepository<Unit, String> {
                 (?1 is null or lower(cast(u.sku as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
                 AND
                 (?2 is null or u.product.id = ?2)
+            order by u.name asc
             """
     )
     List<Unit> findAll(String q, String productId);
