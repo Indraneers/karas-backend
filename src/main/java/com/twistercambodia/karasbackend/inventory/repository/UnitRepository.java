@@ -11,9 +11,11 @@ public interface UnitRepository extends CrudRepository<Unit, String> {
             """
             select u from Unit u
             where
-                (?1 is null or lower(cast(u.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
-                AND
-                (?1 is null or lower(cast(u.sku as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+                (
+                    (?1 is null or lower(cast(u.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+                    OR
+                    (?1 is null or lower(cast(u.sku as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+                )
                 AND
                 (?2 is null or u.product.id = ?2)
             order by u.name asc
