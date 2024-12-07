@@ -39,7 +39,7 @@ public class VehicleService {
 
     public Vehicle create(VehicleDto vehicleDto) {
         Vehicle vehicle = convertToVehicle(vehicleDto);
-        Customer customer = this.customerService.findByIdOrThrowError(vehicleDto.getCustomerId());
+        Customer customer = this.customerService.findByIdOrThrowError(vehicleDto.getCustomer().getId());
         vehicle.setCustomer(customer);
         return this.vehicleRepository.save(vehicle);
     }

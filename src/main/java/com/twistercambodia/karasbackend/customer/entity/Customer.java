@@ -21,7 +21,7 @@ public class Customer {
     private String note;
 
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "customer"
     )

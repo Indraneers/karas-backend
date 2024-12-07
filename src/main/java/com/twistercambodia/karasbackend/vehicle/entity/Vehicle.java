@@ -4,6 +4,7 @@ import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="customer_id", nullable=false)
     private Customer customer;
 
@@ -23,7 +24,7 @@ public class Vehicle {
     @Column(unique = true)
     private String engineNo;
 
-    @Column(unique = true)
+    @Column()
     private int mileage;
 
     @Column
