@@ -20,9 +20,11 @@ public class VehicleController {
     }
 
     @GetMapping
-    public List<VehicleDto> getAllVehicles() {
+    public List<VehicleDto> getAllVehicles(
+            @RequestParam(value = "q", required = false) String q
+    ) {
         return this.vehicleService.convertToVehicleDto(
-          this.vehicleService.findAll()
+          this.vehicleService.findAll(q)
         );
     }
 

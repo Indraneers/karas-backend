@@ -27,8 +27,8 @@ public class VehicleService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Vehicle> findAll() {
-        return this.vehicleRepository.findAll();
+    public List<Vehicle> findAll(String query) {
+        return this.vehicleRepository.findAll(query);
     }
 
     public Vehicle findByIdOrThrowException(String id) {
