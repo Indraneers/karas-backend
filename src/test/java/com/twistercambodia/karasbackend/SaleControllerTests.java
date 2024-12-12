@@ -212,7 +212,7 @@ public class SaleControllerTests {
         // Create Vehicle
         vehicleDto = new VehicleDto();
 
-        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setCustomer(customerDto);
         vehicleDto.setEngineNo("Engine No 1");
         vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
         vehicleDto.setMileage(65000);

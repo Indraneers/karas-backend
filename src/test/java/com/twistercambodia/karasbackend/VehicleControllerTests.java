@@ -69,7 +69,7 @@ public class VehicleControllerTests {
     void createVehicle_shouldReturnNewVehicle_status200() throws Exception {
         VehicleDto vehicleDto = new VehicleDto();
 
-        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setCustomer(customerDto);
         vehicleDto.setEngineNo("Engine No 1");
         vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
         vehicleDto.setMileage(65000);
@@ -86,8 +86,8 @@ public class VehicleControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.customerId")
-                                .value((vehicleDto.getCustomerId()))
+                        MockMvcResultMatchers.jsonPath("$.customer.name")
+                                .value((vehicleDto.getCustomer().getName()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.engineNo")
@@ -119,7 +119,7 @@ public class VehicleControllerTests {
     void createVehicle_DuplicateVehicleException_status400() throws Exception {
         VehicleDto vehicleDto = new VehicleDto();
 
-        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setCustomer(customerDto);
         vehicleDto.setEngineNo("Engine No 1");
         vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
         vehicleDto.setMileage(65000);
@@ -150,7 +150,7 @@ public class VehicleControllerTests {
     void updateVehicle_ShouldUpdateVehicle_status200() throws Exception {
         VehicleDto vehicleDto = new VehicleDto();
 
-        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setCustomer(customerDto);
         vehicleDto.setEngineNo("Engine No 1");
         vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
         vehicleDto.setMileage(65000);
@@ -169,7 +169,7 @@ public class VehicleControllerTests {
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         vehicleDto.setId(id);
-        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setCustomer(customerDto);
         vehicleDto.setEngineNo("Engine No 2");
         vehicleDto.setMakeAndModel("Toyota Camry 2022 Hybrid");
         vehicleDto.setMileage(75000);
@@ -186,8 +186,8 @@ public class VehicleControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.customerId")
-                                .value((vehicleDto.getCustomerId()))
+                        MockMvcResultMatchers.jsonPath("$.customer.name")
+                                .value((vehicleDto.getCustomer().getName()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.engineNo")
@@ -219,7 +219,7 @@ public class VehicleControllerTests {
     void deleteVehicle_ShouldDeleteVehicle_status200() throws Exception {
         VehicleDto vehicleDto = new VehicleDto();
 
-        vehicleDto.setCustomerId(customerDto.getId());
+        vehicleDto.setCustomer(customerDto);
         vehicleDto.setEngineNo("Engine No 1");
         vehicleDto.setMakeAndModel("Toyota Camry 2024 Hybrid");
         vehicleDto.setMileage(65000);
@@ -242,8 +242,8 @@ public class VehicleControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.customerId")
-                                .value((vehicleDto.getCustomerId()))
+                        MockMvcResultMatchers.jsonPath("$.customer.name")
+                                .value((vehicleDto.getCustomer().getName()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.engineNo")

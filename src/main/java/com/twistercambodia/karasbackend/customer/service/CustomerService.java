@@ -40,6 +40,8 @@ public class CustomerService {
 
         customer.setName(customerDto.getName());
         customer.setNote(customerDto.getNote());
+        customer.setAddress(customerDto.getAddress());
+        customer.setContact(customerDto.getContact());
 
         return this.customerRepository.save(customer);
     }

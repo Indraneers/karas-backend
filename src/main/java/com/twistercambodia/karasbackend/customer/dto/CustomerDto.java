@@ -12,6 +12,9 @@ public class CustomerDto {
     private String id;
     private String name;
     private String note;
+    private String address;
+    private String contact;
+
 //    private Set<VehicleDto> vehicles;
 
     public CustomerDto() {}
@@ -21,6 +24,8 @@ public class CustomerDto {
         this.name = customer.getId();
         this.name = customer.getName();
         this.note = customer.getNote();
+        this.address = customer.getAddress();
+        this.contact = customer.getContact();
 //        this.vehicles = customer
 //                .getVehicles()
 //                .stream()
@@ -56,7 +61,24 @@ public class CustomerDto {
     public void setNote(String note) {
         this.note = note;
     }
-//
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    //
 //    public Set<VehicleDto> getVehicles() {
 //        return vehicles;
 //    }
