@@ -2,6 +2,8 @@ package com.twistercambodia.karasbackend.sale.service;
 
 import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.auth.service.UserService;
+import com.twistercambodia.karasbackend.autoService.entity.AutoService;
+import com.twistercambodia.karasbackend.autoService.service.AutoServiceService;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
@@ -34,6 +36,7 @@ public class SaleService {
     private final VehicleService vehicleService;
     private final ModelMapper modelMapper;
     private final UnitService unitService;
+    private final AutoServiceService autoServiceService;
 
     public SaleService(
             SaleRepository saleRepository,
@@ -41,7 +44,8 @@ public class SaleService {
             UserService userService,
             CustomerService customerService,
             VehicleService vehicleService,
-            UnitService unitService
+            UnitService unitService,
+            AutoServiceService autoServiceService
     ) {
         this.saleRepository = saleRepository;
         this.modelMapper = modelMapper;
@@ -49,6 +53,7 @@ public class SaleService {
         this.customerService = customerService;
         this.vehicleService = vehicleService;
         this.unitService = unitService;
+        this.autoServiceService = autoServiceService;
     }
 
     public List<Sale> findAll() {
@@ -77,10 +82,15 @@ public class SaleService {
         List<Item> items = new ArrayList<>();
 
         for (ItemDto itemDto : saleDto.getItems()) {
-            Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
             Item item = this.modelMapper.map(itemDto, Item.class);
 
-            item.setUnit(unit);
+            if (itemDto.getUnitId() != null) {
+                Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
+                item.setUnit(unit);
+            } else if (itemDto.getServiceId() != null) {
+                AutoService service = this.autoServiceService.findByIdOrThrowError(itemDto.getServiceId());
+                item.setService(service);
+            }
 
             items.add(item);
         }
