@@ -1,28 +1,30 @@
 package com.twistercambodia.karasbackend.sale.dto;
 
-import com.twistercambodia.karasbackend.sale.entity.Item;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
+import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
+import org.modelmapper.ModelMapper;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SaleDto {
+public class SaleResponseDto {
     private String id;
     private String created;
     private String dueDate;
     private int discount;
     private List<ItemDto> items;
-    private String userId;
-    private String customerId;
-    private String vehicleId;
+    private UserDto user;
+    private CustomerDto customer;
+    private VehicleDto vehicle;
     private SaleStatus status;
 
-    public SaleDto() {}
+    public SaleResponseDto() {}
 
-    public SaleDto(Sale sale) {
+    public SaleResponseDto(Sale sale) {
+        ModelMapper mapper = new ModelMapper();
         this.id = sale.getId();
         this.created = sale.getCreated().toString();
         this.dueDate = sale.getDueDate().toString();
@@ -33,9 +35,9 @@ public class SaleDto {
                 .map(ItemDto::new)
                 .collect(Collectors.toList());
 
-        this.userId = sale.getUser().getId();
-        this.customerId = sale.getCustomer().getId();
-        this.vehicleId = sale.getVehicle().getId();
+        this.user = mapper.map(sale.getUser(), UserDto.class);
+        this.customer = mapper.map(sale.getCustomer(), CustomerDto.class);
+        this.vehicle = mapper.map(sale.getVehicle(), VehicleDto.class);
         this.status = sale.getStatus();
     }
 
@@ -79,28 +81,28 @@ public class SaleDto {
         this.items = items;
     }
 
-    public String getUserId() {
-        return userId;
+    public UserDto getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public CustomerDto getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomer(CustomerDto customer) {
+        this.customer = customer;
     }
 
-    public String getVehicleId() {
-        return vehicleId;
+    public VehicleDto getVehicle() {
+        return vehicle;
     }
 
-    public void setVehicleId(String vehicleId) {
-        this.vehicleId = vehicleId;
+    public void setVehicle(VehicleDto vehicle) {
+        this.vehicle = vehicle;
     }
 
     public SaleStatus getStatus() {

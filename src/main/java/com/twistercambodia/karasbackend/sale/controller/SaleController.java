@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.sale.controller;
 
-import com.twistercambodia.karasbackend.sale.dto.SaleDto;
+import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
+import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.service.SaleService;
 import org.slf4j.Logger;
@@ -21,46 +22,46 @@ public class SaleController {
     }
 
     @GetMapping
-    public List<SaleDto> getAllSales() {
-        return this.saleService.convertToSaleDto(
+    public List<SaleResponseDto> getAllSales() {
+        return this.saleService.convertToSaleResponseDto(
                 this.saleService.findAll()
         );
     }
 
     @GetMapping("{id}")
-    public SaleDto getAllSales(
+    public SaleResponseDto getSaleById(
             @PathVariable("id") String id
     ) throws Exception {
-        return this.saleService.convertToSaleDto(
+        return this.saleService.convertToSaleResponseDto(
                 this.saleService.findByIdOrThrowException(id)
         );
     }
 
     @PostMapping
-    public SaleDto createSale(
-            @RequestBody SaleDto saleDto
+    public SaleResponseDto createSale(
+            @RequestBody SaleRequestDto saleRequestDto
     ) throws Exception {
-        Sale sale = this.saleService.create(saleDto);
+        Sale sale = this.saleService.create(saleRequestDto);
         this.logger.info("Creating Sale={}", sale);
-        return this.saleService.convertToSaleDto(sale);
+        return this.saleService.convertToSaleResponseDto(sale);
     }
 
     @PutMapping("{id}")
-    public SaleDto updateSale(
+    public SaleResponseDto updateSale(
             @PathVariable("id") String id,
-            @RequestBody SaleDto saleDto
+            @RequestBody SaleRequestDto saleRequestDto
     ) throws Exception {
-        Sale sale = this.saleService.update(id, saleDto);
+        Sale sale = this.saleService.update(id, saleRequestDto);
         this.logger.info("Updating Sale={}", sale);
-        return this.saleService.convertToSaleDto(sale);
+        return this.saleService.convertToSaleResponseDto(sale);
     }
 
     @DeleteMapping("{id}")
-    public SaleDto updateSale(
+    public SaleResponseDto updateSale(
             @PathVariable("id") String id
     ) throws Exception {
         Sale sale = this.saleService.delete(id);
         this.logger.info("Deleting Sale={}", sale);
-        return this.saleService.convertToSaleDto(sale);
+        return this.saleService.convertToSaleResponseDto(sale);
     }
 }
