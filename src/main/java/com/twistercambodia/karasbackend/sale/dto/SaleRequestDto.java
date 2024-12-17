@@ -11,7 +11,7 @@ public class SaleRequestDto {
     private String created;
     private String dueDate;
     private int discount;
-    private List<ItemDto> items;
+    private List<ItemRequestDto> items;
     private String userId;
     private String customerId;
     private String vehicleId;
@@ -27,7 +27,7 @@ public class SaleRequestDto {
 
         this.items = sale.getItems()
                 .stream()
-                .map(ItemDto::new)
+                .map(ItemRequestDto::new)
                 .collect(Collectors.toList());
 
         this.userId = sale.getUser().getId();
@@ -68,11 +68,11 @@ public class SaleRequestDto {
         this.discount = discount;
     }
 
-    public List<ItemDto> getItems() {
+    public List<ItemRequestDto> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemDto> items) {
+    public void setItems(List<ItemRequestDto> items) {
         this.items = items;
     }
 

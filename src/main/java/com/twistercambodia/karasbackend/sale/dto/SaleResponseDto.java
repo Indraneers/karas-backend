@@ -15,7 +15,7 @@ public class SaleResponseDto {
     private String created;
     private String dueDate;
     private int discount;
-    private List<ItemDto> items;
+    private List<ItemResponseDto> items;
     private UserDto user;
     private CustomerDto customer;
     private VehicleDto vehicle;
@@ -32,7 +32,7 @@ public class SaleResponseDto {
 
         this.items = sale.getItems()
                 .stream()
-                .map(ItemDto::new)
+                .map(ItemResponseDto::new)
                 .collect(Collectors.toList());
 
         this.user = mapper.map(sale.getUser(), UserDto.class);
@@ -73,11 +73,11 @@ public class SaleResponseDto {
         this.discount = discount;
     }
 
-    public List<ItemDto> getItems() {
+    public List<ItemResponseDto> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemDto> items) {
+    public void setItems(List<ItemResponseDto> items) {
         this.items = items;
     }
 

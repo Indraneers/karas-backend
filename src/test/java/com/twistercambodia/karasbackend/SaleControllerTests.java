@@ -9,7 +9,7 @@ import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
-import com.twistercambodia.karasbackend.sale.dto.ItemDto;
+import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
@@ -244,20 +244,20 @@ public class SaleControllerTests {
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
 
-        List<ItemDto> itemDtos = new ArrayList<>();
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
         // Create item
         for (int i = 0; i < unitDtos.size(); ++i) {
             // Create Items
-            ItemDto itemDto = new ItemDto();
+            ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemDto.setUnitId(unitDtos.get(i).getId());
-            itemDto.setPrice(unitDtos.get(i).getPrice());
-            itemDto.setQuantity(2);
-            itemDtos.add(itemDto);
+            itemRequestDto.setUnitId(unitDtos.get(i).getId());
+            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setQuantity(2);
+            itemRequestDtos.add(itemRequestDto);
         }
 
-        saleRequestDto.setItems(itemDtos);
+        saleRequestDto.setItems(itemRequestDtos);
 
         String json = objectMapper.writeValueAsString(saleRequestDto);
 
@@ -278,9 +278,9 @@ public class SaleControllerTests {
                         .value(saleRequestDto.getDueDate()),
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleRequestDto.getDiscount()),
-                MockMvcResultMatchers.jsonPath("$.items[0].unitId")
+                MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
                         .value(saleRequestDto.getItems().get(0).getUnitId()),
-                MockMvcResultMatchers.jsonPath("$.items[1].unitId")
+                MockMvcResultMatchers.jsonPath("$.items[1].unit.id")
                         .value(saleRequestDto.getItems().get(1).getUnitId()),
                 MockMvcResultMatchers.jsonPath("$.items", hasSize(4)),
                 MockMvcResultMatchers.jsonPath("$.status")
@@ -300,20 +300,20 @@ public class SaleControllerTests {
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
 
-        List<ItemDto> itemDtos = new ArrayList<>();
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
         // Create item
         for (int i = 0; i < unitDtos.size(); ++i) {
             // Create Items
-            ItemDto itemDto = new ItemDto();
+            ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemDto.setUnitId(unitDtos.get(i).getId());
-            itemDto.setPrice(unitDtos.get(i).getPrice());
-            itemDto.setQuantity(2);
-            itemDtos.add(itemDto);
+            itemRequestDto.setUnitId(unitDtos.get(i).getId());
+            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setQuantity(2);
+            itemRequestDtos.add(itemRequestDto);
         }
 
-        saleRequestDto.setItems(itemDtos);
+        saleRequestDto.setItems(itemRequestDtos);
 
         String json = objectMapper.writeValueAsString(saleRequestDto);
 
@@ -335,19 +335,19 @@ public class SaleControllerTests {
                 mvcResult.getResponse().getContentAsString(), "$.id"
         );
 
-        itemDtos.clear();
+        itemRequestDtos.clear();
 
         // Update new items
         for (int i = 0; i < unitDtos.size(); ++i) {
-            ItemDto itemDto = new ItemDto();
+            ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemDto.setUnitId(unitDtos.get(i).getId());
-            itemDto.setPrice(unitDtos.get(i).getPrice());
-            itemDto.setQuantity(3);
-            itemDtos.add(itemDto);
+            itemRequestDto.setUnitId(unitDtos.get(i).getId());
+            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setQuantity(3);
+            itemRequestDtos.add(itemRequestDto);
         }
 
-        saleRequestDto.setItems(itemDtos);
+        saleRequestDto.setItems(itemRequestDtos);
 
         json = objectMapper.writeValueAsString(saleRequestDto);
 
@@ -368,13 +368,13 @@ public class SaleControllerTests {
                         .value(saleRequestDto.getDueDate()),
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleRequestDto.getDiscount()),
-                MockMvcResultMatchers.jsonPath("$.items[0].unitId")
+                MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
                         .value(saleRequestDto.getItems().get(0).getUnitId()),
-                MockMvcResultMatchers.jsonPath("$.items[0].unitId")
+                MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
                         .value(not(itemIdOne)),
-                MockMvcResultMatchers.jsonPath("$.items[1].unitId")
+                MockMvcResultMatchers.jsonPath("$.items[1].unit.id")
                         .value(saleRequestDto.getItems().get(1).getUnitId()),
-                MockMvcResultMatchers.jsonPath("$.items[1].unitId")
+                MockMvcResultMatchers.jsonPath("$.items[1].unit.id")
                         .value(not(itemIdTwo)),
                 MockMvcResultMatchers.jsonPath("$.status")
                         .value(saleRequestDto.getStatus().toString())
@@ -393,20 +393,20 @@ public class SaleControllerTests {
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
 
-        List<ItemDto> itemDtos = new ArrayList<>();
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
         // Create item
         for (int i = 0; i < unitDtos.size(); ++i) {
             // Create Items
-            ItemDto itemDto = new ItemDto();
+            ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemDto.setUnitId(unitDtos.get(i).getId());
-            itemDto.setPrice(unitDtos.get(i).getPrice());
-            itemDto.setQuantity(2);
-            itemDtos.add(itemDto);
+            itemRequestDto.setUnitId(unitDtos.get(i).getId());
+            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setQuantity(2);
+            itemRequestDtos.add(itemRequestDto);
         }
 
-        saleRequestDto.setItems(itemDtos);
+        saleRequestDto.setItems(itemRequestDtos);
 
         String json = objectMapper.writeValueAsString(saleRequestDto);
 

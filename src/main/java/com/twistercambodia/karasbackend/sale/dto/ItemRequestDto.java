@@ -2,7 +2,7 @@ package com.twistercambodia.karasbackend.sale.dto;
 
 import com.twistercambodia.karasbackend.sale.entity.Item;
 
-public class ItemDto {
+public class ItemRequestDto {
     private String id;
     private int price;
     private int quantity;
@@ -10,9 +10,9 @@ public class ItemDto {
     private String unitId;
     private String serviceId;
 
-    public ItemDto() {}
+    public ItemRequestDto() {}
 
-    public ItemDto(Item item) {
+    public ItemRequestDto(Item item) {
         this.id = item.getId();
         this.price = item.getPrice();
         this.quantity = item.getQuantity();;

@@ -9,7 +9,7 @@ import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
-import com.twistercambodia.karasbackend.sale.dto.ItemDto;
+import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Item;
@@ -78,14 +78,14 @@ public class SaleService {
 
         List<Item> items = new ArrayList<>();
 
-        for (ItemDto itemDto : saleRequestDto.getItems()) {
-            Item item = this.modelMapper.map(itemDto, Item.class);
+        for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
+            Item item = this.modelMapper.map(itemRequestDto, Item.class);
 
-            if (itemDto.getUnitId() != null) {
-                Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
+            if (itemRequestDto.getUnitId() != null) {
+                Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
                 item.setUnit(unit);
-            } else if (itemDto.getServiceId() != null) {
-                AutoService service = this.autoServiceService.findByIdOrThrowError(itemDto.getServiceId());
+            } else if (itemRequestDto.getServiceId() != null) {
+                AutoService service = this.autoServiceService.findByIdOrThrowError(itemRequestDto.getServiceId());
                 item.setService(service);
             }
 
@@ -113,9 +113,9 @@ public class SaleService {
         sale.getItems().clear();
 
         List<Item> items = new ArrayList<>();
-        for (ItemDto itemDto : saleRequestDto.getItems()) {
-            Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
-            Item item = this.modelMapper.map(itemDto, Item.class);
+        for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
+            Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
+            Item item = this.modelMapper.map(itemRequestDto, Item.class);
 
             item.setUnit(unit);
             items.add(item);
