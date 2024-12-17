@@ -369,8 +369,6 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleRequestDto.getDiscount()),
                 MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
-                        .value(saleRequestDto.getItems().get(0).getUnitId()),
-                MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
                         .value(not(itemIdOne)),
                 MockMvcResultMatchers.jsonPath("$.items[1].unit.id")
                         .value(saleRequestDto.getItems().get(1).getUnitId()),

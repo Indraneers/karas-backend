@@ -107,4 +107,19 @@ public class SaleRequestDto {
     public void setStatus(SaleStatus status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "SaleRequestDto{" +
+                "id='" + id + '\'' +
+                ", created='" + created + '\'' +
+                ", dueDate='" + dueDate + '\'' +
+                ", discount=" + discount +
+                ", items=" + items +
+                ", userId='" + userId + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", vehicleId='" + vehicleId + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

@@ -113,11 +113,18 @@ public class SaleService {
         sale.getItems().clear();
 
         List<Item> items = new ArrayList<>();
+
         for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
-            Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
             Item item = this.modelMapper.map(itemRequestDto, Item.class);
 
-            item.setUnit(unit);
+            if (itemRequestDto.getUnitId() != null) {
+                Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
+                item.setUnit(unit);
+            } else if (itemRequestDto.getServiceId() != null) {
+                AutoService service = this.autoServiceService.findByIdOrThrowError(itemRequestDto.getServiceId());
+                item.setService(service);
+            }
+
             items.add(item);
         }
 
