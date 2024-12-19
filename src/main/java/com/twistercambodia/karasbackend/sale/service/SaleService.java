@@ -109,6 +109,7 @@ public class SaleService {
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
+        sale.setDiscount(saleRequestDto.getDiscount());
         sale.setStatus(saleRequestDto.getStatus());
         sale.getItems().clear();
 
