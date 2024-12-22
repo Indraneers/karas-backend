@@ -45,6 +45,13 @@ public class AutoServiceService {
         return this.autoServiceRepository.save(autoService);
     }
 
+    public AutoService delete(String id) {
+        AutoService autoService = this.findByIdOrThrowError(id);
+
+        this.autoServiceRepository.delete(autoService);
+        return autoService;
+    }
+
     public AutoService convertToAutoService(AutoServiceDto autoServiceDto) {
         return this.modelMapper.map(autoServiceDto, AutoService.class);
     }

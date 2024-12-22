@@ -24,7 +24,7 @@ public class Sale {
     @Column
     private int discount;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -1,7 +1,10 @@
 package com.twistercambodia.karasbackend.autoService.entity;
 
 import com.twistercambodia.karasbackend.autoService.dto.AutoServiceDto;
+import com.twistercambodia.karasbackend.sale.entity.Item;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class AutoService {
@@ -17,6 +20,9 @@ public class AutoService {
 
     @Column
     private int originalPrice;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items;
 
     public AutoService() {}
 
