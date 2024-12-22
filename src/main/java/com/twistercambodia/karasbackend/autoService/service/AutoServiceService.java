@@ -40,7 +40,7 @@ public class AutoServiceService {
 
         autoService.setName(autoServiceDto.getName());
         autoService.setActive(autoServiceDto.isActive());
-        autoService.setOriginalPrice(autoServiceDto.getOriginalPrice());
+        autoService.setPrice(autoServiceDto.getPrice());
 
         return this.autoServiceRepository.save(autoService);
     }
