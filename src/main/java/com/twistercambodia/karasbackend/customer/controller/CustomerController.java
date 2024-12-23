@@ -26,6 +26,13 @@ public class CustomerController {
         );
     }
 
+    @GetMapping("{id}")
+    public CustomerDto getCustomer(@PathVariable("id") String id) {
+        return this.customerService.convertToCustomerDto(
+                this.customerService.findByIdOrThrowError((id))
+        );
+    }
+
     @PostMapping
     public CustomerDto createCustomer(
             @RequestBody CustomerDto customerDto

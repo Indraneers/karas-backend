@@ -28,6 +28,13 @@ public class VehicleController {
         );
     }
 
+    @GetMapping("{id}")
+    public VehicleDto getVehicleById(@PathVariable("id") String id) {
+        return this.vehicleService.convertToVehicleDto(
+                this.vehicleService.findByIdOrThrowException(id)
+        );
+    }
+
     @PostMapping
     public VehicleDto createVehicle(@RequestBody VehicleDto vehicleDto) {
         Vehicle vehicle = this.vehicleService.create(vehicleDto);
