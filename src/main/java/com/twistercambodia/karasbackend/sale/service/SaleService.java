@@ -89,6 +89,7 @@ public class SaleService {
                 item.setService(service);
             }
 
+            item.setSale(sale);
             items.add(item);
         }
 

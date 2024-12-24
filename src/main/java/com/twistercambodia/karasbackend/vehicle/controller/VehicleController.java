@@ -21,8 +21,14 @@ public class VehicleController {
 
     @GetMapping
     public List<VehicleDto> getAllVehicles(
-            @RequestParam(value = "q", required = false) String q
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "customerId", required = false) String customerId
     ) {
+        if (customerId != null) {
+            return this.vehicleService.convertToVehicleDto(
+                    this.vehicleService.findByCustomerId(customerId)
+            );
+        }
         return this.vehicleService.convertToVehicleDto(
           this.vehicleService.findAll(q)
         );

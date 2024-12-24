@@ -37,6 +37,10 @@ public class VehicleService {
                 .orElseThrow(() -> new NotFoundException("Vehicle Not Found with ID=" + id));
     }
 
+    public List<Vehicle> findByCustomerId(String customerId) {
+        return this.vehicleRepository.findByCustomerId(customerId);
+    }
+
     public Vehicle create(VehicleDto vehicleDto) {
         Vehicle vehicle = convertToVehicle(vehicleDto);
         Customer customer = this.customerService.findByIdOrThrowError(vehicleDto.getCustomer().getId());

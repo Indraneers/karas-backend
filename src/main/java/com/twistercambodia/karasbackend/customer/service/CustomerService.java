@@ -20,8 +20,8 @@ public class CustomerService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Customer> findAll() {
-        return this.customerRepository.findAll();
+    public List<Customer> findAll(String query) {
+        return this.customerRepository.findAll(query);
     }
 
     public Customer findByIdOrThrowError(String id) throws RuntimeException {

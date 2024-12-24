@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.customer.controller;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,11 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers() {
+    public List<CustomerDto> getAllCustomers(
+            @RequestParam(value = "q", required = false) String q
+    ) {
         return this.customerService.convertToCustomerDto(
-                this.customerService.findAll()
+                this.customerService.findAll(q)
         );
     }
 
