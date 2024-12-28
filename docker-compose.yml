@@ -31,17 +31,14 @@ services:
       - nginx_network
   keycloak:
     container_name: karas-keycloak
-    image: quay.io/keycloak/keycloak:26.0.7
+    build:
+      context: .
+      dockerfile: Dockerfile.auth
+    image: "ghcr.io/chheangg/karas-backend/keycloak:latest"
     depends_on:
       - postgres
-    command:
-      - start-dev
-      - --verbose
     ports:
       - 3000:3000
-    volumes:
-      - ./keycloak/providers/:/opt/keycloak/providers/
-      - ./keycloak/conf/:/opt/keycloak/conf/
     env_file: '.env'
     environment:
       KC_HTTP_PORT: 3000
