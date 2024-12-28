@@ -18,20 +18,15 @@ services:
     container_name: karas-backend-spring-boot
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     env_file: '.env'
     image: "ghcr.io/chheangg/karas-backend/karas-backend:latest"
+    user: 1000:1000
     depends_on:
       - postgres
-    volumes:
-      - ./:/app
-      - ./.m2:/root/.m2
     working_dir: /app
-    command: sh run.sh
     ports:
       - 8080:8080
-      - 35729:35729
-      - 5005:5005
     networks:
       - nginx_network
   keycloak:
