@@ -38,6 +38,7 @@ public class UserService {
     public User update(String id, UserDto userDto) throws Exception {
         User user = this.findByIdOrThrowError(id);
 
+        user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
         user.setRole(userDto.getRole());
 

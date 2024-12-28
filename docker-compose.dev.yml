@@ -1,12 +1,17 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    image: karas-postgres-multiple-db
     restart: always
     env_file: '.env.developmental'
+    environment:
+      POSTGRES_INITDB_ARGS: "-c max_prepared_transactions=100"
     ports:
       - '5431:5432'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/docker-entrypoint-initdb.d
     networks:
       - nginx_network
   backend:
@@ -31,14 +36,17 @@ services:
       - nginx_network
   keycloak:
     container_name: karas-keycloak
-    image: quay.io/keycloak/keycloak:25.0.1
+    image: quay.io/keycloak/keycloak:26.0.7
+    depends_on:
+      - postgres
     command:
       - start-dev
-      - --import-realm
+      - --verbose
     ports:
       - 3000:3000
     volumes:
-      - ./keycloak/:/opt/keycloak/data/import/
+      - ./keycloak/providers/:/opt/keycloak/providers/
+      - ./keycloak/conf/:/opt/keycloak/conf/
     env_file: '.env.developmental'
     environment:
       KC_HTTP_PORT: 3000
