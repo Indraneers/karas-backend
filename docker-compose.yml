@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
-    image: karas-postgres-multiple-db
+    image: "ghcr.io/chheangg/karas-backend/postgres-multiple-db:latest"
     restart: always
     env_file: '.env'
     environment:
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     env_file: '.env'
-    image: karas-backend-spring-boot:latest
+    image: "ghcr.io/chheangg/karas-backend/karas-backend:latest"
     depends_on:
       - postgres
     volumes:
