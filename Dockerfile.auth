@@ -19,6 +19,8 @@ ENV KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN:-admin} \
     KC_DB_PASSWORD=${KC_DB_PASSWORD:-secret} \
     KC_DB_URL=${KC_DB_URL:-jdbc:postgresql://postgres:5432/keycloak} \
     KC_PORT=${KC_PORT:-3000} \
+    KC_HOSTNAME_BACKCHANNEL_DYNAMIC=${KC_HOSTNAME_BACKCHANNEL_DYNAMIC:-false} \
+    KC_KARAS_FRONTEND_URL=${KC_KARAS_FRONTEND_URL:-http://localhost:3000} \
     QUARKUS_DATASOURCE_USER_STORE_DB_KIND=${QUARKUS_DATASOURCE_USER_STORE_DB_KIND:-postgresql} \
     QUARKUS_DATASOURCE_USER_STORE_USERNAME=${QUARKUS_DATASOURCE_USER_STORE_USERNAME:-postgres} \
     QUARKUS_DATASOURCE_USER_STORE_PASSWORD=${QUARKUS_DATASOURCE_USER_STORE_PASSWORD:-secret} \
@@ -29,6 +31,7 @@ ENV KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN:-admin} \
 # Copy the JAR files from the local ./keycloak/providers directory to /opt/keycloak/providers/
 COPY --chown=keycloak keycloak/providers/*.jar /opt/keycloak/providers/
 COPY --chown=keycloak keycloak/conf/* /opt/keycloak/conf/
+COPY --chown=keycloak keycloak/import/* /opt/keycloak/data/import/
 
 RUN ls -la .
 RUN ls -la .
@@ -42,4 +45,4 @@ RUN /opt/keycloak/bin/kc.sh build \
 
 RUN /opt/keycloak/bin/kc.sh show-config
 
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev"]
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm"]
