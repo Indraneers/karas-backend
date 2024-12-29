@@ -395,84 +395,8 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister" : false,
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
-  "users" : [ {
-    "id" : "f:b39d49fb-cb6b-4309-9166-3f460ba0bdab:evan",
-    "username" : "evan",
-    "firstName" : "Evan",
-    "lastName" : "Ly",
-    "emailVerified" : false,
-    "attributes" : {
-      "EMAIL_VERIFIED" : [ "false" ],
-      "ENABLED" : [ "true" ],
-      "role" : [ "" ]
-    },
-    "origin" : "b39d49fb-cb6b-4309-9166-3f460ba0bdab",
-    "enabled" : true,
-    "totp" : false,
-    "federationLink" : "b39d49fb-cb6b-4309-9166-3f460ba0bdab",
-    "credentials" : [ ],
-    "disableableCredentialTypes" : [ "password" ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "offline_access", "uma_authorization" ],
-    "clientRoles" : {
-      "karas-frontend" : [ "ROLE_USER" ],
-      "account" : [ "view-profile", "manage-account" ]
-    },
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "f:b39d49fb-cb6b-4309-9166-3f460ba0bdab:test",
-    "username" : "test",
-    "firstName" : "Evan",
-    "lastName" : "Ly",
-    "emailVerified" : false,
-    "attributes" : {
-      "EMAIL_VERIFIED" : [ "false" ],
-      "ENABLED" : [ "true" ],
-      "role" : [ "" ]
-    },
-    "origin" : "b39d49fb-cb6b-4309-9166-3f460ba0bdab",
-    "enabled" : true,
-    "totp" : false,
-    "federationLink" : "b39d49fb-cb6b-4309-9166-3f460ba0bdab",
-    "credentials" : [ ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "offline_access", "uma_authorization" ],
-    "clientRoles" : {
-      "account" : [ "view-profile", "manage-account" ]
-    },
-    "notBefore" : 0,
-    "groups" : [ ]
-  } ],
-  "federatedUsers" : [ {
-    "id" : "f:b39d49fb-cb6b-4309-9166-3f460ba0bdab:test",
-    "attributes" : {
-      "EMAIL_VERIFIED" : [ "false" ],
-      "ENABLED" : [ "true" ],
-      "LAST_NAME" : [ "Ly" ],
-      "EMAIL" : [ "eangchheangly@gmail.com" ],
-      "FIRST_NAME" : [ "Evan" ]
-    },
-    "credentials" : [ ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "f:b39d49fb-cb6b-4309-9166-3f460ba0bdab:evan",
-    "attributes" : {
-      "EMAIL_VERIFIED" : [ "false" ],
-      "ENABLED" : [ "true" ],
-      "LAST_NAME" : [ "Ly" ],
-      "EMAIL" : [ "eangchheangly@gmail.com" ],
-      "FIRST_NAME" : [ "Evan" ]
-    },
-    "credentials" : [ ],
-    "clientRoles" : {
-      "karas-frontend" : [ "ROLE_USER" ]
-    },
-    "notBefore" : 0,
-    "groups" : [ ]
-  } ],
+  "users" : [ ],
+  "federatedUsers" : [],
   "scopeMappings" : [ {
     "clientScope" : "offline_access",
     "roles" : [ "offline_access" ]
