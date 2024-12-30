@@ -126,7 +126,8 @@ public class SaleService {
                 AutoService service = this.autoServiceService.findByIdOrThrowError(itemRequestDto.getServiceId());
                 item.setService(service);
             }
-
+            
+            item.setSale(sale);
             items.add(item);
         }
 
