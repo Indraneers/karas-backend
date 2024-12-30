@@ -58,7 +58,8 @@ public class SaleService {
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
-        return this.saleRepository.findById(id).orElseThrow(
+        System.out.println(id);
+        return this.saleRepository.findById(extractNumber(id)).orElseThrow(
                 () -> new NotFoundException("Sale not found with ID={}" + id)
         );
     }
@@ -100,7 +101,6 @@ public class SaleService {
 
     public Sale update(String id, SaleRequestDto saleRequestDto) throws Exception {
         Sale sale = this.findByIdOrThrowException(id);
-
         User user = this.userService.findByIdOrThrowError(saleRequestDto.getUserId());
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
@@ -126,7 +126,7 @@ public class SaleService {
                 AutoService service = this.autoServiceService.findByIdOrThrowError(itemRequestDto.getServiceId());
                 item.setService(service);
             }
-            
+
             item.setSale(sale);
             items.add(item);
         }
@@ -156,4 +156,13 @@ public class SaleService {
     public Sale convertToSale(SaleRequestDto saleRequestDto) {
         return this.modelMapper.map(saleRequestDto, Sale.class);
     }
+
+    public static Long extractNumber(String formattedId) {
+        if (formattedId == null || !formattedId.startsWith("TW-") || formattedId.length() != 11) {
+            throw new IllegalArgumentException("Invalid TW ID format: " + formattedId);
+        }
+        // Extract the numeric part (8 digits after "TW-")
+        return Long.parseLong(formattedId.substring(3));
+    }
+
 }

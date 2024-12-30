@@ -20,7 +20,7 @@ public class SaleRequestDto {
     public SaleRequestDto() {}
 
     public SaleRequestDto(Sale sale) {
-        this.id = sale.getId();
+        this.id = sale.getFormattedId();
         this.created = sale.getCreated().toString();
         this.dueDate = sale.getDueDate().toString();
         this.discount = sale.getDiscount();

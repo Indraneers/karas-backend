@@ -30,6 +30,12 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    public User findByUsername(String username) throws Exception {
+        return this.userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
     public User create(UserDto userDto) {
         User user = this.convertToUser(userDto);
         return this.userRepository.save(user);

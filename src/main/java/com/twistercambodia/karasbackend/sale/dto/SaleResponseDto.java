@@ -25,7 +25,7 @@ public class SaleResponseDto {
 
     public SaleResponseDto(Sale sale) {
         ModelMapper mapper = new ModelMapper();
-        this.id = sale.getId();
+        this.id = sale.getFormattedId();
         this.created = sale.getCreated().toString();
         this.dueDate = sale.getDueDate().toString();
         this.discount = sale.getDiscount();
