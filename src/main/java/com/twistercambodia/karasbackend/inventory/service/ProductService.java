@@ -2,7 +2,9 @@ package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.entity.Category;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
+import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableProduct;
 import com.twistercambodia.karasbackend.inventory.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,11 +15,13 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
-    public ProductService(ProductRepository productRepository, ModelMapper modelMapper) {
+    public ProductService(ProductRepository productRepository, CategoryService categoryService, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.categoryService  = categoryService;
     }
 
     public List<Product> findAll(String query, String categoryId) {
@@ -32,13 +36,35 @@ public class ProductService {
 
     public Product create(ProductDto productDto) {
         Product product = this.convertToProduct(productDto);
+
+        boolean invalidVariableProduct =
+                productDto.isVariable()
+                && productDto.getBaseUnit().isEmpty();
+
+        if (invalidVariableProduct) {
+            throw new InvalidVariableProduct();
+        }
+
         return this.productRepository.save(product);
     }
 
     public Product update(String id, ProductDto productDto) throws RuntimeException {
         Product product = findByIdOrThrowError(id);
+        Category category = categoryService.findByIdOrThrowError(productDto.getCategoryId());
+
+        boolean invalidVariableProduct =
+                productDto.isVariable()
+                        && productDto.getBaseUnit().isEmpty();
+
+        if (invalidVariableProduct) {
+            throw new InvalidVariableProduct();
+        }
 
         product.setName(productDto.getName());
+        product.setCategory(category);
+        product.setVariable(product.isVariable());
+        product.setBaseUnit(productDto.getBaseUnit());
+
         return this.productRepository.save(product);
     }
 

@@ -149,12 +149,14 @@ public class SaleControllerTests {
         ProductDto productDtoOne = new ProductDto();
         productDtoOne.setCategoryId(categoryId);
         productDtoOne.setName("Engine Oil A");
+        productDtoOne.setVariable(false);
 
         productDtos.add(productDtoOne);
 
         ProductDto productDtoTwo = new ProductDto();
         productDtoTwo.setCategoryId(categoryId);
         productDtoTwo.setName("Engine Oil B");
+        productDtoTwo.setVariable(false);
 
         productDtos.add(productDtoTwo);
 

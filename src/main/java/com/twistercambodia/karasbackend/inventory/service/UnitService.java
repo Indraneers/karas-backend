@@ -2,7 +2,9 @@ package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
+import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
 import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class UnitService {
     private final UnitRepository unitRepository;
+    private final ProductService productService;
     private final ModelMapper modelMapper;
 
-    public UnitService(UnitRepository unitRepository, ModelMapper modelMapper) {
+    public UnitService(UnitRepository unitRepository, ProductService productService, ModelMapper modelMapper) {
         this.unitRepository = unitRepository;
+        this.productService = productService;
         this.modelMapper = modelMapper;
     }
 
@@ -32,16 +36,37 @@ public class UnitService {
 
     public Unit create(UnitDto unitDto) {
         Unit unit = this.convertToUnit(unitDto);
+        Product product = this.productService.findByIdOrThrowError(unitDto.getProductId());
+
+        boolean invalidVariableUnit =
+                product.isVariable()
+                && unitDto.getToBaseUnit() == 0;
+
+        if (invalidVariableUnit) {
+            throw new InvalidVariableUnit();
+        }
+
         return this.unitRepository.save(unit);
     }
 
     public Unit update(String id, UnitDto unitDto) throws RuntimeException {
         Unit unit = findByIdOrThrowError(id);
+        Product product = this.productService.findByIdOrThrowError(unitDto.getProductId());
+
+        boolean invalidVariableUnit =
+                product.isVariable()
+                        && unitDto.getToBaseUnit() == 0;
+
+        if (invalidVariableUnit) {
+            throw new InvalidVariableUnit();
+        }
 
         unit.setName(unitDto.getName());
         unit.setQuantity(unitDto.getQuantity());
         unit.setPrice(unitDto.getPrice());
         unit.setSku(unitDto.getSku());
+        unit.setToBaseUnit(unit.getToBaseUnit());
+        unit.setProduct(product);
 
         return this.unitRepository.save(unit);
     }

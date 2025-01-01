@@ -25,6 +25,12 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Column
+    private String baseUnit;
+
+    @Column
+    private boolean variable;
+
     // Getters/Setters
 
     public String getId() {
@@ -67,16 +73,31 @@ public class Product {
         this.category = category;
     }
 
-    // define toString() method
+    public String getBaseUnit() {
+        return baseUnit;
+    }
+
+    public void setBaseUnit(String baseUnit) {
+        this.baseUnit = baseUnit;
+    }
+
+    public boolean isVariable() {
+        return variable;
+    }
+
+    public void setVariable(boolean variable) {
+        this.variable = variable;
+    }
 
     @Override
     public String toString() {
         return "Product{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", units=" + units +
+                "variable=" + variable +
+                ", baseUnit='" + baseUnit + '\'' +
                 ", unitCount=" + unitCount +
-                ", category=" + category +
+                ", units=" + units +
+                ", name='" + name + '\'' +
+                ", id='" + id + '\'' +
                 '}';
     }
 }

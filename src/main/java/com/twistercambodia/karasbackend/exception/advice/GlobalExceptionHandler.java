@@ -3,6 +3,8 @@ package com.twistercambodia.karasbackend.exception.advice;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.exception.dto.ExceptionResponse;
 import com.twistercambodia.karasbackend.exception.dto.ExceptionType;
+import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableProduct;
+import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,6 +35,31 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 ExceptionType.DataNotFound,
                 exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(value = InvalidVariableProduct.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleInvalidVariableProduct(InvalidVariableProduct exception) {
+        this.logger.error("Throwing InvalidVariableProductException with message={}", exception.getMessage());
+
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ExceptionType.InvalidVariableProduct,
+                "Invalid Data"
+        );
+    }
+
+
+    @ExceptionHandler(value = InvalidVariableUnit.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleInvalidVariableUnit(InvalidVariableUnit exception) {
+        this.logger.error("Throwing InvalidVariableUnitException with message={}", exception.getMessage());
+
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ExceptionType.InvalidVariableUnit,
+                "Invalid Data"
         );
     }
 }

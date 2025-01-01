@@ -9,6 +9,7 @@ public class UnitDto {
     private String productId;
     private int price;
     private String sku;
+    private int toBaseUnit;
 
     public UnitDto() {}
 
@@ -19,6 +20,7 @@ public class UnitDto {
         this.productId = unit.getProduct().getId();
         this.price = unit.getPrice();
         this.sku = unit.getSku();
+        this.toBaseUnit = unit.getToBaseUnit();
     }
 
     public String getId() {
@@ -67,5 +69,13 @@ public class UnitDto {
 
     public void setSku(String sku) {
         this.sku = sku;
+    }
+
+    public int getToBaseUnit() {
+        return toBaseUnit;
+    }
+
+    public void setToBaseUnit(int toBaseUnit) {
+        this.toBaseUnit = toBaseUnit;
     }
 }

@@ -12,6 +12,8 @@ public class ProductDto {
     private List<UnitDto> units;
     private String categoryId;
     private int unitCount;
+    private String baseUnit;
+    private boolean variable;
 
     public ProductDto() {}
 
@@ -25,6 +27,8 @@ public class ProductDto {
                         .collect(Collectors.toList());
         this.categoryId = product.getCategory().getId();
         this.unitCount = product.getUnitCount();
+        this.baseUnit = product.getBaseUnit();
+        this.variable = product.isVariable();
     }
 
     public String getId() {
@@ -65,5 +69,21 @@ public class ProductDto {
 
     public void setUnitCount(int unitCount) {
         this.unitCount = unitCount;
+    }
+
+    public String getBaseUnit() {
+        return baseUnit;
+    }
+
+    public void setBaseUnit(String baseUnit) {
+        this.baseUnit = baseUnit;
+    }
+
+    public boolean isVariable() {
+        return variable;
+    }
+
+    public void setVariable(boolean variable) {
+        this.variable = variable;
     }
 }
