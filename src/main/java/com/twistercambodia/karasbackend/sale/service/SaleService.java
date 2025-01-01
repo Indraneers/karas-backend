@@ -58,7 +58,6 @@ public class SaleService {
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
-        System.out.println(id);
         return this.saleRepository.findById(extractNumber(id)).orElseThrow(
                 () -> new NotFoundException("Sale not found with ID={}" + id)
         );
