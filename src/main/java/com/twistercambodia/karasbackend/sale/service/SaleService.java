@@ -8,6 +8,7 @@ import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
+import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
@@ -17,6 +18,7 @@ import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +33,8 @@ public class SaleService {
     private final UserService userService;
     private final CustomerService customerService;
     private final VehicleService vehicleService;
-    private final ModelMapper modelMapper;
     private final UnitService unitService;
+    private final ModelMapper modelMapper;
     private final AutoServiceService autoServiceService;
 
     public SaleService(
@@ -63,6 +65,7 @@ public class SaleService {
         );
     }
 
+    @Transactional
     public Sale create(SaleRequestDto saleRequestDto) throws Exception {
         Sale sale = this.convertToSale(saleRequestDto);
 
@@ -95,9 +98,14 @@ public class SaleService {
 
         sale.setItems(items);
 
-        return this.saleRepository.save(sale);
+        Sale saleResult = this.saleRepository.save(sale);
+
+        unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
+
+        return saleResult;
     }
 
+    @Transactional
     public Sale update(String id, SaleRequestDto saleRequestDto) throws Exception {
         Sale sale = this.findByIdOrThrowException(id);
         User user = this.userService.findByIdOrThrowError(saleRequestDto.getUserId());
@@ -111,6 +119,9 @@ public class SaleService {
         sale.setVehicle(vehicle);
         sale.setDiscount(saleRequestDto.getDiscount());
         sale.setStatus(saleRequestDto.getStatus());
+
+        unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
+
         sale.getItems().clear();
 
         List<Item> items = new ArrayList<>();
@@ -132,11 +143,17 @@ public class SaleService {
 
         sale.getItems().addAll(items);
 
-        return this.saleRepository.save(sale);
+
+        Sale saleResult = this.saleRepository.save(sale);
+        unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
+
+        return saleResult;
     }
 
+    @Transactional
     public Sale delete(String id) throws Exception {
         Sale sale = this.findByIdOrThrowException(id);
+        unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
         this.saleRepository.delete(sale);
         return sale;
     }

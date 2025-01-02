@@ -9,7 +9,9 @@ import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
-import com.twistercambodia.karasbackend.inventory.entity.Product;
+import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
+import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
+import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import org.h2.tools.Server;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,17 +29,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -56,7 +57,7 @@ public class SaleInventoryIntegrationTest {
 
     private MockMvc mockMvc;
 
-    HashMap<String, UnitDto> unitTable = new HashMap<>();
+    List<UnitDto> unitDtos = new ArrayList<>();
 
     CategoryDto categoryDto = new CategoryDto();
 
@@ -118,7 +119,7 @@ public class SaleInventoryIntegrationTest {
             addedUnitDto.setProductId(unitDto.getProductId());
             addedUnitDto.setToBaseUnit(unitDto.getToBaseUnit());
             addedUnitDto.setQuantity(unitDto.getQuantity());
-            unitTable.put(addedUnitDto.getId(), addedUnitDto);
+            unitDtos.add(addedUnitDto);
         }
     }
     @BeforeEach
@@ -307,9 +308,7 @@ public class SaleInventoryIntegrationTest {
 
     @Test
     public void updateUnit_WithoutToBaseUnitShouldFail_status400() throws Exception {
-        // get the first valid unit
-        Map.Entry<String, UnitDto> entry = unitTable.entrySet().iterator().next();
-        UnitDto validUnitDto = entry.getValue();
+        UnitDto validUnitDto = unitDtos.get(0);
         // setup invalid mocked unit
         UnitDto invalidUnitDto = new UnitDto();
         invalidUnitDto.setId(validUnitDto.getId());
@@ -333,12 +332,192 @@ public class SaleInventoryIntegrationTest {
 
     @Test
     public void createSale_ShouldDeduceStock_status200() throws Exception {
+        SaleRequestDto saleRequestDto = new SaleRequestDto();
 
+        saleRequestDto.setCustomerId(customerDto.getId());
+        saleRequestDto.setVehicleId(vehicleDto.getId());
+        saleRequestDto.setUserId(userDto.getId());
+        saleRequestDto.setCreated(LocalDateTime.now().toString());
+        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setDiscount(0);
+        saleRequestDto.setStatus(SaleStatus.PAID);
+
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
+
+        ItemRequestDto firstItemRequestDto = new ItemRequestDto();
+
+        firstItemRequestDto.setUnitId(unitDtos.get(0).getId());
+        firstItemRequestDto.setPrice(unitDtos.get(0).getPrice());
+        firstItemRequestDto.setQuantity(10);
+        itemRequestDtos.add(firstItemRequestDto);
+
+        ItemRequestDto secondItemRequestDto = new ItemRequestDto();
+        secondItemRequestDto.setUnitId(unitDtos.get(1).getId());
+        secondItemRequestDto.setPrice(unitDtos.get(1).getPrice());
+        secondItemRequestDto.setQuantity(20);
+        itemRequestDtos.add(secondItemRequestDto);
+
+        saleRequestDto.setItems(itemRequestDtos);
+
+        String json = objectMapper.writeValueAsString(saleRequestDto);
+
+        this.mockMvc.perform(
+                post("/sales")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        );
+
+        this.mockMvc.perform(
+                get("/units/" + unitDtos.get(0).getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.quantity")
+                        .value(unitDtos.get(0).getQuantity() - 10)
+        );
+
+        this.mockMvc.perform(
+                get("/units/" + unitDtos.get(1).getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.quantity")
+                        .value(unitDtos.get(1).getQuantity() - 20)
+        );
     }
 
     @Test
-    public void updateSale_ShouldUpdateStock_status200() throws Exception {}
+    public void updateSale_ShouldUpdateStock_status200() throws Exception {
+        SaleRequestDto saleRequestDto = new SaleRequestDto();
+
+        saleRequestDto.setCustomerId(customerDto.getId());
+        saleRequestDto.setVehicleId(vehicleDto.getId());
+        saleRequestDto.setUserId(userDto.getId());
+        saleRequestDto.setCreated(LocalDateTime.now().toString());
+        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setDiscount(0);
+        saleRequestDto.setStatus(SaleStatus.PAID);
+
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
+
+        ItemRequestDto firstItemRequestDto = new ItemRequestDto();
+
+        firstItemRequestDto.setUnitId(unitDtos.get(0).getId());
+        firstItemRequestDto.setPrice(unitDtos.get(0).getPrice());
+        firstItemRequestDto.setQuantity(10);
+        itemRequestDtos.add(firstItemRequestDto);
+
+        ItemRequestDto secondItemRequestDto = new ItemRequestDto();
+        secondItemRequestDto.setUnitId(unitDtos.get(1).getId());
+        secondItemRequestDto.setPrice(unitDtos.get(1).getPrice());
+        secondItemRequestDto.setQuantity(20);
+        itemRequestDtos.add(secondItemRequestDto);
+
+        saleRequestDto.setItems(itemRequestDtos);
+
+        String json = objectMapper.writeValueAsString(saleRequestDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/sales")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        itemRequestDtos.get(0).setQuantity(20);
+        itemRequestDtos.get(1).setQuantity(5);
+
+        json = objectMapper.writeValueAsString(saleRequestDto);
+
+        String saleId = JsonPath.read(
+                mvcResult.getResponse().getContentAsString(), "$.id"
+        );
+
+        this.mockMvc.perform(
+                put("/sales/" + saleId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        );
+
+        this.mockMvc.perform(
+                get("/units/" + unitDtos.get(0).getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.quantity")
+                        .value(unitDtos.get(0).getQuantity() - 20)
+        );
+
+        this.mockMvc.perform(
+                get("/units/" + unitDtos.get(1).getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.quantity")
+                        .value(unitDtos.get(1).getQuantity() - 5)
+        );
+    }
 
     @Test
-    public void removeSale_shouldRemoveStock_status200() throws Exception {}
+    public void removeSale_shouldRemoveStock_status200() throws Exception {
+        SaleRequestDto saleRequestDto = new SaleRequestDto();
+
+        saleRequestDto.setCustomerId(customerDto.getId());
+        saleRequestDto.setVehicleId(vehicleDto.getId());
+        saleRequestDto.setUserId(userDto.getId());
+        saleRequestDto.setCreated(LocalDateTime.now().toString());
+        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setDiscount(0);
+        saleRequestDto.setStatus(SaleStatus.PAID);
+
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
+
+        ItemRequestDto firstItemRequestDto = new ItemRequestDto();
+
+        firstItemRequestDto.setUnitId(unitDtos.get(0).getId());
+        firstItemRequestDto.setPrice(unitDtos.get(0).getPrice());
+        firstItemRequestDto.setQuantity(10);
+        itemRequestDtos.add(firstItemRequestDto);
+
+        ItemRequestDto secondItemRequestDto = new ItemRequestDto();
+        secondItemRequestDto.setUnitId(unitDtos.get(1).getId());
+        secondItemRequestDto.setPrice(unitDtos.get(1).getPrice());
+        secondItemRequestDto.setQuantity(20);
+        itemRequestDtos.add(secondItemRequestDto);
+
+        saleRequestDto.setItems(itemRequestDtos);
+
+        String json = objectMapper.writeValueAsString(saleRequestDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/sales")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String saleId = JsonPath.read(
+                mvcResult.getResponse().getContentAsString(), "$.id"
+        );
+
+        this.mockMvc.perform(
+                delete("/sales/" + saleId)
+        );
+
+        this.mockMvc.perform(
+                get("/units/" + unitDtos.get(0).getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.quantity")
+                        .value(unitDtos.get(0).getQuantity())
+        );
+
+        this.mockMvc.perform(
+                get("/units/" + unitDtos.get(1).getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.quantity")
+                        .value(unitDtos.get(1).getQuantity())
+        );
+    }
 }

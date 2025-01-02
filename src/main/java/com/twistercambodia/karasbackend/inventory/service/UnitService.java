@@ -4,8 +4,10 @@ import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
+import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
 import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
+import com.twistercambodia.karasbackend.sale.entity.Item;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -91,5 +93,30 @@ public class UnitService {
 
     public Unit convertToUnit(UnitDto unitDto) {
         return modelMapper.map(unitDto, Unit.class);
+    }
+
+    public void batchStockUpdate(List<Item> items, StockUpdate stockUpdate) {
+        List<Unit> batchUnit = items
+                .stream()
+                .map((i) -> stockUpdate(i.getUnit(), i.getQuantity(), stockUpdate))
+                .toList();
+
+        this.unitRepository.saveAll(batchUnit);
+    }
+
+    public Unit stockUpdate(Unit unit, int quantity, StockUpdate stockUpdate) {
+        // 1. check if stock update is restock
+        if (stockUpdate == StockUpdate.RESTOCK) {
+            // 2. if it is, add the quantity to the unit and update it
+            unit.setQuantity(
+                    unit.getQuantity() + quantity
+            );
+        } else {
+            unit.setQuantity(
+                    unit.getQuantity() - quantity
+            );
+        }
+
+        return unit;
     }
 }
