@@ -1,34 +1,27 @@
-package com.twistercambodia.karasbackend.inventory.entity;
+package com.twistercambodia.karasbackend.inventory.dto;
 
-import jakarta.persistence.*;
+import com.twistercambodia.karasbackend.inventory.entity.Unit;
 
-@Entity
-@Table(name="unit")
-public class Unit {
-
-    // define fields
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class UnitRequestDto {
     private String id;
-
-    @Column
     private String name;
-
-    @Column
     private int quantity;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="product_id", nullable = false)
-    private Product product;
-
-    @Column
+    private String productId;
     private int price;
-
-    @Column
     private String sku;
-
-    @Column
     private int toBaseUnit;
+
+    public UnitRequestDto() {}
+
+    public UnitRequestDto(Unit unit) {
+        this.id = unit.getId();
+        this.name = unit.getName();
+        this.quantity = unit.getQuantity();
+        this.productId = unit.getProduct().getId();
+        this.price = unit.getPrice();
+        this.sku = unit.getSku();
+        this.toBaseUnit = unit.getToBaseUnit();
+    }
 
     public String getId() {
         return id;
@@ -54,12 +47,12 @@ public class Unit {
         this.quantity = quantity;
     }
 
-    public Product getProduct() {
-        return product;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public int getPrice() {
@@ -84,17 +77,5 @@ public class Unit {
 
     public void setToBaseUnit(int toBaseUnit) {
         this.toBaseUnit = toBaseUnit;
-    }
-
-    @Override
-    public String toString() {
-        return "Unit{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", sku='" + sku + '\'' +
-                ", toBaseUnit=" + toBaseUnit +
-                '}';
     }
 }

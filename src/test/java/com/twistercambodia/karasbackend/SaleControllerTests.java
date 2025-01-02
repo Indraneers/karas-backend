@@ -8,7 +8,7 @@ import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
@@ -60,7 +60,7 @@ public class SaleControllerTests {
 
     List<ProductDto> productDtos;
 
-    List<UnitDto> unitDtos;
+    List<UnitRequestDto> unitRequestDtos;
 
     CustomerDto customerDto;
 
@@ -97,11 +97,11 @@ public class SaleControllerTests {
         objectMapper.findAndRegisterModules();
     }
 
-    public void setupProductsWithUnits(List<UnitDto> mockedUnitDtos) throws Exception {
+    public void setupProductsWithUnits(List<UnitRequestDto> mockedUnitRequestDtos) throws Exception {
         for (ProductDto productDto : productDtos) {
-            for (UnitDto unitDto : mockedUnitDtos) {
-                unitDto.setProductId(productDto.getId());
-                String json = objectMapper.writeValueAsString(unitDto);
+            for (UnitRequestDto unitRequestDto : mockedUnitRequestDtos) {
+                unitRequestDto.setProductId(productDto.getId());
+                String json = objectMapper.writeValueAsString(unitRequestDto);
 
                 MvcResult mvcResult = this.mockMvc.perform(
                         post("/units")
@@ -111,15 +111,15 @@ public class SaleControllerTests {
 
                 String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-                UnitDto addedUnitDto = new UnitDto();
+                UnitRequestDto addedUnitRequestDto = new UnitRequestDto();
 
-                addedUnitDto.setId(id);
-                addedUnitDto.setName(unitDto.getName());
-                addedUnitDto.setPrice(unitDto.getPrice());
-                addedUnitDto.setProductId(unitDto.getProductId());
-                addedUnitDto.setQuantity(unitDto.getQuantity());
+                addedUnitRequestDto.setId(id);
+                addedUnitRequestDto.setName(unitRequestDto.getName());
+                addedUnitRequestDto.setPrice(unitRequestDto.getPrice());
+                addedUnitRequestDto.setProductId(unitRequestDto.getProductId());
+                addedUnitRequestDto.setQuantity(unitRequestDto.getQuantity());
 
-                unitDtos.add(addedUnitDto);
+                unitRequestDtos.add(addedUnitRequestDto);
             }
         }
     }
@@ -163,23 +163,23 @@ public class SaleControllerTests {
         this.setupProducts();
 
         // Create Units
-        UnitDto unitDtoOne = new UnitDto();
-        unitDtoOne.setName("1L");
-        unitDtoOne.setPrice(500);
-        unitDtoOne.setQuantity(100);
+        UnitRequestDto unitRequestDtoOne = new UnitRequestDto();
+        unitRequestDtoOne.setName("1L");
+        unitRequestDtoOne.setPrice(500);
+        unitRequestDtoOne.setQuantity(100);
 
-        UnitDto unitDtoTwo = new UnitDto();
-        unitDtoTwo.setName("2L");
-        unitDtoTwo.setPrice(1000);
-        unitDtoTwo.setQuantity(100);
+        UnitRequestDto unitRequestDtoTwo = new UnitRequestDto();
+        unitRequestDtoTwo.setName("2L");
+        unitRequestDtoTwo.setPrice(1000);
+        unitRequestDtoTwo.setQuantity(100);
 
-        List<UnitDto> unitDtoMocks = new ArrayList<>();
+        List<UnitRequestDto> unitRequestDtoMocks = new ArrayList<>();
 
-        unitDtoMocks.add(unitDtoOne);
-        unitDtoMocks.add(unitDtoTwo);
+        unitRequestDtoMocks.add(unitRequestDtoOne);
+        unitRequestDtoMocks.add(unitRequestDtoTwo);
 
-        this.unitDtos = new ArrayList<>();
-        this.setupProductsWithUnits(unitDtoMocks);
+        this.unitRequestDtos = new ArrayList<>();
+        this.setupProductsWithUnits(unitRequestDtoMocks);
 
         // Create User
         this.userDto = new UserDto();
@@ -256,12 +256,12 @@ public class SaleControllerTests {
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
         // Create item
-        for (int i = 0; i < unitDtos.size(); ++i) {
+        for (int i = 0; i < unitRequestDtos.size(); ++i) {
             // Create Items
             ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemRequestDto.setUnitId(unitDtos.get(i).getId());
-            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setUnitId(unitRequestDtos.get(i).getId());
+            itemRequestDto.setPrice(unitRequestDtos.get(i).getPrice());
             itemRequestDto.setQuantity(2);
             itemRequestDtos.add(itemRequestDto);
         }
@@ -312,12 +312,12 @@ public class SaleControllerTests {
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
         // Create item
-        for (int i = 0; i < unitDtos.size(); ++i) {
+        for (int i = 0; i < unitRequestDtos.size(); ++i) {
             // Create Items
             ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemRequestDto.setUnitId(unitDtos.get(i).getId());
-            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setUnitId(unitRequestDtos.get(i).getId());
+            itemRequestDto.setPrice(unitRequestDtos.get(i).getPrice());
             itemRequestDto.setQuantity(2);
             itemRequestDtos.add(itemRequestDto);
         }
@@ -347,11 +347,11 @@ public class SaleControllerTests {
         itemRequestDtos.clear();
 
         // Update new items
-        for (int i = 0; i < unitDtos.size(); ++i) {
+        for (int i = 0; i < unitRequestDtos.size(); ++i) {
             ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemRequestDto.setUnitId(unitDtos.get(i).getId());
-            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setUnitId(unitRequestDtos.get(i).getId());
+            itemRequestDto.setPrice(unitRequestDtos.get(i).getPrice());
             itemRequestDto.setQuantity(3);
             itemRequestDtos.add(itemRequestDto);
         }
@@ -403,12 +403,12 @@ public class SaleControllerTests {
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
         // Create item
-        for (int i = 0; i < unitDtos.size(); ++i) {
+        for (int i = 0; i < unitRequestDtos.size(); ++i) {
             // Create Items
             ItemRequestDto itemRequestDto = new ItemRequestDto();
 
-            itemRequestDto.setUnitId(unitDtos.get(i).getId());
-            itemRequestDto.setPrice(unitDtos.get(i).getPrice());
+            itemRequestDto.setUnitId(unitRequestDtos.get(i).getId());
+            itemRequestDto.setPrice(unitRequestDtos.get(i).getPrice());
             itemRequestDto.setQuantity(2);
             itemRequestDtos.add(itemRequestDto);
         }

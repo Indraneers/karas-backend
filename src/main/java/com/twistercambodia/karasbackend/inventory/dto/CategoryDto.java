@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.twistercambodia.karasbackend.utils.MappingUtils.map;
+
 public class CategoryDto {
     private String id;
     private String name;
@@ -16,11 +18,11 @@ public class CategoryDto {
     public CategoryDto() {}
 
     public CategoryDto(Category category) {
-        ModelMapper modelMapper = new ModelMapper();
+
         this.id = category.getId();
         this.name = category.getName();
         this.products = category.getProducts().stream()
-                .map((p) -> modelMapper.map(p, ProductDto.class))
+                .map((p) -> map(p, ProductDto.class))
                 .collect(Collectors.toList());
         this.productCount = category.getProductCount();
     }

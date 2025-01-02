@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class UnitController {
     }
 
     @GetMapping
-    public List<UnitDto> getAllUnits(
+    public List<UnitResponseDto> getAllUnits(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "productId", required = false) String productId
     ) {
@@ -30,33 +31,33 @@ public class UnitController {
     }
 
     @GetMapping("{id}")
-    public UnitDto getUnitById(@PathVariable("id") String id) throws RuntimeException {
+    public UnitResponseDto getUnitById(@PathVariable("id") String id) throws RuntimeException {
         return this.unitService.convertToUnitDto(
                 this.unitService.findByIdOrThrowError(id)
         );
     }
 
     @PostMapping
-    public UnitDto createUnit(
-            @RequestBody UnitDto unitDto
+    public UnitResponseDto createUnit(
+            @RequestBody UnitRequestDto unitRequestDto
     ) {
-        Unit unit = this.unitService.create(unitDto);
+        Unit unit = this.unitService.create(unitRequestDto);
         this.logger.info("Creating unit={}", unit);
         return this.unitService.convertToUnitDto(unit);
     }
 
     @PutMapping("{id}")
-    public UnitDto updateUnit(
-            @RequestBody UnitDto unitDto,
+    public UnitResponseDto updateUnit(
+            @RequestBody UnitRequestDto unitRequestDto,
             @PathVariable("id") String id
     ) throws RuntimeException {
-        Unit unit = this.unitService.update(id, unitDto);
+        Unit unit = this.unitService.update(id, unitRequestDto);
         this.logger.info("Updating unit={}", unit);
         return this.unitService.convertToUnitDto(unit);
     }
 
     @DeleteMapping("{id}")
-    public UnitDto deleteUnit(
+    public UnitResponseDto deleteUnit(
             @PathVariable("id") String id
     ) throws RuntimeException {
         Unit unit = this.unitService.delete(id);

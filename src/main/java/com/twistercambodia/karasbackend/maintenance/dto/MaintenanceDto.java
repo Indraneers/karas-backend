@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.twistercambodia.karasbackend.utils.MappingUtils.map;
+
 public class MaintenanceDto {
     private String id;
     private Long saleId;
@@ -20,7 +22,6 @@ public class MaintenanceDto {
     public MaintenanceDto() {}
 
     public MaintenanceDto(Maintenance maintenance) {
-        ModelMapper modelMapper = new ModelMapper();
         this.id = maintenance.getId();
         this.saleId = maintenance.getSale().getId();
         this.vehicleId = maintenance.getVehicle().getId();
@@ -30,7 +31,7 @@ public class MaintenanceDto {
         this.services = maintenance
                 .getServices()
                 .stream()
-                .map((ms) -> modelMapper.map(ms, MaintenanceServiceDto.class))
+                .map((ms) -> map(ms, MaintenanceServiceDto.class))
                 .collect(Collectors.toSet());
     }
 

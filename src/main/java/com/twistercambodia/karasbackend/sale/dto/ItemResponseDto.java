@@ -1,26 +1,25 @@
 package com.twistercambodia.karasbackend.sale.dto;
 
-import com.twistercambodia.karasbackend.autoService.dto.AutoServiceDto;
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.entity.Item;
-import org.modelmapper.ModelMapper;
+
+import static com.twistercambodia.karasbackend.utils.MappingUtils.map;
 
 public class ItemResponseDto {
     private String id;
     private int price;
     private int quantity;
     private int discount;
-    private UnitDto unit;
+    private UnitRequestDto unit;
 
     public ItemResponseDto() {}
 
     public ItemResponseDto(Item item) {
-        ModelMapper mapper = new ModelMapper();
         this.id = item.getId();
         this.price = item.getPrice();
         this.quantity = item.getQuantity();;
         this.discount = item.getDiscount();
-        this.unit = mapper.map(item.getUnit(), UnitDto.class);
+        this.unit = map(item.getUnit(), UnitRequestDto.class);
     }
 
     public String getId() {
@@ -55,11 +54,11 @@ public class ItemResponseDto {
         this.discount = discount;
     }
 
-    public UnitDto getUnit() {
+    public UnitRequestDto getUnit() {
         return unit;
     }
 
-    public void setUnit(UnitDto unit) {
+    public void setUnit(UnitRequestDto unit) {
         this.unit = unit;
     }
 }

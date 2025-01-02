@@ -8,7 +8,7 @@ import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
@@ -57,7 +57,7 @@ public class SaleInventoryIntegrationTest {
 
     private MockMvc mockMvc;
 
-    List<UnitDto> unitDtos = new ArrayList<>();
+    List<UnitRequestDto> unitRequestDtos = new ArrayList<>();
 
     CategoryDto categoryDto = new CategoryDto();
 
@@ -98,10 +98,10 @@ public class SaleInventoryIntegrationTest {
         objectMapper.findAndRegisterModules();
     }
 
-    public void setupProductsWithUnits(List<UnitDto> mockedUnitDtos) throws Exception {
-            for (UnitDto unitDto : mockedUnitDtos) {
-            unitDto.setProductId(productDto.getId());
-            String json = objectMapper.writeValueAsString(unitDto);
+    public void setupProductsWithUnits(List<UnitRequestDto> mockedUnitRequestDtos) throws Exception {
+            for (UnitRequestDto unitRequestDto : mockedUnitRequestDtos) {
+            unitRequestDto.setProductId(productDto.getId());
+            String json = objectMapper.writeValueAsString(unitRequestDto);
 
             MvcResult mvcResult = this.mockMvc.perform(
                     post("/units")
@@ -111,15 +111,15 @@ public class SaleInventoryIntegrationTest {
 
             String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-            UnitDto addedUnitDto = new UnitDto();
+            UnitRequestDto addedUnitRequestDto = new UnitRequestDto();
 
-            addedUnitDto.setId(id);
-            addedUnitDto.setName(unitDto.getName());
-            addedUnitDto.setPrice(unitDto.getPrice());
-            addedUnitDto.setProductId(unitDto.getProductId());
-            addedUnitDto.setToBaseUnit(unitDto.getToBaseUnit());
-            addedUnitDto.setQuantity(unitDto.getQuantity());
-            unitDtos.add(addedUnitDto);
+            addedUnitRequestDto.setId(id);
+            addedUnitRequestDto.setName(unitRequestDto.getName());
+            addedUnitRequestDto.setPrice(unitRequestDto.getPrice());
+            addedUnitRequestDto.setProductId(unitRequestDto.getProductId());
+            addedUnitRequestDto.setToBaseUnit(unitRequestDto.getToBaseUnit());
+            addedUnitRequestDto.setQuantity(unitRequestDto.getQuantity());
+            unitRequestDtos.add(addedUnitRequestDto);
         }
     }
     @BeforeEach
@@ -152,25 +152,25 @@ public class SaleInventoryIntegrationTest {
         this.setupProducts(productDto);
 
         // create units
-        UnitDto unitDtoOne = new UnitDto();
-        unitDtoOne.setName("1L");
+        UnitRequestDto unitRequestDtoOne = new UnitRequestDto();
+        unitRequestDtoOne.setName("1L");
         // 500
-        unitDtoOne.setPrice(500);
-        unitDtoOne.setQuantity(100);
-        unitDtoOne.setToBaseUnit(1);
+        unitRequestDtoOne.setPrice(500);
+        unitRequestDtoOne.setQuantity(100);
+        unitRequestDtoOne.setToBaseUnit(1);
 
-        UnitDto unitDtoTwo = new UnitDto();
-        unitDtoTwo.setName("2L");
-        unitDtoTwo.setPrice(200);
-        unitDtoTwo.setQuantity(50);
-        unitDtoTwo.setToBaseUnit(2);
+        UnitRequestDto unitRequestDtoTwo = new UnitRequestDto();
+        unitRequestDtoTwo.setName("2L");
+        unitRequestDtoTwo.setPrice(200);
+        unitRequestDtoTwo.setQuantity(50);
+        unitRequestDtoTwo.setToBaseUnit(2);
 
-        List<UnitDto> unitDtoMocks = new ArrayList<>();
+        List<UnitRequestDto> unitRequestDtoMocks = new ArrayList<>();
 
-        unitDtoMocks.add(unitDtoOne);
-        unitDtoMocks.add(unitDtoTwo);
+        unitRequestDtoMocks.add(unitRequestDtoOne);
+        unitRequestDtoMocks.add(unitRequestDtoTwo);
 
-        this.setupProductsWithUnits(unitDtoMocks);
+        this.setupProductsWithUnits(unitRequestDtoMocks);
 
         // Create User
         this.userDto = new UserDto();
@@ -285,16 +285,16 @@ public class SaleInventoryIntegrationTest {
     @Test
     public void createUnit_WithoutToBaseUnitShouldFail_status400() throws Exception {
         // setup invalid mocked unit
-        UnitDto invalidUnitDto = new UnitDto();
+        UnitRequestDto invalidUnitRequestDto = new UnitRequestDto();
 
-        invalidUnitDto.setName("1 Drum");
-        invalidUnitDto.setPrice(27500);
-        invalidUnitDto.setProductId(productDto.getId());
-        invalidUnitDto.setQuantity(100);
+        invalidUnitRequestDto.setName("1 Drum");
+        invalidUnitRequestDto.setPrice(27500);
+        invalidUnitRequestDto.setProductId(productDto.getId());
+        invalidUnitRequestDto.setQuantity(100);
 
 
         String json = objectMapper.writeValueAsString(
-                invalidUnitDto
+                invalidUnitRequestDto
         );
 
         this.mockMvc.perform(
@@ -308,21 +308,21 @@ public class SaleInventoryIntegrationTest {
 
     @Test
     public void updateUnit_WithoutToBaseUnitShouldFail_status400() throws Exception {
-        UnitDto validUnitDto = unitDtos.get(0);
+        UnitRequestDto validUnitRequestDto = unitRequestDtos.get(0);
         // setup invalid mocked unit
-        UnitDto invalidUnitDto = new UnitDto();
-        invalidUnitDto.setId(validUnitDto.getId());
-        invalidUnitDto.setName(validUnitDto.getName());
-        invalidUnitDto.setPrice(validUnitDto.getPrice());
-        invalidUnitDto.setProductId(validUnitDto.getProductId());
-        invalidUnitDto.setQuantity(validUnitDto.getQuantity());
+        UnitRequestDto invalidUnitRequestDto = new UnitRequestDto();
+        invalidUnitRequestDto.setId(validUnitRequestDto.getId());
+        invalidUnitRequestDto.setName(validUnitRequestDto.getName());
+        invalidUnitRequestDto.setPrice(validUnitRequestDto.getPrice());
+        invalidUnitRequestDto.setProductId(validUnitRequestDto.getProductId());
+        invalidUnitRequestDto.setQuantity(validUnitRequestDto.getQuantity());
 
         String json = objectMapper.writeValueAsString(
-                invalidUnitDto
+                invalidUnitRequestDto
         );
 
         this.mockMvc.perform(
-                put("/units/" + invalidUnitDto.getId())
+                put("/units/" + invalidUnitRequestDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
             ).andExpect(
@@ -346,14 +346,14 @@ public class SaleInventoryIntegrationTest {
 
         ItemRequestDto firstItemRequestDto = new ItemRequestDto();
 
-        firstItemRequestDto.setUnitId(unitDtos.get(0).getId());
-        firstItemRequestDto.setPrice(unitDtos.get(0).getPrice());
+        firstItemRequestDto.setUnitId(unitRequestDtos.get(0).getId());
+        firstItemRequestDto.setPrice(unitRequestDtos.get(0).getPrice());
         firstItemRequestDto.setQuantity(10);
         itemRequestDtos.add(firstItemRequestDto);
 
         ItemRequestDto secondItemRequestDto = new ItemRequestDto();
-        secondItemRequestDto.setUnitId(unitDtos.get(1).getId());
-        secondItemRequestDto.setPrice(unitDtos.get(1).getPrice());
+        secondItemRequestDto.setUnitId(unitRequestDtos.get(1).getId());
+        secondItemRequestDto.setPrice(unitRequestDtos.get(1).getPrice());
         secondItemRequestDto.setQuantity(20);
         itemRequestDtos.add(secondItemRequestDto);
 
@@ -368,21 +368,21 @@ public class SaleInventoryIntegrationTest {
         );
 
         this.mockMvc.perform(
-                get("/units/" + unitDtos.get(0).getId())
+                get("/units/" + unitRequestDtos.get(0).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
-                        .value(unitDtos.get(0).getQuantity() - 10)
+                        .value(unitRequestDtos.get(0).getQuantity() - 10)
         );
 
         this.mockMvc.perform(
-                get("/units/" + unitDtos.get(1).getId())
+                get("/units/" + unitRequestDtos.get(1).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
-                        .value(unitDtos.get(1).getQuantity() - 20)
+                        .value(unitRequestDtos.get(1).getQuantity() - 20)
         );
     }
 
@@ -402,14 +402,14 @@ public class SaleInventoryIntegrationTest {
 
         ItemRequestDto firstItemRequestDto = new ItemRequestDto();
 
-        firstItemRequestDto.setUnitId(unitDtos.get(0).getId());
-        firstItemRequestDto.setPrice(unitDtos.get(0).getPrice());
+        firstItemRequestDto.setUnitId(unitRequestDtos.get(0).getId());
+        firstItemRequestDto.setPrice(unitRequestDtos.get(0).getPrice());
         firstItemRequestDto.setQuantity(10);
         itemRequestDtos.add(firstItemRequestDto);
 
         ItemRequestDto secondItemRequestDto = new ItemRequestDto();
-        secondItemRequestDto.setUnitId(unitDtos.get(1).getId());
-        secondItemRequestDto.setPrice(unitDtos.get(1).getPrice());
+        secondItemRequestDto.setUnitId(unitRequestDtos.get(1).getId());
+        secondItemRequestDto.setPrice(unitRequestDtos.get(1).getPrice());
         secondItemRequestDto.setQuantity(20);
         itemRequestDtos.add(secondItemRequestDto);
 
@@ -439,21 +439,21 @@ public class SaleInventoryIntegrationTest {
         );
 
         this.mockMvc.perform(
-                get("/units/" + unitDtos.get(0).getId())
+                get("/units/" + unitRequestDtos.get(0).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
-                        .value(unitDtos.get(0).getQuantity() - 20)
+                        .value(unitRequestDtos.get(0).getQuantity() - 20)
         );
 
         this.mockMvc.perform(
-                get("/units/" + unitDtos.get(1).getId())
+                get("/units/" + unitRequestDtos.get(1).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
-                        .value(unitDtos.get(1).getQuantity() - 5)
+                        .value(unitRequestDtos.get(1).getQuantity() - 5)
         );
     }
 
@@ -473,14 +473,14 @@ public class SaleInventoryIntegrationTest {
 
         ItemRequestDto firstItemRequestDto = new ItemRequestDto();
 
-        firstItemRequestDto.setUnitId(unitDtos.get(0).getId());
-        firstItemRequestDto.setPrice(unitDtos.get(0).getPrice());
+        firstItemRequestDto.setUnitId(unitRequestDtos.get(0).getId());
+        firstItemRequestDto.setPrice(unitRequestDtos.get(0).getPrice());
         firstItemRequestDto.setQuantity(10);
         itemRequestDtos.add(firstItemRequestDto);
 
         ItemRequestDto secondItemRequestDto = new ItemRequestDto();
-        secondItemRequestDto.setUnitId(unitDtos.get(1).getId());
-        secondItemRequestDto.setPrice(unitDtos.get(1).getPrice());
+        secondItemRequestDto.setUnitId(unitRequestDtos.get(1).getId());
+        secondItemRequestDto.setPrice(unitRequestDtos.get(1).getPrice());
         secondItemRequestDto.setQuantity(20);
         itemRequestDtos.add(secondItemRequestDto);
 
@@ -503,21 +503,21 @@ public class SaleInventoryIntegrationTest {
         );
 
         this.mockMvc.perform(
-                get("/units/" + unitDtos.get(0).getId())
+                get("/units/" + unitRequestDtos.get(0).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
-                        .value(unitDtos.get(0).getQuantity())
+                        .value(unitRequestDtos.get(0).getQuantity())
         );
 
         this.mockMvc.perform(
-                get("/units/" + unitDtos.get(1).getId())
+                get("/units/" + unitRequestDtos.get(1).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
-                        .value(unitDtos.get(1).getQuantity())
+                        .value(unitRequestDtos.get(1).getQuantity())
         );
     }
 }

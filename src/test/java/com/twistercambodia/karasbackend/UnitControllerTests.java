@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,15 +84,15 @@ public class UnitControllerTests {
 
     @Test
     void createUnit_shouldReturnNewUnit_status200() throws Exception {
-        UnitDto unitDto = new UnitDto();
+        UnitRequestDto unitRequestDto = new UnitRequestDto();
 
-        unitDto.setName("1L");
-        unitDto.setProductId(this.productDto.getId());
-        unitDto.setPrice(100);
-        unitDto.setQuantity(50);
+        unitRequestDto.setName("1L");
+        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setPrice(100);
+        unitRequestDto.setQuantity(50);
 
 
-        String json = objectMapper.writeValueAsString(unitDto);
+        String json = objectMapper.writeValueAsString(unitRequestDto);
 
         this.mockMvc.perform(
                         post("/units")
@@ -101,20 +101,20 @@ public class UnitControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.productId")
-                                .value((unitDto.getProductId()))
+                        MockMvcResultMatchers.jsonPath("$.product.id")
+                                .value((unitRequestDto.getProductId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
-                                .value((unitDto.getName()))
+                                .value((unitRequestDto.getName()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.price")
-                                .value((unitDto.getPrice()))
+                                .value((unitRequestDto.getPrice()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.quantity")
-                                .value((unitDto.getQuantity()))
+                                .value((unitRequestDto.getQuantity()))
                 );
 
         this.mockMvc.perform(
@@ -128,20 +128,20 @@ public class UnitControllerTests {
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.units[0].name")
-                                .value(unitDto.getName())
+                                .value(unitRequestDto.getName())
                 );
     }
 
     @Test
     void updateUnit_ShouldUpdateProduct_status200() throws Exception {
-        UnitDto unitDto = new UnitDto();
+        UnitRequestDto unitRequestDto = new UnitRequestDto();
 
-        unitDto.setName("1L");
-        unitDto.setProductId(this.productDto.getId());
-        unitDto.setPrice(100);
-        unitDto.setQuantity(50);
+        unitRequestDto.setName("1L");
+        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setPrice(100);
+        unitRequestDto.setQuantity(50);
 
-        String json = objectMapper.writeValueAsString(unitDto);
+        String json = objectMapper.writeValueAsString(unitRequestDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/units")
@@ -151,13 +151,13 @@ public class UnitControllerTests {
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        unitDto.setId(id);
-        unitDto.setName("2L");
-        unitDto.setProductId(this.productDto.getId());
-        unitDto.setPrice(200);
-        unitDto.setQuantity(25);
+        unitRequestDto.setId(id);
+        unitRequestDto.setName("2L");
+        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setPrice(200);
+        unitRequestDto.setQuantity(25);
 
-        json = objectMapper.writeValueAsString(unitDto);
+        json = objectMapper.writeValueAsString(unitRequestDto);
 
         this.mockMvc.perform(
                         put("/units/" + id)
@@ -166,33 +166,33 @@ public class UnitControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.productId")
-                                .value((unitDto.getProductId()))
+                        MockMvcResultMatchers.jsonPath("$.product.id")
+                                .value((unitRequestDto.getProductId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
-                                .value((unitDto.getName()))
+                                .value((unitRequestDto.getName()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.price")
-                                .value((unitDto.getPrice()))
+                                .value((unitRequestDto.getPrice()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.quantity")
-                                .value((unitDto.getQuantity()))
+                                .value((unitRequestDto.getQuantity()))
                 );
     }
 
     @Test
     void deleteUnit_ShouldDeleteProduct_status200() throws Exception {
-        UnitDto unitDto = new UnitDto();
+        UnitRequestDto unitRequestDto = new UnitRequestDto();
 
-        unitDto.setName("1L");
-        unitDto.setProductId(this.productDto.getId());
-        unitDto.setPrice(100);
-        unitDto.setQuantity(50);
+        unitRequestDto.setName("1L");
+        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setPrice(100);
+        unitRequestDto.setQuantity(50);
 
-        String json = objectMapper.writeValueAsString(unitDto);
+        String json = objectMapper.writeValueAsString(unitRequestDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/units")
@@ -209,20 +209,20 @@ public class UnitControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.productId")
-                                .value((unitDto.getProductId()))
+                        MockMvcResultMatchers.jsonPath("$.product.id")
+                                .value((unitRequestDto.getProductId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
-                                .value((unitDto.getName()))
+                                .value((unitRequestDto.getName()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.price")
-                                .value((unitDto.getPrice()))
+                                .value((unitRequestDto.getPrice()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.quantity")
-                                .value((unitDto.getQuantity()))
+                                .value((unitRequestDto.getQuantity()))
                 );
 
         this.mockMvc.perform(

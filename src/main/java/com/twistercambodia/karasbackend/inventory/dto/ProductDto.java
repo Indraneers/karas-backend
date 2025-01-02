@@ -6,10 +6,12 @@ import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.twistercambodia.karasbackend.utils.MappingUtils.map;
+
 public class ProductDto {
     private String id;
     private String name;
-    private List<UnitDto> units;
+    private List<UnitRequestDto> units;
     private String categoryId;
     private int unitCount;
     private String baseUnit;
@@ -18,12 +20,11 @@ public class ProductDto {
     public ProductDto() {}
 
     public ProductDto(Product product) {
-        ModelMapper modelMapper = new ModelMapper();
         this.id = product.getId();
         this.name = product.getName();
         this.units =
                 product.getUnits().stream()
-                        .map((u) -> modelMapper.map(u, UnitDto.class))
+                        .map(u -> map(u, UnitRequestDto.class))
                         .collect(Collectors.toList());
         this.categoryId = product.getCategory().getId();
         this.unitCount = product.getUnitCount();
@@ -47,11 +48,11 @@ public class ProductDto {
         this.name = name;
     }
 
-    public List<UnitDto> getUnits() {
+    public List<UnitRequestDto> getUnits() {
         return units;
     }
 
-    public void setUnits(List<UnitDto> units) {
+    public void setUnits(List<UnitRequestDto> units) {
         this.units = units;
     }
 

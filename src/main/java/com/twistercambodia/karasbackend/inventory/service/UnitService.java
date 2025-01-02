@@ -1,7 +1,8 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
-import com.twistercambodia.karasbackend.inventory.dto.UnitDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
+import com.twistercambodia.karasbackend.inventory.dto.UnitResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
@@ -36,13 +37,13 @@ public class UnitService {
                 .orElseThrow(() -> new NotFoundException("Unit Not Found with ID=" + id));
     }
 
-    public Unit create(UnitDto unitDto) {
-        Unit unit = this.convertToUnit(unitDto);
-        Product product = this.productService.findByIdOrThrowError(unitDto.getProductId());
+    public Unit create(UnitRequestDto unitRequestDto) {
+        Unit unit = this.convertToUnit(unitRequestDto);
+        Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
         boolean invalidVariableUnit =
                 product.isVariable()
-                && unitDto.getToBaseUnit() == 0;
+                && unitRequestDto.getToBaseUnit() == 0;
 
         if (invalidVariableUnit) {
             throw new InvalidVariableUnit();
@@ -51,23 +52,23 @@ public class UnitService {
         return this.unitRepository.save(unit);
     }
 
-    public Unit update(String id, UnitDto unitDto) throws RuntimeException {
+    public Unit update(String id, UnitRequestDto unitRequestDto) throws RuntimeException {
         Unit unit = findByIdOrThrowError(id);
-        Product product = this.productService.findByIdOrThrowError(unitDto.getProductId());
+        Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
         boolean invalidVariableUnit =
                 product.isVariable()
-                        && unitDto.getToBaseUnit() == 0;
+                        && unitRequestDto.getToBaseUnit() == 0;
 
         if (invalidVariableUnit) {
             throw new InvalidVariableUnit();
         }
 
-        unit.setName(unitDto.getName());
-        unit.setQuantity(unitDto.getQuantity());
-        unit.setPrice(unitDto.getPrice());
-        unit.setSku(unitDto.getSku());
-        unit.setToBaseUnit(unit.getToBaseUnit());
+        unit.setName(unitRequestDto.getName());
+        unit.setQuantity(unitRequestDto.getQuantity());
+        unit.setPrice(unitRequestDto.getPrice());
+        unit.setSku(unitRequestDto.getSku());
+        unit.setToBaseUnit(unitRequestDto.getToBaseUnit());
         unit.setProduct(product);
 
         return this.unitRepository.save(unit);
@@ -80,19 +81,19 @@ public class UnitService {
         return unit;
     }
 
-    public UnitDto convertToUnitDto(Unit unit) {
-        return modelMapper.map(unit, UnitDto.class);
+    public UnitResponseDto convertToUnitDto(Unit unit) {
+        return modelMapper.map(unit, UnitResponseDto.class);
     }
 
-    public List<UnitDto> convertToUnitDto(List<Unit> units) {
+    public List<UnitResponseDto> convertToUnitDto(List<Unit> units) {
         return units
                 .stream()
-                .map((unit) -> modelMapper.map(unit, UnitDto.class))
+                .map((unit) -> modelMapper.map(unit, UnitResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Unit convertToUnit(UnitDto unitDto) {
-        return modelMapper.map(unitDto, Unit.class);
+    public Unit convertToUnit(UnitRequestDto unitRequestDto) {
+        return modelMapper.map(unitRequestDto, Unit.class);
     }
 
     public void batchStockUpdate(List<Item> items, StockUpdate stockUpdate) {

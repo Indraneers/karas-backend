@@ -28,7 +28,7 @@ public class Product {
     @Column
     private String baseUnit;
 
-    @Column
+    @Column(nullable = false)
     private boolean variable;
 
     // Getters/Setters

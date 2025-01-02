@@ -20,7 +20,6 @@ public class CustomerDto {
     public CustomerDto() {}
 
     public CustomerDto(Customer customer) {
-        ModelMapper modelMapper = new ModelMapper();
         this.name = customer.getId();
         this.name = customer.getName();
         this.note = customer.getNote();
