@@ -15,6 +15,9 @@ public class MaintenanceService {
     @ManyToOne(fetch = FetchType.EAGER)
     private AutoService autoService;
 
+    @Column(nullable = false)
+    private int price;
+
     public String getId() {
         return id;
     }
@@ -39,12 +42,29 @@ public class MaintenanceService {
         this.autoService = autoService;
     }
 
+    public AutoService getAutoService() {
+        return autoService;
+    }
+
+    public void setAutoService(AutoService autoService) {
+        this.autoService = autoService;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "MaintenanceService{" +
                 "id='" + id + '\'' +
                 ", maintenance=" + maintenance +
-                ", service=" + autoService +
+                ", autoService=" + autoService +
+                ", price=" + price +
                 '}';
     }
 }

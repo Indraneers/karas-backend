@@ -1,11 +1,16 @@
 package com.twistercambodia.karasbackend.maintenance.entity;
 
+import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
+import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceServiceDto;
+import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Maintenance {
@@ -13,25 +18,33 @@ public class Maintenance {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private Sale sale;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Vehicle vehicle;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(nullable = false)
     private int mileage;
 
     @Column
     private String note;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Set<MaintenanceService> maintenanceServices;
+    private Set<MaintenanceService> services;
 
     public Maintenance() {}
 
     public Maintenance(MaintenanceDto maintenanceDto) {
+        ModelMapper modelMapper = new ModelMapper();
         this.createdAt = maintenanceDto.getCreatedAt();
+        this.services = maintenanceDto.getServices()
+                .stream()
+                .map((ms) -> modelMapper.map(ms, MaintenanceService.class))
+                .collect(Collectors.toSet());
         this.mileage = maintenanceDto.getMileage();
         this.note = maintenanceDto.getNote();
     }
@@ -42,6 +55,14 @@ public class Maintenance {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
     }
 
     public Vehicle getVehicle() {
@@ -76,12 +97,12 @@ public class Maintenance {
         this.note = note;
     }
 
-    public Set<MaintenanceService> getMaintenanceServices() {
-        return maintenanceServices;
+    public Set<MaintenanceService> getServices() {
+        return services;
     }
 
-    public void setMaintenanceServices(Set<MaintenanceService> maintenanceServices) {
-        this.maintenanceServices = maintenanceServices;
+    public void setServices(Set<MaintenanceService> services) {
+        this.services = services;
     }
 
     @Override
@@ -92,7 +113,7 @@ public class Maintenance {
                 ", createdAt=" + createdAt +
                 ", mileage=" + mileage +
                 ", note='" + note + '\'' +
-                ", maintenanceService=" + maintenanceServices +
+                ", services=" + services +
                 '}';
     }
 }

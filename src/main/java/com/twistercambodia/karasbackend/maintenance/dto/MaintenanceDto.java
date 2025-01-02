@@ -9,23 +9,26 @@ import java.util.stream.Collectors;
 
 public class MaintenanceDto {
     private String id;
+    private Long saleId;
     private String vehicleId;
     private LocalDateTime createdAt;
+    private LocalDateTime nextMaintenanceDate;
     private int mileage;
     private String note;
-    private Set<MaintenanceServiceDto> maintenanceServices;
+    private Set<MaintenanceServiceDto> services;
 
     public MaintenanceDto() {}
 
     public MaintenanceDto(Maintenance maintenance) {
         ModelMapper modelMapper = new ModelMapper();
         this.id = maintenance.getId();
+        this.saleId = maintenance.getSale().getId();
         this.vehicleId = maintenance.getVehicle().getId();
         this.createdAt = maintenance.getCreatedAt();
         this.mileage = maintenance.getMileage();
         this.note = maintenance.getNote();
-        this.maintenanceServices = maintenance
-                .getMaintenanceServices()
+        this.services = maintenance
+                .getServices()
                 .stream()
                 .map((ms) -> modelMapper.map(ms, MaintenanceServiceDto.class))
                 .collect(Collectors.toSet());
@@ -37,6 +40,14 @@ public class MaintenanceDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Long getSaleId() {
+        return saleId;
+    }
+
+    public void setSaleId(Long saleId) {
+        this.saleId = saleId;
     }
 
     public String getVehicleId() {
@@ -55,6 +66,14 @@ public class MaintenanceDto {
         this.createdAt = createdAt;
     }
 
+    public LocalDateTime getNextMaintenanceDate() {
+        return nextMaintenanceDate;
+    }
+
+    public void setNextMaintenanceDate(LocalDateTime nextMaintenanceDate) {
+        this.nextMaintenanceDate = nextMaintenanceDate;
+    }
+
     public int getMileage() {
         return mileage;
     }
@@ -71,11 +90,11 @@ public class MaintenanceDto {
         this.note = note;
     }
 
-    public Set<MaintenanceServiceDto> getMaintenanceServices() {
-        return maintenanceServices;
+    public Set<MaintenanceServiceDto> getServices() {
+        return services;
     }
 
-    public void setMaintenanceServices(Set<MaintenanceServiceDto> maintenanceServices) {
-        this.maintenanceServices = maintenanceServices;
+    public void setServices(Set<MaintenanceServiceDto> services) {
+        this.services = services;
     }
 }
