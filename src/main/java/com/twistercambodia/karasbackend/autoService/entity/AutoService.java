@@ -21,9 +21,6 @@ public class AutoService {
     @Column
     private int price;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items;
-
     public AutoService() {}
 
     public AutoService(AutoServiceDto autoServiceDto) {

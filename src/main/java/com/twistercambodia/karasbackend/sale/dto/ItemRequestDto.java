@@ -17,12 +17,7 @@ public class ItemRequestDto {
         this.price = item.getPrice();
         this.quantity = item.getQuantity();;
         this.discount = item.getDiscount();
-
-        if (item.getUnit() != null) {
-            this.unitId = item.getUnit().getId();
-        } else {
-            this.serviceId = item.getService().getId();
-        }
+        this.unitId = item.getUnit().getId();
     }
 
     public String getId() {

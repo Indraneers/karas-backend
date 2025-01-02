@@ -1,7 +1,5 @@
 package com.twistercambodia.karasbackend.sale.entity;
 
-import com.twistercambodia.karasbackend.autoService.entity.AutoService;
-import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import jakarta.persistence.*;
 
@@ -25,13 +23,9 @@ public class Item {
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "unit_id")
     private Unit unit;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "autoservice_id")
-    private AutoService service;
 
     public String getId() {
         return id;
@@ -81,13 +75,6 @@ public class Item {
         this.unit = unit;
     }
 
-    public AutoService getService() {
-        return service;
-    }
-
-    public void setService(AutoService service) {
-        this.service = service;
-    }
 
     @Override
     public String toString() {
@@ -97,7 +84,6 @@ public class Item {
                 ", quantity=" + quantity +
                 ", discount=" + discount +
                 ", unit=" + unit +
-                ", service=" + service +
                 '}';
     }
 }

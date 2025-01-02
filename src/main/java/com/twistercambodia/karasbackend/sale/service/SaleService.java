@@ -2,7 +2,6 @@ package com.twistercambodia.karasbackend.sale.service;
 
 import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.auth.service.UserService;
-import com.twistercambodia.karasbackend.autoService.entity.AutoService;
 import com.twistercambodia.karasbackend.autoService.service.AutoServiceService;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
@@ -35,7 +34,6 @@ public class SaleService {
     private final VehicleService vehicleService;
     private final UnitService unitService;
     private final ModelMapper modelMapper;
-    private final AutoServiceService autoServiceService;
 
     public SaleService(
             SaleRepository saleRepository,
@@ -43,8 +41,7 @@ public class SaleService {
             UserService userService,
             CustomerService customerService,
             VehicleService vehicleService,
-            UnitService unitService,
-            AutoServiceService autoServiceService
+            UnitService unitService
     ) {
         this.saleRepository = saleRepository;
         this.modelMapper = modelMapper;
@@ -52,7 +49,6 @@ public class SaleService {
         this.customerService = customerService;
         this.vehicleService = vehicleService;
         this.unitService = unitService;
-        this.autoServiceService = autoServiceService;
     }
 
     public List<Sale> findAll() {
@@ -84,13 +80,8 @@ public class SaleService {
         for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
             Item item = this.modelMapper.map(itemRequestDto, Item.class);
 
-            if (itemRequestDto.getUnitId() != null) {
-                Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
-                item.setUnit(unit);
-            } else if (itemRequestDto.getServiceId() != null) {
-                AutoService service = this.autoServiceService.findByIdOrThrowError(itemRequestDto.getServiceId());
-                item.setService(service);
-            }
+            Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
+            item.setUnit(unit);
 
             item.setSale(sale);
             items.add(item);
@@ -129,13 +120,8 @@ public class SaleService {
         for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
             Item item = this.modelMapper.map(itemRequestDto, Item.class);
 
-            if (itemRequestDto.getUnitId() != null) {
-                Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
-                item.setUnit(unit);
-            } else if (itemRequestDto.getServiceId() != null) {
-                AutoService service = this.autoServiceService.findByIdOrThrowError(itemRequestDto.getServiceId());
-                item.setService(service);
-            }
+            Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
+            item.setUnit(unit);
 
             item.setSale(sale);
             items.add(item);

@@ -11,7 +11,6 @@ public class ItemResponseDto {
     private int quantity;
     private int discount;
     private UnitDto unit;
-    private AutoServiceDto service;
 
     public ItemResponseDto() {}
 
@@ -21,12 +20,7 @@ public class ItemResponseDto {
         this.price = item.getPrice();
         this.quantity = item.getQuantity();;
         this.discount = item.getDiscount();
-
-        if (item.getUnit() != null) {
-            this.unit = mapper.map(item.getUnit(), UnitDto.class);
-        } else {
-            this.service = mapper.map(item.getService(), AutoServiceDto.class);
-        }
+        this.unit = mapper.map(item.getUnit(), UnitDto.class);
     }
 
     public String getId() {
@@ -67,13 +61,5 @@ public class ItemResponseDto {
 
     public void setUnit(UnitDto unit) {
         this.unit = unit;
-    }
-
-    public AutoServiceDto getService() {
-        return service;
-    }
-
-    public void setService(AutoServiceDto service) {
-        this.service = service;
     }
 }

@@ -71,7 +71,7 @@ public class SaleInventoryIntegrationTest {
 
     @BeforeAll
     public static void init() throws SQLException {
-        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
+        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8083")
                 .start();
     }
 
