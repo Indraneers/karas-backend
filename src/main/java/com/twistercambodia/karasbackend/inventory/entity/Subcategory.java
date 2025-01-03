@@ -14,6 +14,10 @@ public class Subcategory {
     @Column(unique = true)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="subcategory_id")
     private List<Product> products;
@@ -37,6 +41,14 @@ public class Subcategory {
         this.name = name;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public List<Product> getProducts() {
         return products;
     }
@@ -52,7 +64,6 @@ public class Subcategory {
     public void setProductCount(int productCount) {
         this.productCount = productCount;
     }
-
 
     @Override
     public String toString() {

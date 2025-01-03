@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.entity.Category;
 import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import com.twistercambodia.karasbackend.inventory.repository.SubcategoryRepository;
 import org.modelmapper.ModelMapper;
@@ -13,10 +14,13 @@ import java.util.stream.Collectors;
 @Service
 public class SubcategoryService {
     private final SubcategoryRepository subcategoryRepository;
+    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
-    public SubcategoryService(SubcategoryRepository subcategoryRepository, ModelMapper modelMapper) {
+    public SubcategoryService
+            (SubcategoryRepository subcategoryRepository, CategoryService categoryService, ModelMapper modelMapper) {
         this.subcategoryRepository = subcategoryRepository;
+        this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
 
@@ -27,7 +31,7 @@ public class SubcategoryService {
     public Subcategory findByIdOrThrowError(String id) throws RuntimeException {
         return this.subcategoryRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Category Not Found with ID=" + id));
+                .orElseThrow(() -> new NotFoundException("Subcategory Not Found with ID=" + id));
     }
 
     public Subcategory create(SubcategoryDto subcategoryDto) {
@@ -37,8 +41,10 @@ public class SubcategoryService {
 
     public Subcategory update(String id, SubcategoryDto subcategoryDto) throws RuntimeException {
         Subcategory subcategory = findByIdOrThrowError(id);
+        Category category = categoryService.findByIdOrThrowError(subcategoryDto.getCategoryId());
 
         subcategory.setName(subcategoryDto.getName());
+        subcategory.setCategory(category);
         return this.subcategoryRepository.save(subcategory);
     }
 

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class SubcategoryDto {
     private String id;
     private String name;
+    private String categoryId;
     private List<ProductDto> products;
     private int productCount;
 
@@ -18,6 +19,7 @@ public class SubcategoryDto {
         ModelMapper mapper = new ModelMapper();
         this.id = subcategory.getId();
         this.name = subcategory.getName();
+        this.categoryId = subcategory.getCategory().getId();
         this.products = subcategory.getProducts().stream()
                 .map((p) -> mapper.map(p, ProductDto.class))
                 .collect(Collectors.toList());
@@ -38,6 +40,14 @@ public class SubcategoryDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String subcategoryId) {
+        this.categoryId = subcategoryId;
     }
 
     public List<ProductDto> getProducts() {

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface SubcategoryRepository extends CrudRepository<Subcategory, String> {
     @Query("""
-        select c from Subcategory c 
+        select sc from Subcategory sc 
         where 
-            (?1 is null or lower(cast(c.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+            (?1 is null or lower(cast(sc.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
     """)
     List<Subcategory> findAll(String q);
 }

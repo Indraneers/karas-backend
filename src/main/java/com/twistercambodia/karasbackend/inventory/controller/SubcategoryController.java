@@ -20,7 +20,7 @@ public class SubcategoryController {
     }
 
     @GetMapping
-    public List<SubcategoryDto> getAllCategory(
+    public List<SubcategoryDto> getAllSubcategory(
             @RequestParam(value = "q", required = false) String q
     ) {
         return this.subcategoryService.convertToSubcategoryDto(
@@ -29,7 +29,7 @@ public class SubcategoryController {
     }
 
     @GetMapping("{id}")
-    public SubcategoryDto getCategoryById(
+    public SubcategoryDto getSubcategoryById(
             @PathVariable("id") String id
     ) {
         return this.subcategoryService.convertToSubcategoryDto(
@@ -38,7 +38,7 @@ public class SubcategoryController {
     }
 
     @PostMapping
-    public SubcategoryDto createCategory(
+    public SubcategoryDto createSubcategory(
             @RequestBody SubcategoryDto subcategoryDto
     ) {
         Subcategory subcategory = this.subcategoryService.create(subcategoryDto);
@@ -47,7 +47,7 @@ public class SubcategoryController {
     }
 
     @PutMapping("{id}")
-    public SubcategoryDto updateCategory(
+    public SubcategoryDto updateSubcategory(
             @RequestBody SubcategoryDto subcategoryDto,
             @PathVariable("id") String id
     ) throws RuntimeException {
@@ -57,7 +57,7 @@ public class SubcategoryController {
     }
 
     @DeleteMapping("{id}")
-    public SubcategoryDto deleteCategory(
+    public SubcategoryDto deleteSubcategory(
             @PathVariable("id") String id
     ) throws RuntimeException {
         Subcategory subcategory = this.subcategoryService.delete(id);
