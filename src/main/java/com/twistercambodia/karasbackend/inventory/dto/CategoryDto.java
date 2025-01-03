@@ -9,7 +9,7 @@ public class CategoryDto {
     private String id;
     private String name;
     private List<SubcategoryDto> subcategories;
-    private int subcategoriesCount;
+    private int subcategoryCount;
 
     public CategoryDto() {}
 
@@ -22,7 +22,7 @@ public class CategoryDto {
                 .stream()
                 .map(sc -> mapper.map(sc, SubcategoryDto.class))
                 .toList();
-        this.subcategoriesCount = category.getSubcategoriesCount();
+        this.subcategoryCount = category.getSubcategoryCount();
     }
 
     public String getId() {
@@ -49,11 +49,11 @@ public class CategoryDto {
         this.subcategories = subcategories;
     }
 
-    public int getSubcategoriesCount() {
-        return subcategoriesCount;
+    public int getSubcategoryCount() {
+        return subcategoryCount;
     }
 
-    public void setSubcategoriesCount(int subcategoriesCount) {
-        this.subcategoriesCount = subcategoriesCount;
+    public void setSubcategoryCount(int subcategoryCount) {
+        this.subcategoryCount = subcategoryCount;
     }
 }

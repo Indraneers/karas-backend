@@ -18,8 +18,8 @@ public class Category {
     @JoinColumn(name = "category_id")
     private List<Subcategory> subcategories;
 
-    @Formula("(select count(*) from subcategory sc where sc.category_id = id")
-    private int subcategoriesCount;
+    @Formula("(select count(*) from subcategory sc where sc.category_id = id)")
+    private int subcategoryCount;
 
     public String getId() {
         return id;
@@ -45,12 +45,12 @@ public class Category {
         this.subcategories = subcategories;
     }
 
-    public int getSubcategoriesCount() {
-        return subcategoriesCount;
+    public int getSubcategoryCount() {
+        return subcategoryCount;
     }
 
-    public void setSubcategoriesCount(int subcategoriesCount) {
-        this.subcategoriesCount = subcategoriesCount;
+    public void setSubcategoryCount(int subcategoryCount) {
+        this.subcategoryCount = subcategoryCount;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Category {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", subcategories=" + subcategories +
-                ", subcategoriesCount=" + subcategoriesCount +
+                ", subcategoryCount=" + subcategoryCount +
                 '}';
     }
 }

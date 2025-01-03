@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
@@ -51,22 +52,40 @@ public class UnitControllerTests {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("Engine Oil");
 
-        String categoryDtoJson = objectMapper.writeValueAsString(subcategoryDto);
+        String json = objectMapper.writeValueAsString(categoryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/subcategories")
+                post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(categoryDtoJson)
+                        .content(json)
         ).andReturn();
 
-        String categoryId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        categoryDto.setId(id);
+
+        subcategoryDto = new SubcategoryDto();
+        subcategoryDto.setName("Passenger Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
+
+        json = objectMapper.writeValueAsString(subcategoryDto);
+
+        mvcResult = this.mockMvc.perform(
+                post("/subcategories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        subcategoryDto.setId(id);
 
         productDto = new ProductDto();
 
-        productDto.setSubcategoryId(categoryId);
+        productDto.setSubcategoryId(subcategoryDto.getId());
         productDto.setName("Twister Engine Oil A");
 
         String productDtoJson = objectMapper.writeValueAsString(productDto);

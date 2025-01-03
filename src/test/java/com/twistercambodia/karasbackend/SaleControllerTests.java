@@ -6,6 +6,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
@@ -129,32 +130,49 @@ public class SaleControllerTests {
         this.setupObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        // Create Category
-        SubcategoryDto subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("Engine Oil");
 
-        String json = objectMapper.writeValueAsString(subcategoryDto);
+        String json = objectMapper.writeValueAsString(categoryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
+                post("/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        categoryDto.setId(id);
+
+        SubcategoryDto  subcategoryDto = new SubcategoryDto();
+        subcategoryDto.setName("Passenger Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
+
+        json = objectMapper.writeValueAsString(subcategoryDto);
+
+        mvcResult = this.mockMvc.perform(
                 post("/subcategories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andReturn();
 
-        String subcategoryId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        subcategoryDto.setId(id);
 
         this.productDtos = new ArrayList<>();
 
         // Create Products
         ProductDto productDtoOne = new ProductDto();
-        productDtoOne.setSubcategoryId(subcategoryId);
+        productDtoOne.setSubcategoryId(subcategoryDto.getId());
         productDtoOne.setName("Engine Oil A");
         productDtoOne.setVariable(false);
 
         productDtos.add(productDtoOne);
 
         ProductDto productDtoTwo = new ProductDto();
-        productDtoTwo.setSubcategoryId(subcategoryId);
+        productDtoTwo.setSubcategoryId(subcategoryDto.getId());
         productDtoTwo.setName("Engine Oil B");
         productDtoTwo.setVariable(false);
 
@@ -195,7 +213,7 @@ public class SaleControllerTests {
                         .content(json)
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         userDto.setId(id);
 

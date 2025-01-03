@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,18 +49,34 @@ public class ProductControllerTests {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("Engine Oil");
 
-        String json = objectMapper.writeValueAsString(subcategoryDto);
+        String json = objectMapper.writeValueAsString(categoryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/subcategories")
+                post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        categoryDto.setId(id);
+
+        subcategoryDto = new SubcategoryDto();
+        subcategoryDto.setName("Passenger Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
+
+        json = objectMapper.writeValueAsString(subcategoryDto);
+
+        mvcResult = this.mockMvc.perform(
+                post("/subcategories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         subcategoryDto.setId(id);
     }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("categories")
 public class CategoryController {
     private final CategoryService categoryService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

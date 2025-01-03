@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,17 +41,35 @@ public class SubcategoryControllerTests {
 
     private MockMvc mockMvc;
 
+    private CategoryDto categoryDto;
+
     @BeforeEach
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         this.objectMapper = new ObjectMapper();
+
+        categoryDto = new CategoryDto();
+        categoryDto.setName("Engine Oil");
+
+        String json = objectMapper.writeValueAsString(categoryDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        categoryDto.setId(id);
     }
 
     @Test
-    public void createCategory_shouldCreateNewSubcategory_status200() throws Exception {
+    public void createSubcategory_shouldCreateNewSubcategory_status200() throws Exception {
         SubcategoryDto subcategoryDto = new SubcategoryDto();
 
-        subcategoryDto.setName("Engine Oil");
+        subcategoryDto.setName("Gasoline Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryDto);
 
@@ -64,13 +83,28 @@ public class SubcategoryControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((subcategoryDto.getName()))
                 );
+
+        this.mockMvc.perform(
+                        get("/categories/" + categoryDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.subcategoryCount")
+                                .value(1)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.subcategories[0].name")
+                                .value(subcategoryDto.getName())
+                );
     }
 
     @Test
-    void createCategory_DuplicateSubcategoryException_Status400() throws Exception {
+    void createSubcategory_DuplicateSubcategoryException_Status400() throws Exception {
         SubcategoryDto subcategoryDto = new SubcategoryDto();
 
-        subcategoryDto.setName("Gasoline Engine Oils");
+        subcategoryDto.setName("Gasoline Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryDto);
 
@@ -90,13 +124,24 @@ public class SubcategoryControllerTests {
                         MockMvcResultMatchers.jsonPath("$.message")
                                 .value("Invalid Data")
                 );
+
+        this.mockMvc.perform(
+                        get("/categories/" + categoryDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.subcategoryCount")
+                                .value(1)
+                );
     }
 
     @Test
-    void updateCategory_ShouldUpdateSubcategory_Status200() throws Exception {
+    void updateSubcategory_ShouldUpdateSubcategory_Status200() throws Exception {
         SubcategoryDto subcategoryDto = new SubcategoryDto();
 
-        subcategoryDto.setName("Gasoline Engine Oils");
+        subcategoryDto.setName("Gasoline Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryDto);
 
@@ -109,7 +154,7 @@ public class SubcategoryControllerTests {
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         subcategoryDto.setId(id);
-        subcategoryDto.setName("Transmission Fluid");
+        subcategoryDto.setName("Diesel Engine Oil");
 
         json = objectMapper.writeValueAsString(subcategoryDto);
 
@@ -123,13 +168,28 @@ public class SubcategoryControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((subcategoryDto.getName()))
                 );
+
+        this.mockMvc.perform(
+                        get("/categories/" + categoryDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.subcategoryCount")
+                                .value(1)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.subcategories[0].name")
+                                .value(subcategoryDto.getName())
+                );
     }
 
     @Test
-    void deleteCategory_ShouldDeleteSubcategory_Status200() throws Exception {
+    void deleteSubcategory_ShouldDeleteSubcategory_Status200() throws Exception {
         SubcategoryDto subcategoryDto = new SubcategoryDto();
 
-        subcategoryDto.setName("Gasoline Engine Oils");
+        subcategoryDto.setName("Gasoline Engine Oil");
+        subcategoryDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryDto);
 
@@ -150,6 +210,16 @@ public class SubcategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((subcategoryDto.getName()))
+                );
+
+        this.mockMvc.perform(
+                        get("/categories/" + categoryDto.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.subcategoryCount")
+                                .value(0)
                 );
     }
 }
