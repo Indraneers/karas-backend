@@ -22,8 +22,8 @@ public class Product {
     private int unitCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "subcategory_id", nullable = false)
+    private Subcategory subcategory;
 
     @Column
     private String baseUnit;
@@ -65,12 +65,12 @@ public class Product {
         this.unitCount = unitTotal;
     }
 
-    public Category getCategory() {
-        return category;
+    public Subcategory getSubcategory() {
+        return subcategory;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setSubcategory(Subcategory subcategory) {
+        this.subcategory = subcategory;
     }
 
     public String getBaseUnit() {

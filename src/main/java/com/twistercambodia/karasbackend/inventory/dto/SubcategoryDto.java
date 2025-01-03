@@ -1,27 +1,27 @@
 package com.twistercambodia.karasbackend.inventory.dto;
 
-import com.twistercambodia.karasbackend.inventory.entity.Category;
+import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CategoryDto {
+public class SubcategoryDto {
     private String id;
     private String name;
     private List<ProductDto> products;
     private int productCount;
 
-    public CategoryDto() {}
+    public SubcategoryDto() {}
 
-    public CategoryDto(Category category) {
+    public SubcategoryDto(Subcategory subcategory) {
         ModelMapper mapper = new ModelMapper();
-        this.id = category.getId();
-        this.name = category.getName();
-        this.products = category.getProducts().stream()
+        this.id = subcategory.getId();
+        this.name = subcategory.getName();
+        this.products = subcategory.getProducts().stream()
                 .map((p) -> mapper.map(p, ProductDto.class))
                 .collect(Collectors.toList());
-        this.productCount = category.getProductCount();
+        this.productCount = subcategory.getProductCount();
     }
 
     public String getId() {

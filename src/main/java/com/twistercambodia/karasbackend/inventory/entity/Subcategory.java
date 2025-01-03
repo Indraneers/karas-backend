@@ -1,13 +1,12 @@
 package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Formula;
 
 import java.util.List;
 
 @Entity
-public class Category {
+public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -16,10 +15,10 @@ public class Category {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="category_id")
+    @JoinColumn(name="subcategory_id")
     private List<Product> products;
 
-    @Formula("(select count(*) from product p where p.category_id = id)")
+    @Formula("(select count(*) from product p where p.subcategory_id = id)")
     private int productCount;
 
     public String getId() {
@@ -57,7 +56,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "Subcategory{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", products=" + products +

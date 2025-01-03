@@ -2,7 +2,7 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,27 +41,27 @@ public class ProductControllerTests {
 
     private MockMvc mockMvc;
 
-    private CategoryDto categoryDto;
+    private SubcategoryDto subcategoryDto;
 
     @BeforeEach
     public void setup() throws Exception {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        categoryDto = new CategoryDto();
-        categoryDto.setName("Engine Oil");
+        subcategoryDto = new SubcategoryDto();
+        subcategoryDto.setName("Passenger Engine Oil");
 
-        String json = objectMapper.writeValueAsString(categoryDto);
+        String json = objectMapper.writeValueAsString(subcategoryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/categories")
+                post("/subcategories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        categoryDto.setId(id);
+        subcategoryDto.setId(id);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setCategoryId(this.categoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -80,8 +80,8 @@ public class ProductControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.categoryId")
-                                .value((productDto.getCategoryId()))
+                        MockMvcResultMatchers.jsonPath("$.subcategoryId")
+                                .value((productDto.getSubcategoryId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
@@ -89,7 +89,7 @@ public class ProductControllerTests {
                 );
 
         this.mockMvc.perform(
-                get("/categories/" + categoryDto.getId())
+                get("/subcategories/" + subcategoryDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         )
@@ -108,7 +108,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setCategoryId(this.categoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -134,7 +134,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setCategoryId(this.categoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -158,8 +158,8 @@ public class ProductControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.categoryId")
-                                .value((productDto.getCategoryId()))
+                        MockMvcResultMatchers.jsonPath("$.subcategoryId")
+                                .value((productDto.getSubcategoryId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
@@ -172,7 +172,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setCategoryId(this.categoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -189,8 +189,8 @@ public class ProductControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.categoryId")
-                                .value((productDto.getCategoryId()))
+                        MockMvcResultMatchers.jsonPath("$.subcategoryId")
+                                .value((productDto.getSubcategoryId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
@@ -198,7 +198,7 @@ public class ProductControllerTests {
                 );
 
         this.mockMvc.perform(
-                        get("/categories/" + categoryDto.getId())
+                        get("/subcategories/" + subcategoryDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )

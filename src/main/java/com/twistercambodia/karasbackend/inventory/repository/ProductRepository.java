@@ -13,7 +13,7 @@ public interface ProductRepository extends CrudRepository<Product, String> {
         where
             (?1 is null or lower(cast(p.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
             AND
-            (?2 is null or p.category.id = ?2)
+            (?2 is null or p.subcategory.id = ?2)
         """
     )
     List<Product> findAll(String q, String categoryId);

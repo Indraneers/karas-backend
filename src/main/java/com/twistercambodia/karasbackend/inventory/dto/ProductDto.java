@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 public class ProductDto {
     private String id;
     private String name;
-    private List<UnitRequestDto> units;
-    private String categoryId;
+    private String subcategoryId;
     private int unitCount;
     private String baseUnit;
     private boolean variable;
@@ -21,11 +20,7 @@ public class ProductDto {
         ModelMapper mapper = new ModelMapper();
         this.id = product.getId();
         this.name = product.getName();
-        this.units =
-                product.getUnits().stream()
-                        .map(u -> mapper.map(u, UnitRequestDto.class))
-                        .collect(Collectors.toList());
-        this.categoryId = product.getCategory().getId();
+        this.subcategoryId = product.getSubcategory().getId();
         this.unitCount = product.getUnitCount();
         this.baseUnit = product.getBaseUnit();
         this.variable = product.isVariable();
@@ -47,20 +42,12 @@ public class ProductDto {
         this.name = name;
     }
 
-    public List<UnitRequestDto> getUnits() {
-        return units;
+    public String getSubcategoryId() {
+        return subcategoryId;
     }
 
-    public void setUnits(List<UnitRequestDto> units) {
-        this.units = units;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setSubcategoryId(String subcategoryId) {
+        this.subcategoryId = subcategoryId;
     }
 
     public int getUnitCount() {

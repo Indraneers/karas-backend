@@ -2,7 +2,7 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ public class UnitControllerTests {
 
     private MockMvc mockMvc;
 
-    CategoryDto categoryDto;
+    SubcategoryDto subcategoryDto;
 
     private ProductDto productDto;
 
@@ -51,13 +51,13 @@ public class UnitControllerTests {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        categoryDto = new CategoryDto();
-        categoryDto.setName("Engine Oil");
+        subcategoryDto = new SubcategoryDto();
+        subcategoryDto.setName("Passenger Engine Oil");
 
-        String categoryDtoJson = objectMapper.writeValueAsString(categoryDto);
+        String categoryDtoJson = objectMapper.writeValueAsString(subcategoryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/categories")
+                post("/subcategories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(categoryDtoJson)
         ).andReturn();
@@ -66,7 +66,7 @@ public class UnitControllerTests {
 
         productDto = new ProductDto();
 
-        productDto.setCategoryId(categoryId);
+        productDto.setSubcategoryId(categoryId);
         productDto.setName("Twister Engine Oil A");
 
         String productDtoJson = objectMapper.writeValueAsString(productDto);
@@ -125,10 +125,6 @@ public class UnitControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.unitCount")
                                 .value(1)
-                )
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.units[0].name")
-                                .value(unitRequestDto.getName())
                 );
     }
 
@@ -233,10 +229,6 @@ public class UnitControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.unitCount")
                                 .value(0)
-                )
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.units")
-                                .isEmpty()
                 );
     }
 }
