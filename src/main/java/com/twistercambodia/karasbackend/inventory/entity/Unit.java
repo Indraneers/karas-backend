@@ -15,7 +15,7 @@ public class Unit {
     private String name;
 
     @Column
-    private int quantity;
+    private long quantity;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="product_id", nullable = false)
@@ -28,7 +28,8 @@ public class Unit {
     private String sku;
 
     @Column
-    private int toBaseUnit;
+    private long
+            toBaseUnit;
 
     public String getId() {
         return id;
@@ -46,11 +47,11 @@ public class Unit {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -78,11 +79,11 @@ public class Unit {
         this.sku = sku;
     }
 
-    public int getToBaseUnit() {
+    public long getToBaseUnit() {
         return toBaseUnit;
     }
 
-    public void setToBaseUnit(int toBaseUnit) {
+    public void setToBaseUnit(long toBaseUnit) {
         this.toBaseUnit = toBaseUnit;
     }
 

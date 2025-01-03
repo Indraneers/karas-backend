@@ -23,7 +23,7 @@ public class Item {
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "unit_id")
     private Unit unit;
 

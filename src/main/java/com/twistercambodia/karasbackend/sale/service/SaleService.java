@@ -147,7 +147,7 @@ public class SaleService {
     public List<SaleResponseDto> convertToSaleResponseDto(List<Sale> sales) {
         return sales
                 .stream()
-                .map((s) -> modelMapper.map(s, SaleResponseDto.class))
+                .map(SaleResponseDto::new)
                 .collect(Collectors.toList());
     }
 

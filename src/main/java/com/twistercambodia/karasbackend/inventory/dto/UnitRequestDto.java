@@ -5,11 +5,11 @@ import com.twistercambodia.karasbackend.inventory.entity.Unit;
 public class UnitRequestDto {
     private String id;
     private String name;
-    private int quantity;
+    private long quantity;
     private String productId;
     private int price;
     private String sku;
-    private int toBaseUnit;
+    private long toBaseUnit;
 
     public UnitRequestDto() {}
 
@@ -39,11 +39,11 @@ public class UnitRequestDto {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -71,11 +71,11 @@ public class UnitRequestDto {
         this.sku = sku;
     }
 
-    public int getToBaseUnit() {
+    public long getToBaseUnit() {
         return toBaseUnit;
     }
 
-    public void setToBaseUnit(int toBaseUnit) {
+    public void setToBaseUnit(long toBaseUnit) {
         this.toBaseUnit = toBaseUnit;
     }
 }

@@ -4,6 +4,7 @@ import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.service.SaleService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;

@@ -3,24 +3,23 @@ package com.twistercambodia.karasbackend.inventory.dto;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import org.modelmapper.ModelMapper;
 
-import static com.twistercambodia.karasbackend.utils.MappingUtils.map;
-
 public class UnitResponseDto {
     private String id;
     private String name;
-    private int quantity;
+    private long quantity;
     private ProductDto product;
     private int price;
     private String sku;
-    private int toBaseUnit;
+    private long toBaseUnit;
 
     public UnitResponseDto() {}
 
     public UnitResponseDto(Unit unit) {
+        ModelMapper mapper = new ModelMapper();
         this.id = unit.getId();
         this.name = unit.getName();
         this.quantity = unit.getQuantity();
-        this.product = map(unit.getProduct(), ProductDto.class);
+        this.product = mapper.map(unit.getProduct(), ProductDto.class);
         this.price = unit.getPrice();
         this.sku = unit.getSku();
         this.toBaseUnit = unit.getToBaseUnit();
@@ -42,11 +41,11 @@ public class UnitResponseDto {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -74,11 +73,11 @@ public class UnitResponseDto {
         this.sku = sku;
     }
 
-    public int getToBaseUnit() {
+    public long getToBaseUnit() {
         return toBaseUnit;
     }
 
-    public void setToBaseUnit(int toBaseUnit) {
+    public void setToBaseUnit(long toBaseUnit) {
         this.toBaseUnit = toBaseUnit;
     }
 }
