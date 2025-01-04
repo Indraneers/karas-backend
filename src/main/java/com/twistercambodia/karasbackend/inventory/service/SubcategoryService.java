@@ -25,8 +25,8 @@ public class SubcategoryService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Subcategory> findAll(String query) {
-        return this.subcategoryRepository.findAll(query);
+    public List<Subcategory> findAll(String query, String categoryId) {
+        return this.subcategoryRepository.findAll(query, categoryId);
     }
 
     public Subcategory findByIdOrThrowError(String id) throws RuntimeException {

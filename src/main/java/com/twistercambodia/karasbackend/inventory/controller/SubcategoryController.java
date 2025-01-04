@@ -22,10 +22,11 @@ public class SubcategoryController {
 
     @GetMapping
     public List<SubcategoryResponseDto> getAllSubcategory(
-            @RequestParam(value = "q", required = false) String q
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "categoryId", required = false) String categoryId
     ) {
         return this.subcategoryService.convertToSubcategoryDto(
-                this.subcategoryService.findAll(q)
+                this.subcategoryService.findAll(q, categoryId)
         );
     }
 

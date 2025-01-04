@@ -11,6 +11,8 @@ public interface SubcategoryRepository extends CrudRepository<Subcategory, Strin
         select sc from Subcategory sc 
         where 
             (?1 is null or lower(cast(sc.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+            AND
+            (?2 is null or sc.category.id = ?2)
     """)
-    List<Subcategory> findAll(String q);
+    List<Subcategory> findAll(String q, String categoryId);
 }
