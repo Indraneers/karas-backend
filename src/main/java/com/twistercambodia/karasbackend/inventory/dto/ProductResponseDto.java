@@ -3,24 +3,20 @@ package com.twistercambodia.karasbackend.inventory.dto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import org.modelmapper.ModelMapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class ProductDto {
+public class ProductResponseDto {
     private String id;
     private String name;
-    private String subcategoryId;
+    private SubcategoryRequestDto subcategory;
     private int unitCount;
     private String baseUnit;
     private boolean variable;
 
-    public ProductDto() {}
-
-    public ProductDto(Product product) {
+    public ProductResponseDto() {}
+    public ProductResponseDto(Product product) {
         ModelMapper mapper = new ModelMapper();
         this.id = product.getId();
         this.name = product.getName();
-        this.subcategoryId = product.getSubcategory().getId();
+        this.subcategory = mapper.map(product.getSubcategory(), SubcategoryRequestDto.class);
         this.unitCount = product.getUnitCount();
         this.baseUnit = product.getBaseUnit();
         this.variable = product.isVariable();
@@ -42,12 +38,12 @@ public class ProductDto {
         this.name = name;
     }
 
-    public String getSubcategoryId() {
-        return subcategoryId;
+    public SubcategoryRequestDto getSubcategory() {
+        return subcategory;
     }
 
-    public void setSubcategoryId(String subcategoryId) {
-        this.subcategoryId = subcategoryId;
+    public void setSubcategory(SubcategoryRequestDto subcategory) {
+        this.subcategory = subcategory;
     }
 
     public int getUnitCount() {

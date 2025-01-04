@@ -10,7 +10,7 @@ public class SubcategoryResponseDto {
     private String id;
     private String name;
     private CategoryDto category;
-    private List<ProductDto> products;
+    private List<ProductRequestDto> products;
     private int productCount;
 
     public SubcategoryResponseDto() {}
@@ -21,7 +21,7 @@ public class SubcategoryResponseDto {
         this.name = subcategory.getName();
         this.category = new CategoryDto(subcategory.getCategory());
         this.products = subcategory.getProducts().stream()
-                .map((p) -> mapper.map(p, ProductDto.class))
+                .map((p) -> mapper.map(p, ProductRequestDto.class))
                 .collect(Collectors.toList());
         this.productCount = subcategory.getProductCount();
     }
@@ -50,11 +50,11 @@ public class SubcategoryResponseDto {
         this.category = category;
     }
 
-    public List<ProductDto> getProducts() {
+    public List<ProductRequestDto> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductDto> products) {
+    public void setProducts(List<ProductRequestDto> products) {
         this.products = products;
     }
 

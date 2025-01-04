@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
-import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.service.ProductService;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDto> getAllProducts(
+    public List<ProductResponseDto> getAllProducts(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "categoryId", required = false) String categoryId
     ) {
@@ -30,7 +31,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public ProductDto getProductById(
+    public ProductResponseDto getProductById(
             @PathVariable("id") String id
     ) {
         return this.productService.convertToProductDto(
@@ -39,26 +40,26 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductDto createProduct(
-            @RequestBody ProductDto productDto
+    public ProductResponseDto createProduct(
+            @RequestBody ProductRequestDto productRequestDto
     ) {
-        Product product = this.productService.create(productDto);
+        Product product = this.productService.create(productRequestDto);
         this.logger.info("Creating product={}", product);
         return this.productService.convertToProductDto(product);
     }
 
     @PutMapping("{id}")
-    public ProductDto updateProduct(
-            @RequestBody ProductDto productDto,
+    public ProductResponseDto updateProduct(
+            @RequestBody ProductRequestDto productRequestDto,
             @PathVariable("id") String id
     ) throws RuntimeException {
-        Product product = this.productService.update(id, productDto);
+        Product product = this.productService.update(id, productRequestDto);
         this.logger.info("Updating product={}", product);
         return this.productService.convertToProductDto(product);
     }
 
     @DeleteMapping("{id}")
-    public ProductDto deleteProduct(
+    public ProductResponseDto deleteProduct(
             @PathVariable("id") String id
     ) throws RuntimeException {
         Product product = this.productService.delete(id);

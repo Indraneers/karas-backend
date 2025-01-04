@@ -8,7 +8,7 @@ import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
-import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
@@ -59,7 +59,7 @@ public class SaleControllerTests {
 
     private MockMvc mockMvc;
 
-    List<ProductDto> productDtos;
+    List<ProductRequestDto> productRequestDtos;
 
     List<UnitRequestDto> unitRequestDtos;
 
@@ -76,9 +76,9 @@ public class SaleControllerTests {
     }
 
     public void setupProducts() throws Exception {
-        for (ProductDto productDto : productDtos) {
-            System.out.println(productDto.getName());
-            String json = objectMapper.writeValueAsString(productDto);
+        for (ProductRequestDto productRequestDto : productRequestDtos) {
+            System.out.println(productRequestDto.getName());
+            String json = objectMapper.writeValueAsString(productRequestDto);
 
             MvcResult mvcResult = this.mockMvc.perform(
                     post("/products")
@@ -88,7 +88,7 @@ public class SaleControllerTests {
 
             String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-            productDto.setId(id);
+            productRequestDto.setId(id);
         }
     }
 
@@ -99,9 +99,9 @@ public class SaleControllerTests {
     }
 
     public void setupProductsWithUnits(List<UnitRequestDto> mockedUnitRequestDtos) throws Exception {
-        for (ProductDto productDto : productDtos) {
+        for (ProductRequestDto productRequestDto : productRequestDtos) {
             for (UnitRequestDto unitRequestDto : mockedUnitRequestDtos) {
-                unitRequestDto.setProductId(productDto.getId());
+                unitRequestDto.setProductId(productRequestDto.getId());
                 String json = objectMapper.writeValueAsString(unitRequestDto);
 
                 MvcResult mvcResult = this.mockMvc.perform(
@@ -161,22 +161,22 @@ public class SaleControllerTests {
 
         subcategoryRequestDto.setId(id);
 
-        this.productDtos = new ArrayList<>();
+        this.productRequestDtos = new ArrayList<>();
 
         // Create Products
-        ProductDto productDtoOne = new ProductDto();
-        productDtoOne.setSubcategoryId(subcategoryRequestDto.getId());
-        productDtoOne.setName("Engine Oil A");
-        productDtoOne.setVariable(false);
+        ProductRequestDto productRequestDtoOne = new ProductRequestDto();
+        productRequestDtoOne.setSubcategoryId(subcategoryRequestDto.getId());
+        productRequestDtoOne.setName("Engine Oil A");
+        productRequestDtoOne.setVariable(false);
 
-        productDtos.add(productDtoOne);
+        productRequestDtos.add(productRequestDtoOne);
 
-        ProductDto productDtoTwo = new ProductDto();
-        productDtoTwo.setSubcategoryId(subcategoryRequestDto.getId());
-        productDtoTwo.setName("Engine Oil B");
-        productDtoTwo.setVariable(false);
+        ProductRequestDto productRequestDtoTwo = new ProductRequestDto();
+        productRequestDtoTwo.setSubcategoryId(subcategoryRequestDto.getId());
+        productRequestDtoTwo.setName("Engine Oil B");
+        productRequestDtoTwo.setVariable(false);
 
-        productDtos.add(productDtoTwo);
+        productRequestDtos.add(productRequestDtoTwo);
 
         this.setupProducts();
 

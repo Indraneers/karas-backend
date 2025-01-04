@@ -1,10 +1,12 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
-import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableProduct;
+
 import com.twistercambodia.karasbackend.inventory.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -34,12 +36,12 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product Not Found with ID=" + id));
     }
 
-    public Product create(ProductDto productDto) {
-        Product product = this.convertToProduct(productDto);
+    public Product create(ProductRequestDto productRequestDto) {
+        Product product = this.convertToProduct(productRequestDto);
 
         boolean invalidVariableProduct =
-                productDto.isVariable()
-                && productDto.getBaseUnit().isEmpty();
+                productRequestDto.isVariable()
+                && productRequestDto.getBaseUnit().isEmpty();
 
         if (invalidVariableProduct) {
             throw new InvalidVariableProduct();
@@ -48,22 +50,22 @@ public class ProductService {
         return this.productRepository.save(product);
     }
 
-    public Product update(String id, ProductDto productDto) throws RuntimeException {
+    public Product update(String id, ProductRequestDto productRequestDto) throws RuntimeException {
         Product product = findByIdOrThrowError(id);
-        Subcategory subcategory = subcategoryService.findByIdOrThrowError(productDto.getSubcategoryId());
+        Subcategory subcategory = subcategoryService.findByIdOrThrowError(productRequestDto.getSubcategoryId());
 
         boolean invalidVariableProduct =
-                productDto.isVariable()
-                        && productDto.getBaseUnit().isEmpty();
+                productRequestDto.isVariable()
+                        && productRequestDto.getBaseUnit().isEmpty();
 
         if (invalidVariableProduct) {
             throw new InvalidVariableProduct();
         }
 
-        product.setName(productDto.getName());
+        product.setName(productRequestDto.getName());
         product.setSubcategory(subcategory);
         product.setVariable(product.isVariable());
-        product.setBaseUnit(productDto.getBaseUnit());
+        product.setBaseUnit(productRequestDto.getBaseUnit());
 
         return this.productRepository.save(product);
     }
@@ -75,18 +77,18 @@ public class ProductService {
         return product;
     }
 
-    public ProductDto convertToProductDto(Product product) {
-        return modelMapper.map(product, ProductDto.class);
+    public ProductResponseDto convertToProductDto(Product product) {
+        return modelMapper.map(product, ProductResponseDto.class);
     }
 
-    public List<ProductDto> convertToProductDto(List<Product> products) {
+    public List<ProductResponseDto> convertToProductDto(List<Product> products) {
         return products
                 .stream()
-                .map((product) -> modelMapper.map(product, ProductDto.class))
+                .map((product) -> modelMapper.map(product, ProductResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Product convertToProduct(ProductDto productDto) {
-        return modelMapper.map(productDto, Product.class);
+    public Product convertToProduct(ProductRequestDto productRequestDto) {
+        return modelMapper.map(productRequestDto, Product.class);
     }
 }

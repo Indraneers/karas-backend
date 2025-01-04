@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
-import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,12 +83,12 @@ public class ProductControllerTests {
 
     @Test
     void createProduct_shouldReturnNewProduct_status200() throws Exception {
-        ProductDto productDto = new ProductDto();
+        ProductRequestDto productRequestDto = new ProductRequestDto();
 
-        productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
+        productRequestDto.setName("Twister Engine Oil A");
+        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
-        String json = objectMapper.writeValueAsString(productDto);
+        String json = objectMapper.writeValueAsString(productRequestDto);
 
         this.mockMvc.perform(
                         post("/products")
@@ -97,12 +97,12 @@ public class ProductControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.subcategoryId")
-                                .value((productDto.getSubcategoryId()))
+                        MockMvcResultMatchers.jsonPath("$.subcategory.id")
+                                .value((productRequestDto.getSubcategoryId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
-                                .value((productDto.getName()))
+                                .value((productRequestDto.getName()))
                 );
 
         this.mockMvc.perform(
@@ -116,18 +116,18 @@ public class ProductControllerTests {
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.products[0].name")
-                                .value(productDto.getName())
+                                .value(productRequestDto.getName())
                 );
     }
 
     @Test
     void createProduct_DuplicateProductException_status400() throws Exception {
-        ProductDto productDto = new ProductDto();
+        ProductRequestDto productRequestDto = new ProductRequestDto();
 
-        productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
+        productRequestDto.setName("Twister Engine Oil A");
+        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
-        String json = objectMapper.writeValueAsString(productDto);
+        String json = objectMapper.writeValueAsString(productRequestDto);
 
         this.mockMvc.perform(
                 post("/products")
@@ -148,12 +148,12 @@ public class ProductControllerTests {
 
     @Test
     void updateProduct_ShouldUpdateProduct_status200() throws Exception {
-        ProductDto productDto = new ProductDto();
+        ProductRequestDto productRequestDto = new ProductRequestDto();
 
-        productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
+        productRequestDto.setName("Twister Engine Oil A");
+        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
-        String json = objectMapper.writeValueAsString(productDto);
+        String json = objectMapper.writeValueAsString(productRequestDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/products")
@@ -163,10 +163,10 @@ public class ProductControllerTests {
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        productDto.setId(id);
-        productDto.setName("Twister Engine Oil B");
+        productRequestDto.setId(id);
+        productRequestDto.setName("Twister Engine Oil B");
 
-        json = objectMapper.writeValueAsString(productDto);
+        json = objectMapper.writeValueAsString(productRequestDto);
 
         this.mockMvc.perform(
                         put("/products/" + id)
@@ -175,23 +175,23 @@ public class ProductControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.subcategoryId")
-                                .value((productDto.getSubcategoryId()))
+                        MockMvcResultMatchers.jsonPath("$.subcategory.id")
+                                .value((productRequestDto.getSubcategoryId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
-                                .value((productDto.getName()))
+                                .value((productRequestDto.getName()))
                 );
     }
 
     @Test
     void deleteProduct_ShouldDeleteProduct_status200() throws Exception {
-        ProductDto productDto = new ProductDto();
+        ProductRequestDto productRequestDto = new ProductRequestDto();
 
-        productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
+        productRequestDto.setName("Twister Engine Oil A");
+        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
-        String json = objectMapper.writeValueAsString(productDto);
+        String json = objectMapper.writeValueAsString(productRequestDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/products")
@@ -206,12 +206,12 @@ public class ProductControllerTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.subcategoryId")
-                                .value((productDto.getSubcategoryId()))
+                        MockMvcResultMatchers.jsonPath("$.subcategory.id")
+                                .value((productRequestDto.getSubcategoryId()))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
-                                .value((productDto.getName()))
+                                .value((productRequestDto.getName()))
                 );
 
         this.mockMvc.perform(

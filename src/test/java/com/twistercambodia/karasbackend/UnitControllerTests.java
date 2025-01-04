@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
-import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ public class UnitControllerTests {
 
     SubcategoryRequestDto subcategoryRequestDto;
 
-    private ProductDto productDto;
+    private ProductRequestDto productRequestDto;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -83,12 +83,12 @@ public class UnitControllerTests {
 
         subcategoryRequestDto.setId(id);
 
-        productDto = new ProductDto();
+        productRequestDto = new ProductRequestDto();
 
-        productDto.setSubcategoryId(subcategoryRequestDto.getId());
-        productDto.setName("Twister Engine Oil A");
+        productRequestDto.setSubcategoryId(subcategoryRequestDto.getId());
+        productRequestDto.setName("Twister Engine Oil A");
 
-        String productDtoJson = objectMapper.writeValueAsString(productDto);
+        String productDtoJson = objectMapper.writeValueAsString(productRequestDto);
 
         mvcResult = this.mockMvc.perform(
                 post("/products")
@@ -98,7 +98,7 @@ public class UnitControllerTests {
 
         String productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        productDto.setId(productId);
+        productRequestDto.setId(productId);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class UnitControllerTests {
         UnitRequestDto unitRequestDto = new UnitRequestDto();
 
         unitRequestDto.setName("1L");
-        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setProductId(this.productRequestDto.getId());
         unitRequestDto.setPrice(100);
         unitRequestDto.setQuantity(50);
 
@@ -137,7 +137,7 @@ public class UnitControllerTests {
                 );
 
         this.mockMvc.perform(
-                        get("/products/" + productDto.getId())
+                        get("/products/" + productRequestDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )
@@ -152,7 +152,7 @@ public class UnitControllerTests {
         UnitRequestDto unitRequestDto = new UnitRequestDto();
 
         unitRequestDto.setName("1L");
-        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setProductId(this.productRequestDto.getId());
         unitRequestDto.setPrice(100);
         unitRequestDto.setQuantity(50);
 
@@ -168,7 +168,7 @@ public class UnitControllerTests {
 
         unitRequestDto.setId(id);
         unitRequestDto.setName("2L");
-        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setProductId(this.productRequestDto.getId());
         unitRequestDto.setPrice(200);
         unitRequestDto.setQuantity(25);
 
@@ -203,7 +203,7 @@ public class UnitControllerTests {
         UnitRequestDto unitRequestDto = new UnitRequestDto();
 
         unitRequestDto.setName("1L");
-        unitRequestDto.setProductId(this.productDto.getId());
+        unitRequestDto.setProductId(this.productRequestDto.getId());
         unitRequestDto.setPrice(100);
         unitRequestDto.setQuantity(50);
 
@@ -241,7 +241,7 @@ public class UnitControllerTests {
                 );
 
         this.mockMvc.perform(
-                        get("/products/" + productDto.getId())
+                        get("/products/" + productRequestDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )

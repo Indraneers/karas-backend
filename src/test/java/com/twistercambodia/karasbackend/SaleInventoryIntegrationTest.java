@@ -8,7 +8,7 @@ import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
-import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
@@ -62,7 +62,7 @@ public class SaleInventoryIntegrationTest {
 
     SubcategoryRequestDto subcategoryRequestDto = new SubcategoryRequestDto();
 
-    ProductDto productDto;
+    ProductRequestDto productRequestDto;
 
     CustomerDto customerDto;
 
@@ -76,9 +76,9 @@ public class SaleInventoryIntegrationTest {
                 .start();
     }
 
-    public void setupProducts(ProductDto requestProductDto) throws Exception {
-        System.out.println(requestProductDto.getName());
-        String json = objectMapper.writeValueAsString(requestProductDto);
+    public void setupProducts(ProductRequestDto requestProductRequestDto) throws Exception {
+        System.out.println(requestProductRequestDto.getName());
+        String json = objectMapper.writeValueAsString(requestProductRequestDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/products")
@@ -88,9 +88,9 @@ public class SaleInventoryIntegrationTest {
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        requestProductDto.setId(id);
+        requestProductRequestDto.setId(id);
 
-        productDto = requestProductDto;
+        productRequestDto = requestProductRequestDto;
     }
 
     public void setupObjectMapper() {
@@ -101,7 +101,7 @@ public class SaleInventoryIntegrationTest {
 
     public void setupProductsWithUnits(List<UnitRequestDto> mockedUnitRequestDtos) throws Exception {
             for (UnitRequestDto unitRequestDto : mockedUnitRequestDtos) {
-            unitRequestDto.setProductId(productDto.getId());
+            unitRequestDto.setProductId(productRequestDto.getId());
             String json = objectMapper.writeValueAsString(unitRequestDto);
 
             MvcResult mvcResult = this.mockMvc.perform(
@@ -160,13 +160,13 @@ public class SaleInventoryIntegrationTest {
         subcategoryRequestDto.setId(id);
 
         // create product
-        productDto = new ProductDto();
-        productDto.setSubcategoryId(subcategoryRequestDto.getId());
-        productDto.setName("Engine Oil A");
-        productDto.setVariable(true);
-        productDto.setBaseUnit("1L");
+        productRequestDto = new ProductRequestDto();
+        productRequestDto.setSubcategoryId(subcategoryRequestDto.getId());
+        productRequestDto.setName("Engine Oil A");
+        productRequestDto.setVariable(true);
+        productRequestDto.setBaseUnit("1L");
 
-        this.setupProducts(productDto);
+        this.setupProducts(productRequestDto);
 
         // create units
         UnitRequestDto unitRequestDtoOne = new UnitRequestDto();
@@ -252,17 +252,17 @@ public class SaleInventoryIntegrationTest {
     @Test
     public void createProduct_WithoutBaseUnitIfVariableShouldFail_status400() throws Exception {
         // setup invalid mocked unit
-        ProductDto invalidProductDto = new ProductDto();
+        ProductRequestDto invalidProductRequestDto = new ProductRequestDto();
 
         // create product
-        invalidProductDto = new ProductDto();
-        invalidProductDto.setSubcategoryId(subcategoryRequestDto.getId());
-        invalidProductDto.setName("Engine Oil B");
-        invalidProductDto.setVariable(true);
-        invalidProductDto.setBaseUnit("");
+        invalidProductRequestDto = new ProductRequestDto();
+        invalidProductRequestDto.setSubcategoryId(subcategoryRequestDto.getId());
+        invalidProductRequestDto.setName("Engine Oil B");
+        invalidProductRequestDto.setVariable(true);
+        invalidProductRequestDto.setBaseUnit("");
 
         String json = objectMapper.writeValueAsString(
-                invalidProductDto
+                invalidProductRequestDto
         );
 
         this.mockMvc.perform(
@@ -277,21 +277,21 @@ public class SaleInventoryIntegrationTest {
     @Test
     public void updateProduct_WithoutBaseUnitIfVariableShouldFail_status400() throws Exception {
         // setup invalid mocked unit
-        ProductDto invalidProductDto;
+        ProductRequestDto invalidProductRequestDto;
 
         // create product
-        invalidProductDto = new ProductDto();
-        invalidProductDto.setSubcategoryId(productDto.getSubcategoryId());
-        invalidProductDto.setName(productDto.getName());
-        invalidProductDto.setVariable(productDto.isVariable());
-        invalidProductDto.setBaseUnit("");
+        invalidProductRequestDto = new ProductRequestDto();
+        invalidProductRequestDto.setSubcategoryId(productRequestDto.getSubcategoryId());
+        invalidProductRequestDto.setName(productRequestDto.getName());
+        invalidProductRequestDto.setVariable(productRequestDto.isVariable());
+        invalidProductRequestDto.setBaseUnit("");
 
         String json = objectMapper.writeValueAsString(
-                invalidProductDto
+                invalidProductRequestDto
         );
 
         this.mockMvc.perform(
-                put("/products/" + productDto.getId())
+                put("/products/" + productRequestDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(
@@ -306,7 +306,7 @@ public class SaleInventoryIntegrationTest {
 
         invalidUnitRequestDto.setName("1 Drum");
         invalidUnitRequestDto.setPrice(27500);
-        invalidUnitRequestDto.setProductId(productDto.getId());
+        invalidUnitRequestDto.setProductId(productRequestDto.getId());
         invalidUnitRequestDto.setQuantity(100);
 
 
