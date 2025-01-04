@@ -7,7 +7,7 @@ import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
@@ -145,11 +145,11 @@ public class SaleControllerTests {
 
         categoryDto.setId(id);
 
-        SubcategoryDto  subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
-        subcategoryDto.setCategoryId(categoryDto.getId());
+        SubcategoryRequestDto subcategoryRequestDto = new SubcategoryRequestDto();
+        subcategoryRequestDto.setName("Passenger Engine Oil");
+        subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
-        json = objectMapper.writeValueAsString(subcategoryDto);
+        json = objectMapper.writeValueAsString(subcategoryRequestDto);
 
         mvcResult = this.mockMvc.perform(
                 post("/subcategories")
@@ -159,20 +159,20 @@ public class SaleControllerTests {
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        subcategoryDto.setId(id);
+        subcategoryRequestDto.setId(id);
 
         this.productDtos = new ArrayList<>();
 
         // Create Products
         ProductDto productDtoOne = new ProductDto();
-        productDtoOne.setSubcategoryId(subcategoryDto.getId());
+        productDtoOne.setSubcategoryId(subcategoryRequestDto.getId());
         productDtoOne.setName("Engine Oil A");
         productDtoOne.setVariable(false);
 
         productDtos.add(productDtoOne);
 
         ProductDto productDtoTwo = new ProductDto();
-        productDtoTwo.setSubcategoryId(subcategoryDto.getId());
+        productDtoTwo.setSubcategoryId(subcategoryRequestDto.getId());
         productDtoTwo.setName("Engine Oil B");
         productDtoTwo.setVariable(false);
 

@@ -3,7 +3,7 @@ package com.twistercambodia.karasbackend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ public class UnitControllerTests {
 
     private MockMvc mockMvc;
 
-    SubcategoryDto subcategoryDto;
+    SubcategoryRequestDto subcategoryRequestDto;
 
     private ProductDto productDto;
 
@@ -67,11 +67,11 @@ public class UnitControllerTests {
 
         categoryDto.setId(id);
 
-        subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
-        subcategoryDto.setCategoryId(categoryDto.getId());
+        subcategoryRequestDto = new SubcategoryRequestDto();
+        subcategoryRequestDto.setName("Passenger Engine Oil");
+        subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
-        json = objectMapper.writeValueAsString(subcategoryDto);
+        json = objectMapper.writeValueAsString(subcategoryRequestDto);
 
         mvcResult = this.mockMvc.perform(
                 post("/subcategories")
@@ -81,11 +81,11 @@ public class UnitControllerTests {
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        subcategoryDto.setId(id);
+        subcategoryRequestDto.setId(id);
 
         productDto = new ProductDto();
 
-        productDto.setSubcategoryId(subcategoryDto.getId());
+        productDto.setSubcategoryId(subcategoryRequestDto.getId());
         productDto.setName("Twister Engine Oil A");
 
         String productDtoJson = objectMapper.writeValueAsString(productDto);

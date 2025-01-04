@@ -7,7 +7,7 @@ import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
@@ -60,7 +60,7 @@ public class SaleInventoryIntegrationTest {
 
     List<UnitRequestDto> unitRequestDtos = new ArrayList<>();
 
-    SubcategoryDto subcategoryDto = new SubcategoryDto();
+    SubcategoryRequestDto subcategoryRequestDto = new SubcategoryRequestDto();
 
     ProductDto productDto;
 
@@ -143,11 +143,11 @@ public class SaleInventoryIntegrationTest {
 
         categoryDto.setId(id);
 
-        subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
-        subcategoryDto.setCategoryId(categoryDto.getId());
+        subcategoryRequestDto = new SubcategoryRequestDto();
+        subcategoryRequestDto.setName("Passenger Engine Oil");
+        subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
-        json = objectMapper.writeValueAsString(subcategoryDto);
+        json = objectMapper.writeValueAsString(subcategoryRequestDto);
 
         mvcResult = this.mockMvc.perform(
                 post("/subcategories")
@@ -157,11 +157,11 @@ public class SaleInventoryIntegrationTest {
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        subcategoryDto.setId(id);
+        subcategoryRequestDto.setId(id);
 
         // create product
         productDto = new ProductDto();
-        productDto.setSubcategoryId(subcategoryDto.getId());
+        productDto.setSubcategoryId(subcategoryRequestDto.getId());
         productDto.setName("Engine Oil A");
         productDto.setVariable(true);
         productDto.setBaseUnit("1L");
@@ -256,7 +256,7 @@ public class SaleInventoryIntegrationTest {
 
         // create product
         invalidProductDto = new ProductDto();
-        invalidProductDto.setSubcategoryId(subcategoryDto.getId());
+        invalidProductDto.setSubcategoryId(subcategoryRequestDto.getId());
         invalidProductDto.setName("Engine Oil B");
         invalidProductDto.setVariable(true);
         invalidProductDto.setBaseUnit("");

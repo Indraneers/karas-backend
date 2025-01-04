@@ -1,9 +1,7 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
 import com.twistercambodia.karasbackend.inventory.entity.Category;
-import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import com.twistercambodia.karasbackend.inventory.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

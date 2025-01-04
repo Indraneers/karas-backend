@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import com.twistercambodia.karasbackend.inventory.service.SubcategoryService;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class SubcategoryController {
     }
 
     @GetMapping
-    public List<SubcategoryDto> getAllSubcategory(
+    public List<SubcategoryResponseDto> getAllSubcategory(
             @RequestParam(value = "q", required = false) String q
     ) {
         return this.subcategoryService.convertToSubcategoryDto(
@@ -29,7 +30,7 @@ public class SubcategoryController {
     }
 
     @GetMapping("{id}")
-    public SubcategoryDto getSubcategoryById(
+    public SubcategoryResponseDto getSubcategoryById(
             @PathVariable("id") String id
     ) {
         return this.subcategoryService.convertToSubcategoryDto(
@@ -38,26 +39,26 @@ public class SubcategoryController {
     }
 
     @PostMapping
-    public SubcategoryDto createSubcategory(
-            @RequestBody SubcategoryDto subcategoryDto
+    public SubcategoryResponseDto createSubcategory(
+            @RequestBody SubcategoryRequestDto subcategoryRequestDto
     ) {
-        Subcategory subcategory = this.subcategoryService.create(subcategoryDto);
+        Subcategory subcategory = this.subcategoryService.create(subcategoryRequestDto);
         this.logger.info("Creating subcategory={}", subcategory);
         return this.subcategoryService.convertToSubcategoryDto(subcategory);
     }
 
     @PutMapping("{id}")
-    public SubcategoryDto updateSubcategory(
-            @RequestBody SubcategoryDto subcategoryDto,
+    public SubcategoryResponseDto updateSubcategory(
+            @RequestBody SubcategoryRequestDto subcategoryRequestDto,
             @PathVariable("id") String id
     ) throws RuntimeException {
-        Subcategory subcategory = this.subcategoryService.update(id, subcategoryDto);
+        Subcategory subcategory = this.subcategoryService.update(id, subcategoryRequestDto);
         this.logger.info("Updating subcategory={}", subcategory);
         return this.subcategoryService.convertToSubcategoryDto(subcategory);
     }
 
     @DeleteMapping("{id}")
-    public SubcategoryDto deleteSubcategory(
+    public SubcategoryResponseDto deleteSubcategory(
             @PathVariable("id") String id
     ) throws RuntimeException {
         Subcategory subcategory = this.subcategoryService.delete(id);

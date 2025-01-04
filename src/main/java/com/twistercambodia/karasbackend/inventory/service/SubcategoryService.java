@@ -1,7 +1,8 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Category;
 import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import com.twistercambodia.karasbackend.inventory.repository.SubcategoryRepository;
@@ -34,16 +35,16 @@ public class SubcategoryService {
                 .orElseThrow(() -> new NotFoundException("Subcategory Not Found with ID=" + id));
     }
 
-    public Subcategory create(SubcategoryDto subcategoryDto) {
-        Subcategory subcategory = this.convertToSubcategory(subcategoryDto);
+    public Subcategory create(SubcategoryRequestDto subcategoryRequestDto) {
+        Subcategory subcategory = this.convertToSubcategory(subcategoryRequestDto);
         return this.subcategoryRepository.save(subcategory);
     }
 
-    public Subcategory update(String id, SubcategoryDto subcategoryDto) throws RuntimeException {
+    public Subcategory update(String id, SubcategoryRequestDto subcategoryRequestDto) throws RuntimeException {
         Subcategory subcategory = findByIdOrThrowError(id);
-        Category category = categoryService.findByIdOrThrowError(subcategoryDto.getCategoryId());
+        Category category = categoryService.findByIdOrThrowError(subcategoryRequestDto.getCategoryId());
 
-        subcategory.setName(subcategoryDto.getName());
+        subcategory.setName(subcategoryRequestDto.getName());
         subcategory.setCategory(category);
         return this.subcategoryRepository.save(subcategory);
     }
@@ -55,18 +56,18 @@ public class SubcategoryService {
         return subcategory;
     }
 
-    public SubcategoryDto convertToSubcategoryDto(Subcategory subcategory) {
-        return modelMapper.map(subcategory, SubcategoryDto.class);
+    public SubcategoryResponseDto convertToSubcategoryDto(Subcategory subcategory) {
+        return modelMapper.map(subcategory, SubcategoryResponseDto.class);
     }
 
-    public List<SubcategoryDto> convertToSubcategoryDto(List<Subcategory> categories) {
+    public List<SubcategoryResponseDto> convertToSubcategoryDto(List<Subcategory> categories) {
         return categories
                 .stream()
-                .map((category) -> modelMapper.map(category, SubcategoryDto.class))
+                .map((category) -> modelMapper.map(category, SubcategoryResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Subcategory convertToSubcategory(SubcategoryDto subcategoryDto) {
-        return modelMapper.map(subcategoryDto, Subcategory.class);
+    public Subcategory convertToSubcategory(SubcategoryRequestDto subcategoryRequestDto) {
+        return modelMapper.map(subcategoryRequestDto, Subcategory.class);
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public class CategoryDto {
     private String id;
     private String name;
-    private List<SubcategoryDto> subcategories;
+    private List<SubcategoryRequestDto> subcategories;
     private int subcategoryCount;
 
     public CategoryDto() {}
@@ -20,7 +20,7 @@ public class CategoryDto {
         this.subcategories = category
                 .getSubcategories()
                 .stream()
-                .map(sc -> mapper.map(sc, SubcategoryDto.class))
+                .map(sc -> mapper.map(sc, SubcategoryRequestDto.class))
                 .toList();
         this.subcategoryCount = category.getSubcategoryCount();
     }
@@ -41,11 +41,11 @@ public class CategoryDto {
         this.name = name;
     }
 
-    public List<SubcategoryDto> getSubcategories() {
+    public List<SubcategoryRequestDto> getSubcategories() {
         return subcategories;
     }
 
-    public void setSubcategories(List<SubcategoryDto> subcategories) {
+    public void setSubcategories(List<SubcategoryRequestDto> subcategories) {
         this.subcategories = subcategories;
     }
 

@@ -3,7 +3,7 @@ package com.twistercambodia.karasbackend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ public class ProductControllerTests {
 
     private MockMvc mockMvc;
 
-    private SubcategoryDto subcategoryDto;
+    private SubcategoryRequestDto subcategoryRequestDto;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -64,11 +64,11 @@ public class ProductControllerTests {
 
         categoryDto.setId(id);
 
-        subcategoryDto = new SubcategoryDto();
-        subcategoryDto.setName("Passenger Engine Oil");
-        subcategoryDto.setCategoryId(categoryDto.getId());
+        subcategoryRequestDto = new SubcategoryRequestDto();
+        subcategoryRequestDto.setName("Passenger Engine Oil");
+        subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
-        json = objectMapper.writeValueAsString(subcategoryDto);
+        json = objectMapper.writeValueAsString(subcategoryRequestDto);
 
         mvcResult = this.mockMvc.perform(
                 post("/subcategories")
@@ -78,7 +78,7 @@ public class ProductControllerTests {
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
-        subcategoryDto.setId(id);
+        subcategoryRequestDto.setId(id);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -106,7 +106,7 @@ public class ProductControllerTests {
                 );
 
         this.mockMvc.perform(
-                get("/subcategories/" + subcategoryDto.getId())
+                get("/subcategories/" + subcategoryRequestDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         )
@@ -125,7 +125,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -151,7 +151,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -189,7 +189,7 @@ public class ProductControllerTests {
         ProductDto productDto = new ProductDto();
 
         productDto.setName("Twister Engine Oil A");
-        productDto.setSubcategoryId(this.subcategoryDto.getId());
+        productDto.setSubcategoryId(this.subcategoryRequestDto.getId());
 
         String json = objectMapper.writeValueAsString(productDto);
 
@@ -215,7 +215,7 @@ public class ProductControllerTests {
                 );
 
         this.mockMvc.perform(
-                        get("/subcategories/" + subcategoryDto.getId())
+                        get("/subcategories/" + subcategoryRequestDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )

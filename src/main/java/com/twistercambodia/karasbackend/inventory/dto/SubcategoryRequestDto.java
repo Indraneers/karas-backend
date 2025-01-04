@@ -6,16 +6,16 @@ import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SubcategoryDto {
+public class SubcategoryRequestDto {
     private String id;
     private String name;
     private String categoryId;
     private List<ProductDto> products;
     private int productCount;
 
-    public SubcategoryDto() {}
+    public SubcategoryRequestDto() {}
 
-    public SubcategoryDto(Subcategory subcategory) {
+    public SubcategoryRequestDto(Subcategory subcategory) {
         ModelMapper mapper = new ModelMapper();
         this.id = subcategory.getId();
         this.name = subcategory.getName();
