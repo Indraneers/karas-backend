@@ -15,7 +15,8 @@ public class Product {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="product_id")
+    @JoinColumn(
+            name="product_id")
     private List<Unit> units;
 
     @Formula("(select count(*) from unit u where u.product_id = id)")

@@ -16,5 +16,5 @@ public interface ProductRepository extends CrudRepository<Product, String> {
             (?2 is null or p.subcategory.id = ?2)
         """
     )
-    List<Product> findAll(String q, String categoryId);
+    List<Product> findAll(String q, String subcategoryId);
 }

@@ -26,8 +26,8 @@ public class ProductService {
         this.subcategoryService = subcategoryService;
     }
 
-    public List<Product> findAll(String query, String categoryId) {
-        return this.productRepository.findAll(query, categoryId);
+    public List<Product> findAll(String query, String subcategoryId) {
+        return this.productRepository.findAll(query, subcategoryId);
     }
 
     public Product findByIdOrThrowError(String id) throws RuntimeException {
