@@ -4,7 +4,7 @@ import com.twistercambodia.karasbackend.autoService.entity.AutoService;
 import jakarta.persistence.*;
 
 @Entity
-public class MaintenanceService {
+public class MaintenanceAutoService {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -17,6 +17,9 @@ public class MaintenanceService {
 
     @Column(nullable = false)
     private int price;
+
+    @Column
+    private int discount;
 
     public String getId() {
         return id;
@@ -58,13 +61,21 @@ public class MaintenanceService {
         this.price = price;
     }
 
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
     @Override
     public String toString() {
         return "MaintenanceService{" +
                 "id='" + id + '\'' +
-                ", maintenance=" + maintenance +
-                ", autoService=" + autoService +
+                ", autoService=" + autoService.getId() +
                 ", price=" + price +
+                ", discount=" + discount +
                 '}';
     }
 }

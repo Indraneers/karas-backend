@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.sale.dto;
 
+import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 
@@ -12,6 +13,7 @@ public class SaleRequestDto {
     private String dueDate;
     private int discount;
     private List<ItemRequestDto> items;
+    private MaintenanceDto maintenance;
     private String userId;
     private String customerId;
     private String vehicleId;
@@ -29,6 +31,8 @@ public class SaleRequestDto {
                 .stream()
                 .map(ItemRequestDto::new)
                 .collect(Collectors.toList());
+
+        this.maintenance = new MaintenanceDto(sale.getMaintenance());
 
         this.userId = sale.getUser().getId();
         this.customerId = sale.getCustomer().getId();
@@ -76,6 +80,14 @@ public class SaleRequestDto {
         this.items = items;
     }
 
+    public MaintenanceDto getMaintenance() {
+        return maintenance;
+    }
+
+    public void setMaintenance(MaintenanceDto maintenance) {
+        this.maintenance = maintenance;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -116,6 +128,7 @@ public class SaleRequestDto {
                 ", dueDate='" + dueDate + '\'' +
                 ", discount=" + discount +
                 ", items=" + items +
+                ", maintenance=" + maintenance +
                 ", userId='" + userId + '\'' +
                 ", customerId='" + customerId + '\'' +
                 ", vehicleId='" + vehicleId + '\'' +

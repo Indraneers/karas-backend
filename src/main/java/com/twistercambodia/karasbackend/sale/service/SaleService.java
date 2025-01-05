@@ -9,6 +9,8 @@ import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
+import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
+import com.twistercambodia.karasbackend.maintenance.service.MaintenanceService;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
@@ -33,6 +35,7 @@ public class SaleService {
     private final CustomerService customerService;
     private final VehicleService vehicleService;
     private final UnitService unitService;
+    private final MaintenanceService maintenanceService;
     private final ModelMapper modelMapper;
 
     public SaleService(
@@ -41,7 +44,8 @@ public class SaleService {
             UserService userService,
             CustomerService customerService,
             VehicleService vehicleService,
-            UnitService unitService
+            UnitService unitService,
+            MaintenanceService maintenanceService
     ) {
         this.saleRepository = saleRepository;
         this.modelMapper = modelMapper;
@@ -49,6 +53,7 @@ public class SaleService {
         this.customerService = customerService;
         this.vehicleService = vehicleService;
         this.unitService = unitService;
+        this.maintenanceService = maintenanceService;
     }
 
     public List<Sale> findAll() {
@@ -88,6 +93,10 @@ public class SaleService {
         }
 
         sale.setItems(items);
+
+        Maintenance maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+
+        sale.setMaintenance(maintenance);
 
         Sale saleResult = this.saleRepository.save(sale);
 
@@ -129,6 +138,19 @@ public class SaleService {
 
         sale.getItems().addAll(items);
 
+        if (saleRequestDto.getMaintenance() != null) {
+            Maintenance maintenance;
+            if (sale.getMaintenance() != null) {
+                System.out.println("HEY" + saleRequestDto.getMaintenance());
+                maintenance = this.maintenanceService.update(
+                        sale.getMaintenance().getId(),
+                        saleRequestDto.getMaintenance()
+                        );
+            } else {
+                    maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+            }
+            sale.setMaintenance(maintenance);
+        }
 
         Sale saleResult = this.saleRepository.save(sale);
         unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);

@@ -11,11 +11,10 @@ public class MaintenanceDto {
     private String id;
     private Long saleId;
     private String vehicleId;
-    private LocalDateTime createdAt;
-    private LocalDateTime nextMaintenanceDate;
+    private String createdAt;
     private int mileage;
     private String note;
-    private Set<MaintenanceServiceDto> services;
+    private Set<MaintenanceAutoServiceDto> services;
 
     public MaintenanceDto() {}
 
@@ -24,13 +23,13 @@ public class MaintenanceDto {
         this.id = maintenance.getId();
         this.saleId = maintenance.getSale().getId();
         this.vehicleId = maintenance.getVehicle().getId();
-        this.createdAt = maintenance.getCreatedAt();
+        this.createdAt = maintenance.getCreatedAt().toString();
         this.mileage = maintenance.getMileage();
         this.note = maintenance.getNote();
         this.services = maintenance
                 .getServices()
                 .stream()
-                .map((ms) -> mapper.map(ms, MaintenanceServiceDto.class))
+                .map((ms) -> mapper.map(ms, MaintenanceAutoServiceDto.class))
                 .collect(Collectors.toSet());
     }
 
@@ -58,20 +57,12 @@ public class MaintenanceDto {
         this.vehicleId = vehicleId;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getNextMaintenanceDate() {
-        return nextMaintenanceDate;
-    }
-
-    public void setNextMaintenanceDate(LocalDateTime nextMaintenanceDate) {
-        this.nextMaintenanceDate = nextMaintenanceDate;
     }
 
     public int getMileage() {
@@ -90,11 +81,11 @@ public class MaintenanceDto {
         this.note = note;
     }
 
-    public Set<MaintenanceServiceDto> getServices() {
+    public Set<MaintenanceAutoServiceDto> getServices() {
         return services;
     }
 
-    public void setServices(Set<MaintenanceServiceDto> services) {
+    public void setServices(Set<MaintenanceAutoServiceDto> services) {
         this.services = services;
     }
 }

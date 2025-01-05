@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend.sale.entity;
 
 import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
+import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
@@ -26,6 +27,9 @@ public class Sale {
 
     @OneToMany(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
+
+    @OneToOne(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Maintenance maintenance;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
@@ -110,6 +114,14 @@ public class Sale {
         this.items = items;
     }
 
+    public Maintenance getMaintenance() {
+        return maintenance;
+    }
+
+    public void setMaintenance(Maintenance maintenance) {
+        this.maintenance = maintenance;
+    }
+
     public SaleStatus getStatus() {
         return status;
     }
@@ -121,14 +133,15 @@ public class Sale {
     @Override
     public String toString() {
         return "Sale{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", created=" + created +
                 ", dueDate=" + dueDate +
                 ", discount=" + discount +
                 ", items=" + items +
+                ", maintenance=" + maintenance +
                 ", user=" + user +
                 ", customer=" + customer +
-                ", vehicle=" + vehicle +
+                ", vehicle=" + vehicle.getId() +
                 ", status=" + status +
                 '}';
     }

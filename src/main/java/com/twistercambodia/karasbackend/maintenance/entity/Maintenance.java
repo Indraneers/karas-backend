@@ -1,8 +1,6 @@
 package com.twistercambodia.karasbackend.maintenance.entity;
 
-import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
-import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceServiceDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
@@ -18,7 +16,7 @@ public class Maintenance {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
     private Sale sale;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -33,21 +31,10 @@ public class Maintenance {
     @Column
     private String note;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<MaintenanceService> services;
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    private Set<MaintenanceAutoService> services;
 
     public Maintenance() {}
-
-    public Maintenance(MaintenanceDto maintenanceDto) {
-        ModelMapper modelMapper = new ModelMapper();
-        this.createdAt = maintenanceDto.getCreatedAt();
-        this.services = maintenanceDto.getServices()
-                .stream()
-                .map((ms) -> modelMapper.map(ms, MaintenanceService.class))
-                .collect(Collectors.toSet());
-        this.mileage = maintenanceDto.getMileage();
-        this.note = maintenanceDto.getNote();
-    }
 
     public String getId() {
         return id;
@@ -97,11 +84,11 @@ public class Maintenance {
         this.note = note;
     }
 
-    public Set<MaintenanceService> getServices() {
+    public Set<MaintenanceAutoService> getServices() {
         return services;
     }
 
-    public void setServices(Set<MaintenanceService> services) {
+    public void setServices(Set<MaintenanceAutoService> services) {
         this.services = services;
     }
 
@@ -109,7 +96,7 @@ public class Maintenance {
     public String toString() {
         return "Maintenance{" +
                 "id='" + id + '\'' +
-                ", vehicle=" + vehicle +
+                ", vehicle=" + vehicle.getId() +
                 ", createdAt=" + createdAt +
                 ", mileage=" + mileage +
                 ", note='" + note + '\'' +
