@@ -19,6 +19,7 @@ import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -94,13 +95,14 @@ public class SaleService {
 
         sale.setItems(items);
 
-        Maintenance maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
-
-        sale.setMaintenance(maintenance);
 
         Sale saleResult = this.saleRepository.save(sale);
 
+        saleRequestDto.getMaintenance().setSaleId(saleResult.getId());
+        Maintenance maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+
         unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
+        saleResult.setMaintenance(maintenance);
 
         return saleResult;
     }
@@ -138,21 +140,22 @@ public class SaleService {
 
         sale.getItems().addAll(items);
 
+        Sale saleResult = this.saleRepository.save(sale);
+
         if (saleRequestDto.getMaintenance() != null) {
             Maintenance maintenance;
             if (sale.getMaintenance() != null) {
-                System.out.println("HEY" + saleRequestDto.getMaintenance());
                 maintenance = this.maintenanceService.update(
                         sale.getMaintenance().getId(),
                         saleRequestDto.getMaintenance()
-                        );
+                );
             } else {
-                    maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+                saleRequestDto.getMaintenance().setSaleId(saleResult.getId());
+                maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
             }
             sale.setMaintenance(maintenance);
         }
 
-        Sale saleResult = this.saleRepository.save(sale);
         unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
 
         return saleResult;
@@ -174,7 +177,7 @@ public class SaleService {
     }
 
     public SaleResponseDto convertToSaleResponseDto(Sale sale) {
-        return this.modelMapper.map(sale, SaleResponseDto.class);
+        return new SaleResponseDto(sale);
     }
 
     public Sale convertToSale(SaleRequestDto saleRequestDto) {

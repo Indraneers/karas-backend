@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceAutoServiceDt
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import com.twistercambodia.karasbackend.maintenance.entity.MaintenanceAutoService;
 import com.twistercambodia.karasbackend.maintenance.repository.MaintenanceRepository;
+import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.modelmapper.ModelMapper;
@@ -39,9 +40,11 @@ public class MaintenanceService {
 
     public Maintenance create(MaintenanceDto maintenanceDto) {
         Maintenance maintenance = convertToMaintenance(maintenanceDto);
+        System.out.println("CALLED - 1");
+        System.out.println(maintenanceDto.getCreatedAt() + " " + LocalDateTime.parse(maintenanceDto.getCreatedAt()));
+        System.out.println("CALLED - 2");
         maintenance.setCreatedAt(LocalDateTime.parse(maintenanceDto.getCreatedAt()));
-
-        maintenance = maintenanceRepository.save(maintenance);
+        maintenance.getServices().forEach(ms -> ms.setMaintenance(maintenance));
 
         return maintenanceRepository.save(maintenance);
     }

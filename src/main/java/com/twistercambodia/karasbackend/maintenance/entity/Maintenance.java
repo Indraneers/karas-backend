@@ -31,7 +31,7 @@ public class Maintenance {
     @Column
     private String note;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "maintenance", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MaintenanceAutoService> services;
 
     public Maintenance() {}

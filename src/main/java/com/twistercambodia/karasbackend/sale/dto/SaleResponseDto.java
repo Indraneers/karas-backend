@@ -37,7 +37,7 @@ public class SaleResponseDto {
                 .map(ItemResponseDto::new)
                 .collect(Collectors.toList());
 
-        this.maintenance = mapper.map(sale.getMaintenance(), MaintenanceDto.class);
+        this.maintenance = new MaintenanceDto(sale.getMaintenance());
         this.user = mapper.map(sale.getUser(), UserDto.class);
         this.customer = mapper.map(sale.getCustomer(), CustomerDto.class);
         this.vehicle = mapper.map(sale.getVehicle(), VehicleDto.class);

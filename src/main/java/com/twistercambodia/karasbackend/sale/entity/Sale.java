@@ -28,7 +28,7 @@ public class Sale {
     @OneToMany(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
 
-    @OneToOne(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Maintenance maintenance;
 
     @ManyToOne(fetch = FetchType.EAGER)

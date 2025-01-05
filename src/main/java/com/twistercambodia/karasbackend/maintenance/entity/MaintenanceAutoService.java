@@ -10,6 +10,7 @@ public class MaintenanceAutoService {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maintenance_id")
     private Maintenance maintenance;
 
     @ManyToOne(fetch = FetchType.EAGER)
