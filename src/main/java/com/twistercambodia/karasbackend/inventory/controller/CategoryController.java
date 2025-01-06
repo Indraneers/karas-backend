@@ -3,10 +3,13 @@ package com.twistercambodia.karasbackend.inventory.controller;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.entity.Category;
 import com.twistercambodia.karasbackend.inventory.service.CategoryService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -39,19 +42,21 @@ public class CategoryController {
 
     @PostMapping
     public CategoryDto createCategory(
-            @RequestBody CategoryDto categoryDto
-    ) {
-        Category category = this.categoryService.create(categoryDto);
+            @RequestPart(value = "data", required = true) CategoryDto categoryDto,
+            @RequestParam(name = "file", required = false) MultipartFile file
+    ) throws IOException {
+        Category category = this.categoryService.create(categoryDto, file);
         this.logger.info("Creating category={}", category);
         return this.categoryService.convertToCategoryDto(category);
     }
 
     @PutMapping("{id}")
     public CategoryDto updateCategory(
-            @RequestBody CategoryDto categoryDto,
+            @RequestPart(value = "data", required = true) CategoryDto categoryDto,
+            @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id
-    ) throws RuntimeException {
-        Category category = this.categoryService.update(id, categoryDto);
+    ) throws RuntimeException, IOException {
+        Category category = this.categoryService.update(id, categoryDto, file);
         this.logger.info("Updating category={}", category);
         return this.categoryService.convertToCategoryDto(category);
     }

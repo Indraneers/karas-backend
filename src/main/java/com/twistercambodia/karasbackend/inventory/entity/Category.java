@@ -21,6 +21,9 @@ public class Category {
     @Formula("(select count(*) from subcategory sc where sc.category_id = id)")
     private int subcategoryCount;
 
+    @Column(nullable = true)
+    private String img;
+
     public String getId() {
         return id;
     }
@@ -53,6 +56,14 @@ public class Category {
         this.subcategoryCount = subcategoryCount;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
@@ -60,6 +71,7 @@ public class Category {
                 ", name='" + name + '\'' +
                 ", subcategories=" + subcategories +
                 ", subcategoryCount=" + subcategoryCount +
+                ", img=" + img +
                 '}';
     }
 }

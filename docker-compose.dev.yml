@@ -55,6 +55,17 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - nginx_network
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    env_file: '.env.developmental'
+    volumes:
+      - ./minio/data:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    networks:
+      - nginx_network
 networks:
   nginx_network:
     external: true

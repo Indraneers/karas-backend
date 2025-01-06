@@ -10,6 +10,7 @@ public class CategoryDto {
     private String name;
     private List<SubcategoryRequestDto> subcategories;
     private int subcategoryCount;
+    private String img;
 
     public CategoryDto() {}
 
@@ -23,6 +24,7 @@ public class CategoryDto {
                 .map(sc -> mapper.map(sc, SubcategoryRequestDto.class))
                 .toList();
         this.subcategoryCount = category.getSubcategoryCount();
+        this.img = category.getImg();
     }
 
     public String getId() {
@@ -55,5 +57,13 @@ public class CategoryDto {
 
     public void setSubcategoryCount(int subcategoryCount) {
         this.subcategoryCount = subcategoryCount;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }
