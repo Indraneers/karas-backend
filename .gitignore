@@ -36,6 +36,9 @@ build/
 pgdata
 postgres-data
 
+### MiniO ###
+minio
+
 ### Hot Swapping ###
 .m2
 
