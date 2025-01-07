@@ -7,7 +7,9 @@ import com.twistercambodia.karasbackend.inventory.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -41,19 +43,21 @@ public class ProductController {
 
     @PostMapping
     public ProductResponseDto createProduct(
-            @RequestBody ProductRequestDto productRequestDto
-    ) {
-        Product product = this.productService.create(productRequestDto);
+            @RequestParam(name = "data", required = true) ProductRequestDto productRequestDto,
+            @RequestParam(name = "file", required = false) MultipartFile file
+    ) throws IOException {
+        Product product = this.productService.create(productRequestDto, file);
         this.logger.info("Creating product={}", product);
         return this.productService.convertToProductDto(product);
     }
 
     @PutMapping("{id}")
     public ProductResponseDto updateProduct(
-            @RequestBody ProductRequestDto productRequestDto,
+            @RequestParam(name = "data", required = true) ProductRequestDto productRequestDto,
+            @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id
-    ) throws RuntimeException {
-        Product product = this.productService.update(id, productRequestDto);
+    ) throws RuntimeException, IOException {
+        Product product = this.productService.update(id, productRequestDto, file);
         this.logger.info("Updating product={}", product);
         return this.productService.convertToProductDto(product);
     }

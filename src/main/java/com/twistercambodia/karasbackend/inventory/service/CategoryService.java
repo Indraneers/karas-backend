@@ -57,6 +57,7 @@ public class CategoryService {
         }
 
         category.setName(categoryDto.getName());
+
         return this.categoryRepository.save(category);
     }
 

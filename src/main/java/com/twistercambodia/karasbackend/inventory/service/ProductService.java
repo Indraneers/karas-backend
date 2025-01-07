@@ -8,22 +8,34 @@ import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableProduct;
 
 import com.twistercambodia.karasbackend.inventory.repository.ProductRepository;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+    private final StorageService storageService;
     private final ProductRepository productRepository;
     private final SubcategoryService subcategoryService;
     private final ModelMapper modelMapper;
 
-    public ProductService(ProductRepository productRepository, SubcategoryService subcategoryService, ModelMapper modelMapper) {
+    public ProductService(
+            ProductRepository productRepository,
+            SubcategoryService subcategoryService,
+            ModelMapper modelMapper,
+            StorageService storageService
+    ) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
         this.subcategoryService = subcategoryService;
+        this.storageService = storageService;
     }
 
     public List<Product> findAll(String query, String subcategoryId) {
@@ -36,9 +48,9 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product Not Found with ID=" + id));
     }
 
-    public Product create(ProductRequestDto productRequestDto) {
+    @Transactional
+    public Product create(ProductRequestDto productRequestDto, MultipartFile image) throws IOException {
         Product product = this.convertToProduct(productRequestDto);
-
         boolean invalidVariableProduct =
                 productRequestDto.isVariable()
                 && productRequestDto.getBaseUnit().isEmpty();
@@ -47,10 +59,17 @@ public class ProductService {
             throw new InvalidVariableProduct();
         }
 
-        return this.productRepository.save(product);
+        product = this.productRepository.save(product);
+
+        if (image != null) {
+            product.setImg(uploadProductImg(product.getId(), image.getInputStream()));
+            product = this.productRepository.save(product);
+        }
+        return product;
     }
 
-    public Product update(String id, ProductRequestDto productRequestDto) throws RuntimeException {
+    @Transactional
+    public Product update(String id, ProductRequestDto productRequestDto, MultipartFile image) throws RuntimeException, IOException {
         Product product = findByIdOrThrowError(id);
         Subcategory subcategory = subcategoryService.findByIdOrThrowError(productRequestDto.getSubcategoryId());
 
@@ -67,12 +86,18 @@ public class ProductService {
         product.setVariable(product.isVariable());
         product.setBaseUnit(productRequestDto.getBaseUnit());
 
+        if (image != null) {
+            product.setImg(uploadProductImg(product.getId(), image.getInputStream()));
+        }
+
         return this.productRepository.save(product);
     }
 
     public Product delete(String id) throws RuntimeException {
         Product product = this.findByIdOrThrowError(id);
-
+        if (product.getImg() != null) {
+            deleteProductImg(product.getImg());
+        }
         this.productRepository.delete(product);
         return product;
     }
@@ -90,5 +115,25 @@ public class ProductService {
 
     public Product convertToProduct(ProductRequestDto productRequestDto) {
         return modelMapper.map(productRequestDto, Product.class);
+    }
+
+    public String getProductImg(String id, String ext) {
+        return "/products/" + id + "." + ext;
+    }
+
+    public String uploadProductImg(String id, InputStream inputStream) {
+        String filename = getProductImg(id, "png");
+        storageService.uploadFile(
+                filename,
+                inputStream,
+                "image/png"
+        );
+        return filename;
+    }
+
+    public void deleteProductImg(String filename) {
+        storageService.deleteFile(
+                filename
+        );
     }
 }
