@@ -25,7 +25,8 @@ public class Subcategory {
     @Formula("(select count(*) from product p where p.subcategory_id = id)")
     private int productCount;
 
-    private String img;
+    @Column
+    private String img = "";
 
     public String getId() {
         return id;

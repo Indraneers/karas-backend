@@ -32,8 +32,8 @@ public class Product {
     @Column(nullable = false)
     private boolean variable;
 
-    @Column(nullable = true)
-    private String img;
+    @Column
+    private String img = "";
 
     // Getters/Setters
 

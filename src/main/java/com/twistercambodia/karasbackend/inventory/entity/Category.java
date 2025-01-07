@@ -21,8 +21,8 @@ public class Category {
     @Formula("(select count(*) from subcategory sc where sc.category_id = id)")
     private int subcategoryCount;
 
-    @Column(nullable = true)
-    private String img;
+    @Column
+    private String img = "";
 
     public String getId() {
         return id;
