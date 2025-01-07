@@ -65,7 +65,7 @@ public class CategoryService {
     @Transactional
     public Category delete(String id) throws RuntimeException {
         Category category = this.findByIdOrThrowError(id);
-        if (category.getImg() != null) {
+        if (category.getImg() != null && !category.getImg().isEmpty()) {
             deleteCategoryIcon(category.getImg());
         }
         this.categoryRepository.delete(category);

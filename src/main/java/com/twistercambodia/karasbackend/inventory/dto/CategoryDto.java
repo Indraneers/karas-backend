@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.inventory.dto;
 import com.twistercambodia.karasbackend.inventory.entity.Category;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDto {
@@ -18,11 +19,16 @@ public class CategoryDto {
         ModelMapper mapper = new ModelMapper();
         this.id = category.getId();;
         this.name = category.getName();
-        this.subcategories = category
-                .getSubcategories()
-                .stream()
-                .map(sc -> mapper.map(sc, SubcategoryRequestDto.class))
-                .toList();
+        this.subcategories =
+                category.getSubcategories() != null
+                ?
+                category
+                    .getSubcategories()
+                    .stream()
+                    .map(sc -> mapper.map(sc, SubcategoryRequestDto.class))
+                    .toList()
+                :
+                new ArrayList<>();
         this.subcategoryCount = category.getSubcategoryCount();
         this.img = category.getImg();
     }

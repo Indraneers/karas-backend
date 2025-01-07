@@ -95,7 +95,7 @@ public class ProductService {
 
     public Product delete(String id) throws RuntimeException {
         Product product = this.findByIdOrThrowError(id);
-        if (product.getImg() != null) {
+        if (product.getImg() != null && !product.getImg().isEmpty()) {
             deleteProductImg(product.getImg());
         }
         this.productRepository.delete(product);

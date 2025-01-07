@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.inventory.dto;
 import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +22,13 @@ public class SubcategoryResponseDto {
         this.id = subcategory.getId();
         this.name = subcategory.getName();
         this.category = new CategoryDto(subcategory.getCategory());
-        this.products = subcategory.getProducts().stream()
-                .map((p) -> mapper.map(p, ProductRequestDto.class))
-                .collect(Collectors.toList());
+        this.products = subcategory.getProducts() != null ?
+                subcategory.getProducts()
+                        .stream()
+                        .map((p) -> mapper.map(p, ProductRequestDto.class))
+                        .collect(Collectors.toList())
+                :
+                new ArrayList<>();
         this.productCount = subcategory.getProductCount();
         this.img = subcategory.getImg();
     }

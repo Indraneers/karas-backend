@@ -76,7 +76,7 @@ public class SubcategoryService {
     @Transactional
     public Subcategory delete(String id) throws RuntimeException {
         Subcategory subcategory = this.findByIdOrThrowError(id);
-        if (subcategory.getImg() != null) {
+        if (subcategory.getImg() != null && !subcategory.getImg().isEmpty()) {
             deleteSubcategoryIcon(subcategory.getImg());
         }
         this.subcategoryRepository.delete(subcategory);
@@ -84,13 +84,13 @@ public class SubcategoryService {
     }
 
     public SubcategoryResponseDto convertToSubcategoryDto(Subcategory subcategory) {
-        return modelMapper.map(subcategory, SubcategoryResponseDto.class);
+        return new SubcategoryResponseDto(subcategory);
     }
 
-    public List<SubcategoryResponseDto> convertToSubcategoryDto(List<Subcategory> categories) {
-        return categories
+    public List<SubcategoryResponseDto> convertToSubcategoryDto(List<Subcategory> subcategories) {
+        return subcategories
                 .stream()
-                .map((category) -> modelMapper.map(category, SubcategoryResponseDto.class))
+                .map(SubcategoryResponseDto::new)
                 .collect(Collectors.toList());
     }
 

@@ -69,7 +69,7 @@ public class Subcategory {
     }
 
     public String getImg() {
-        return img;
+        return img == null ? "" : img;
     }
 
     public void setImg(String img) {
