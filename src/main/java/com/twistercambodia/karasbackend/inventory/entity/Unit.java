@@ -25,9 +25,6 @@ public class Unit {
     private int price;
 
     @Column
-    private String sku;
-
-    @Column
     private long
             toBaseUnit;
 
@@ -71,14 +68,6 @@ public class Unit {
         this.price = price;
     }
 
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
     public long getToBaseUnit() {
         return toBaseUnit;
     }
@@ -94,7 +83,6 @@ public class Unit {
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
-                ", sku='" + sku + '\'' +
                 ", toBaseUnit=" + toBaseUnit +
                 '}';
     }

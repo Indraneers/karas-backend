@@ -11,7 +11,11 @@ public interface ProductRepository extends CrudRepository<Product, String> {
         """
         select p from Product p
         where
-            (?1 is null or lower(cast(p.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+            (
+                (?1 is null or lower(cast(p.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+                OR 
+                (?1 is null or lower(cast(p.identifier as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+             )
             AND
             (?2 is null or p.subcategory.id = ?2)
         """

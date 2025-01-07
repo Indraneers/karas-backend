@@ -14,7 +14,7 @@ public interface UnitRepository extends CrudRepository<Unit, String> {
                 (
                     (?1 is null or lower(cast(u.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
                     OR
-                    (?1 is null or lower(cast(u.sku as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+                    (?1 is null or lower(cast(u.product.identifier as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
                     OR
                     (?1 is null or lower(cast(u.product.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
                 )

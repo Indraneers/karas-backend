@@ -85,6 +85,7 @@ public class ProductService {
         product.setSubcategory(subcategory);
         product.setVariable(product.isVariable());
         product.setBaseUnit(productRequestDto.getBaseUnit());
+        product.setIdentifier(productRequestDto.getIdentifier());
 
         if (image != null) {
             product.setImg(uploadProductImg(product.getId(), image.getInputStream()));

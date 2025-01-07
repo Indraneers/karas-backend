@@ -9,7 +9,6 @@ public class UnitResponseDto {
     private long quantity;
     private ProductRequestDto product;
     private int price;
-    private String sku;
     private long toBaseUnit;
 
     public UnitResponseDto() {}
@@ -21,7 +20,6 @@ public class UnitResponseDto {
         this.quantity = unit.getQuantity();
         this.product = mapper.map(unit.getProduct(), ProductRequestDto.class);
         this.price = unit.getPrice();
-        this.sku = unit.getSku();
         this.toBaseUnit = unit.getToBaseUnit();
     }
 
@@ -63,14 +61,6 @@ public class UnitResponseDto {
 
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
     }
 
     public long getToBaseUnit() {

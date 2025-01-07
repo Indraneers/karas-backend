@@ -8,7 +8,6 @@ public class UnitRequestDto {
     private long quantity;
     private String productId;
     private int price;
-    private String sku;
     private long toBaseUnit;
 
     public UnitRequestDto() {}
@@ -19,7 +18,6 @@ public class UnitRequestDto {
         this.quantity = unit.getQuantity();
         this.productId = unit.getProduct().getId();
         this.price = unit.getPrice();
-        this.sku = unit.getSku();
         this.toBaseUnit = unit.getToBaseUnit();
     }
 
@@ -61,14 +59,6 @@ public class UnitRequestDto {
 
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
     }
 
     public long getToBaseUnit() {

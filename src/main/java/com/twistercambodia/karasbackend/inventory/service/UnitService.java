@@ -67,7 +67,6 @@ public class UnitService {
         unit.setName(unitRequestDto.getName());
         unit.setQuantity(unitRequestDto.getQuantity());
         unit.setPrice(unitRequestDto.getPrice());
-        unit.setSku(unitRequestDto.getSku());
         unit.setToBaseUnit(unitRequestDto.getToBaseUnit());
         unit.setProduct(product);
 

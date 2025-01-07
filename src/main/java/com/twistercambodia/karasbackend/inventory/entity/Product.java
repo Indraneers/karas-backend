@@ -14,6 +14,9 @@ public class Product {
     @Column(unique = true)
     private String name;
 
+    @Column
+    private String identifier;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(
             name="product_id")
@@ -36,7 +39,6 @@ public class Product {
     private String img = "";
 
     // Getters/Setters
-
     public String getId() {
         return id;
     }
@@ -51,6 +53,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public List<Unit> getUnits() {
@@ -109,6 +119,7 @@ public class Product {
                 ", unitCount=" + unitCount +
                 ", units=" + units +
                 ", name='" + name + '\'' +
+                ", identifier='" + identifier + '\'' +
                 ", id='" + id + '\'' +
                 ", img=" + img + '\'' +
                 '}';

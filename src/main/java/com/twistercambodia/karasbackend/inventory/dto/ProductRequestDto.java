@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 public class ProductRequestDto {
     private String id;
     private String name;
+    private String identifier;
     private String subcategoryId;
     private int unitCount;
     private String baseUnit;
@@ -17,6 +18,7 @@ public class ProductRequestDto {
         ModelMapper mapper = new ModelMapper();
         this.id = product.getId();
         this.name = product.getName();
+        this.identifier = product.getIdentifier();
         this.subcategoryId = product.getSubcategory().getId();
         this.unitCount = product.getUnitCount();
         this.baseUnit = product.getBaseUnit();
@@ -37,6 +39,14 @@ public class ProductRequestDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getSubcategoryId() {
