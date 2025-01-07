@@ -43,7 +43,7 @@ public class ProductController {
 
     @PostMapping
     public ProductResponseDto createProduct(
-            @RequestParam(name = "data", required = true) ProductRequestDto productRequestDto,
+            @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file
     ) throws IOException {
         Product product = this.productService.create(productRequestDto, file);
@@ -53,7 +53,7 @@ public class ProductController {
 
     @PutMapping("{id}")
     public ProductResponseDto updateProduct(
-            @RequestParam(name = "data", required = true) ProductRequestDto productRequestDto,
+            @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id
     ) throws RuntimeException, IOException {
