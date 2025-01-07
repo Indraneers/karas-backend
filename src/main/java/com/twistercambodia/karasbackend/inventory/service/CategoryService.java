@@ -53,6 +53,7 @@ public class CategoryService {
         Category category = findByIdOrThrowError(id);
 
         if (image != null) {
+            System.out.println("UPDATE");
             category.setImg(uploadCategoryIcon(category.getId(), image.getInputStream()));
         }
 
@@ -88,7 +89,7 @@ public class CategoryService {
     }
 
     public String getCategoryIcon(String id) {
-        return "/categories/" + id + ".svg";
+        return "/categories/" + id + "-" + System.currentTimeMillis() + ".svg";
     }
 
     public String uploadCategoryIcon(String id, InputStream inputStream) {

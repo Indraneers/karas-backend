@@ -118,7 +118,7 @@ public class ProductService {
     }
 
     public String getProductImg(String id, String ext) {
-        return "/products/" + id + "." + ext;
+        return "/products/" + id + "-" + System.currentTimeMillis() + "." + ext;
     }
 
     public String uploadProductImg(String id, InputStream inputStream) {

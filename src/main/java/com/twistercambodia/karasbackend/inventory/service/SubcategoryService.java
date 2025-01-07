@@ -99,7 +99,7 @@ public class SubcategoryService {
     }
 
     public String getSubcategoryIcon(String id) {
-        return "/subcategories/" + id + ".svg";
+        return "/subcategories/" + id + "-" + System.currentTimeMillis() + ".svg";
     }
 
     public String uploadSubcategoryIcon(String id, InputStream inputStream) {
