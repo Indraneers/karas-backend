@@ -12,6 +12,7 @@ public class SubcategoryResponseDto {
     private CategoryDto category;
     private List<ProductRequestDto> products;
     private int productCount;
+    private String img;
 
     public SubcategoryResponseDto() {}
 
@@ -24,6 +25,7 @@ public class SubcategoryResponseDto {
                 .map((p) -> mapper.map(p, ProductRequestDto.class))
                 .collect(Collectors.toList());
         this.productCount = subcategory.getProductCount();
+        this.img = subcategory.getImg();
     }
 
     public String getId() {
@@ -64,5 +66,13 @@ public class SubcategoryResponseDto {
 
     public void setProductCount(int productCount) {
         this.productCount = productCount;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

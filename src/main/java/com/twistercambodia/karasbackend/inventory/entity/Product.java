@@ -32,6 +32,9 @@ public class Product {
     @Column(nullable = false)
     private boolean variable;
 
+    @Column(nullable = true)
+    private String img;
+
     // Getters/Setters
 
     public String getId() {
@@ -90,6 +93,14 @@ public class Product {
         this.variable = variable;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -99,6 +110,7 @@ public class Product {
                 ", units=" + units +
                 ", name='" + name + '\'' +
                 ", id='" + id + '\'' +
+                ", img=" + img + '\'' +
                 '}';
     }
 }

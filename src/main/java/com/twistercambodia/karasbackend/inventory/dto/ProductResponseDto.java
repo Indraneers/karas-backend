@@ -10,6 +10,7 @@ public class ProductResponseDto {
     private int unitCount;
     private String baseUnit;
     private boolean variable;
+    private String img;
 
     public ProductResponseDto() {}
     public ProductResponseDto(Product product) {
@@ -20,6 +21,7 @@ public class ProductResponseDto {
         this.unitCount = product.getUnitCount();
         this.baseUnit = product.getBaseUnit();
         this.variable = product.isVariable();
+        this.img = product.getImg();
     }
 
     public String getId() {
@@ -68,5 +70,13 @@ public class ProductResponseDto {
 
     public void setVariable(boolean variable) {
         this.variable = variable;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }
