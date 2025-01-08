@@ -110,6 +110,7 @@ public class SaleService {
     @Transactional
     public Sale update(String id, SaleRequestDto saleRequestDto) throws Exception {
         Sale sale = this.findByIdOrThrowException(id);
+
         User user = this.userService.findByIdOrThrowError(saleRequestDto.getUserId());
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
@@ -121,6 +122,7 @@ public class SaleService {
         sale.setVehicle(vehicle);
         sale.setDiscount(saleRequestDto.getDiscount());
         sale.setStatus(saleRequestDto.getStatus());
+        sale.getMaintenance().setVehicle(vehicle);
 
         unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
 
@@ -144,6 +146,7 @@ public class SaleService {
 
         if (saleRequestDto.getMaintenance() != null) {
             Maintenance maintenance;
+            saleRequestDto.getMaintenance().setVehicleId(vehicle.getId());
             if (sale.getMaintenance() != null) {
                 maintenance = this.maintenanceService.update(
                         sale.getMaintenance().getId(),
