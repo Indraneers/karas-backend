@@ -61,11 +61,16 @@ public class SubcategoryControllerTests {
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/categories")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");

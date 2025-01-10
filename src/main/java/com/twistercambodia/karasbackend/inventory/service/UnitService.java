@@ -4,6 +4,7 @@ import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
+import com.twistercambodia.karasbackend.inventory.entity.RestockItem;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
@@ -101,6 +102,16 @@ public class UnitService {
                 .map((i) -> stockUpdate(i.getUnit(), i.getQuantity(), stockUpdate))
                 .toList();
 
+        this.unitRepository.saveAll(batchUnit);
+    }
+
+    public void batchStockUpdate(List<RestockItem> restockItems) {
+        List<Unit> batchUnit = restockItems
+                .stream()
+                .map((i) -> stockUpdate(i.getUnit(), i.getQuantity(), i.getStatus()))
+                .toList();
+
+        System.out.println(batchUnit);
         this.unitRepository.saveAll(batchUnit);
     }
 

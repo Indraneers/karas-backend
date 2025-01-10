@@ -108,11 +108,16 @@ public class UnitControllerTests {
         productRequestDto.setName("Twister Engine Oil A");
 
         String productDtoJson = objectMapper.writeValueAsString(productRequestDto);
+        file = new MockMultipartFile(
+                "data",
+                productDtoJson,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                productDtoJson.getBytes()
+        );
 
         mvcResult = this.mockMvc.perform(
-                post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(productDtoJson)
+                multipart("/products")
+                        .file(file)
         ).andReturn();
 
         String productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");

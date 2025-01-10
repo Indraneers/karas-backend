@@ -233,10 +233,12 @@ public class RestockUnitIntegrationTest {
         RestockItemRequestDto itemOne = new RestockItemRequestDto();
         itemOne.setQuantity(1000);
         itemOne.setStatus(StockUpdate.RESTOCK);
+        itemOne.setUnitId(unitRequestDtos.get(0).getId());
 
         RestockItemRequestDto itemTwo = new RestockItemRequestDto();
         itemTwo.setQuantity(2000);
-        itemOne.setStatus(StockUpdate.RESTOCK);
+        itemTwo.setStatus(StockUpdate.RESTOCK);
+        itemTwo.setUnitId(unitRequestDtos.get(1).getId());
 
         List<RestockItemRequestDto> items = new ArrayList<>();
         items.add(itemOne);
@@ -280,10 +282,12 @@ public class RestockUnitIntegrationTest {
         RestockItemRequestDto itemOne = new RestockItemRequestDto();
         itemOne.setQuantity(1000);
         itemOne.setStatus(StockUpdate.RESTOCK);
+        itemOne.setUnitId(unitRequestDtos.get(0).getId());
 
         RestockItemRequestDto itemTwo = new RestockItemRequestDto();
         itemTwo.setQuantity(2000);
-        itemOne.setStatus(StockUpdate.RESTOCK);
+        itemTwo.setStatus(StockUpdate.RESTOCK);
+        itemTwo.setUnitId(unitRequestDtos.get(1).getId());
 
         List<RestockItemRequestDto> items = new ArrayList<>();
         items.add(itemOne);
@@ -301,7 +305,7 @@ public class RestockUnitIntegrationTest {
         itemOne.setQuantity(250);
         itemOne.setStatus(StockUpdate.DEDUCT);
         itemTwo.setQuantity(500);
-        itemOne.setStatus(StockUpdate.DEDUCT);
+        itemTwo.setStatus(StockUpdate.DEDUCT);
 
         items.clear();
 
@@ -346,10 +350,12 @@ public class RestockUnitIntegrationTest {
         RestockItemRequestDto itemOne = new RestockItemRequestDto();
         itemOne.setQuantity(1000);
         itemOne.setStatus(StockUpdate.RESTOCK);
+        itemOne.setUnitId(unitRequestDtos.get(0).getId());
 
         RestockItemRequestDto itemTwo = new RestockItemRequestDto();
         itemTwo.setQuantity(2000);
-        itemOne.setStatus(StockUpdate.RESTOCK);
+        itemTwo.setStatus(StockUpdate.RESTOCK);
+        itemTwo.setUnitId(unitRequestDtos.get(1).getId());
 
         List<RestockItemRequestDto> items = new ArrayList<>();
         items.add(itemOne);
@@ -367,7 +373,7 @@ public class RestockUnitIntegrationTest {
         itemOne.setQuantity(250);
         itemOne.setStatus(StockUpdate.RESTOCK);
         itemTwo.setQuantity(500);
-        itemOne.setStatus(StockUpdate.DEDUCT);
+        itemTwo.setStatus(StockUpdate.DEDUCT);
 
         items.clear();
 
