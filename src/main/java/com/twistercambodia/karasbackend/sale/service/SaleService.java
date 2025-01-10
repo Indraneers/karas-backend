@@ -98,11 +98,13 @@ public class SaleService {
 
         Sale saleResult = this.saleRepository.save(sale);
 
-        saleRequestDto.getMaintenance().setSaleId(saleResult.getId());
-        Maintenance maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
-
         unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
-        saleResult.setMaintenance(maintenance);
+
+        if (saleRequestDto.getMaintenance() != null) {
+            saleRequestDto.getMaintenance().setSaleId(saleResult.getId());
+            Maintenance maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+            saleResult.setMaintenance(maintenance);
+        }
 
         return saleResult;
     }
@@ -122,7 +124,6 @@ public class SaleService {
         sale.setVehicle(vehicle);
         sale.setDiscount(saleRequestDto.getDiscount());
         sale.setStatus(saleRequestDto.getStatus());
-        sale.getMaintenance().setVehicle(vehicle);
 
         unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
 
@@ -146,6 +147,7 @@ public class SaleService {
 
         if (saleRequestDto.getMaintenance() != null) {
             Maintenance maintenance;
+            sale.getMaintenance().setVehicle(vehicle);
             saleRequestDto.getMaintenance().setVehicleId(vehicle.getId());
             if (sale.getMaintenance() != null) {
                 maintenance = this.maintenanceService.update(

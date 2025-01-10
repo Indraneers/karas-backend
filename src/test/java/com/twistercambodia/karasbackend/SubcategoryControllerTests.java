@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -36,6 +39,12 @@ public class SubcategoryControllerTests {
 
     @MockBean
     private JwtDecoder jwtDecoder;
+
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
 
@@ -72,11 +81,16 @@ public class SubcategoryControllerTests {
         subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         this.mockMvc.perform(
-                        post("/subcategories")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                        multipart("/subcategories")
+                                .file(file)
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -107,17 +121,21 @@ public class SubcategoryControllerTests {
         subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryRequestDto);
-
-        this.mockMvc.perform(
-                post("/subcategories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
         );
 
         this.mockMvc.perform(
-                        post("/subcategories")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                multipart("/subcategories")
+                        .file(file)
+        );
+
+        this.mockMvc.perform(
+                        multipart("/subcategories")
+                                .file(file)
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(
@@ -144,11 +162,16 @@ public class SubcategoryControllerTests {
         subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/subcategories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/subcategories")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -157,11 +180,18 @@ public class SubcategoryControllerTests {
         subcategoryRequestDto.setName("Diesel Engine Oil");
 
         json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
 
         this.mockMvc.perform(
-                        put("/subcategories/" + id)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                        multipart("/subcategories/" + id)
+                                .file(file)
+                                .with(req -> { req.setMethod("PUT"); return req; })
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -192,11 +222,16 @@ public class SubcategoryControllerTests {
         subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
         String json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/subcategories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/subcategories")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");

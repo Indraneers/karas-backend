@@ -11,6 +11,8 @@ import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceAutoServiceDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import org.h2.tools.Server;
 import org.hamcrest.Matchers;
@@ -54,6 +56,12 @@ public class SaleMaintenanceIntegrationTest {
 
     @MockBean
     private JwtDecoder jwtDecoder;
+
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
 

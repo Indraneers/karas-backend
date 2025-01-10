@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +40,12 @@ public class AuthControllerTests {
 
     @MockBean
     private JwtDecoder jwtDecoder;
+
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
 

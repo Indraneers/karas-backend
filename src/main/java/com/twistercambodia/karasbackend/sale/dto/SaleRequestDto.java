@@ -32,7 +32,9 @@ public class SaleRequestDto {
                 .map(ItemRequestDto::new)
                 .collect(Collectors.toList());
 
-        this.maintenance = new MaintenanceDto(sale.getMaintenance());
+        if (sale.getMaintenance() != null) {
+            this.maintenance = new MaintenanceDto(sale.getMaintenance());
+        }
 
         this.userId = sale.getUser().getId();
         this.customerId = sale.getCustomer().getId();

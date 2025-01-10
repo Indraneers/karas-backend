@@ -3,6 +3,8 @@ package com.twistercambodia.karasbackend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,6 +44,12 @@ public class VehicleControllerTests {
 
     @MockBean
     private JwtDecoder jwtDecoder;
+
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
 

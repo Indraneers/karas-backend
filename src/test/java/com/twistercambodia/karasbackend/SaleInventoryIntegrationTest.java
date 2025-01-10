@@ -13,6 +13,8 @@ import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import org.h2.tools.Server;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -54,6 +57,12 @@ public class SaleInventoryIntegrationTest {
     @MockBean
     private JwtDecoder jwtDecoder;
 
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
+
     private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
@@ -79,11 +88,16 @@ public class SaleInventoryIntegrationTest {
     public void setupProducts(ProductRequestDto requestProductRequestDto) throws Exception {
         System.out.println(requestProductRequestDto.getName());
         String json = objectMapper.writeValueAsString(requestProductRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/products")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -123,6 +137,7 @@ public class SaleInventoryIntegrationTest {
             unitRequestDtos.add(addedUnitRequestDto);
         }
     }
+
     @BeforeEach
     public void setup() throws Exception {
         this.setupObjectMapper();
@@ -132,11 +147,16 @@ public class SaleInventoryIntegrationTest {
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/categories")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -148,11 +168,16 @@ public class SaleInventoryIntegrationTest {
         subcategoryRequestDto.setCategoryId(categoryDto.getId());
 
         json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         mvcResult = this.mockMvc.perform(
-                post("/subcategories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/subcategories")
+                        .file(file)
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -287,13 +312,17 @@ public class SaleInventoryIntegrationTest {
         invalidProductRequestDto.setBaseUnit("");
 
         String json = objectMapper.writeValueAsString(
-                invalidProductRequestDto
-        );
+                invalidProductRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                        "data",
+                        json,
+                        String.valueOf(MediaType.APPLICATION_JSON),
+                        json.getBytes()
+                );
 
         this.mockMvc.perform(
-                put("/products/" + productRequestDto.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/products")
+                        .file(file)
         ).andExpect(
                 status().isBadRequest()
         );

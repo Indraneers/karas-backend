@@ -3,12 +3,15 @@ package com.twistercambodia.karasbackend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -36,6 +40,12 @@ public class CategoryControllerTests {
     @MockBean
     private JwtDecoder jwtDecoder;
 
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
+
     private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
@@ -53,11 +63,16 @@ public class CategoryControllerTests {
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         this.mockMvc.perform(
-                        post("/categories")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                multipart("/categories")
+                        .file(file)
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -73,17 +88,21 @@ public class CategoryControllerTests {
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
-
-        this.mockMvc.perform(
-                post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
         );
 
         this.mockMvc.perform(
-                        post("/categories")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                multipart("/categories")
+                .file(file)
+        );
+
+        this.mockMvc.perform(
+                        multipart("/categories")
+                                .file(file)
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(
@@ -99,11 +118,16 @@ public class CategoryControllerTests {
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/categories")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -112,11 +136,17 @@ public class CategoryControllerTests {
         categoryDto.setName("Transmission Fluid");
 
         json = objectMapper.writeValueAsString(categoryDto);
+        file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         this.mockMvc.perform(
-                        put("/categories/" + id)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                multipart("/categories/" + id)
+                        .file(file)
+                        .with(req -> { req.setMethod("PUT"); return req; })
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -132,11 +162,16 @@ public class CategoryControllerTests {
         categoryDto.setName("Engine Oil");
 
         String json = objectMapper.writeValueAsString(categoryDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+                multipart("/categories")
+                        .file(file)
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
