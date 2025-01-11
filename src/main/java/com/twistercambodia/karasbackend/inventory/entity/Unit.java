@@ -25,8 +25,23 @@ public class Unit {
     private int price;
 
     @Column
-    private long
-            toBaseUnit;
+    private long toBaseUnit;
+
+    @Transient
+    public String getSubcategoryName() {
+        return product.getSubcategory().getName();
+    }
+
+    @Transient
+    public String getSubcategoryImg() {
+        return product.getSubcategory().getImg();
+    }
+
+    @Transient
+    public String getCategoryName() {
+        return product.getSubcategory().getCategory().getName();
+    }
+
 
     public String getId() {
         return id;
