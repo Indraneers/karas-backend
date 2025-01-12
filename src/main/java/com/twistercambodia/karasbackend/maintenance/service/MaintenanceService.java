@@ -40,9 +40,6 @@ public class MaintenanceService {
 
     public Maintenance create(MaintenanceDto maintenanceDto) {
         Maintenance maintenance = convertToMaintenance(maintenanceDto);
-        System.out.println("CALLED - 1");
-        System.out.println(maintenanceDto.getCreatedAt() + " " + LocalDateTime.parse(maintenanceDto.getCreatedAt()));
-        System.out.println("CALLED - 2");
         maintenance.setCreatedAt(LocalDateTime.parse(maintenanceDto.getCreatedAt()));
         maintenance.getServices().forEach(ms -> ms.setMaintenance(maintenance));
 

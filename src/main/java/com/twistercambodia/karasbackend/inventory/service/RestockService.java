@@ -57,6 +57,7 @@ public class RestockService {
             Unit unit = unitService.findByIdOrThrowError(item.getUnitId());
             restockItem.setUnit(unit);
 
+            restockItem.setRestock(restock);
             restock.getItems().add(restockItem);
         }
 

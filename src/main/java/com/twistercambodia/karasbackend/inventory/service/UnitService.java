@@ -82,13 +82,13 @@ public class UnitService {
     }
 
     public UnitResponseDto convertToUnitDto(Unit unit) {
-        return modelMapper.map(unit, UnitResponseDto.class);
+        return new UnitResponseDto(unit);
     }
 
     public List<UnitResponseDto> convertToUnitDto(List<Unit> units) {
         return units
                 .stream()
-                .map((unit) -> modelMapper.map(unit, UnitResponseDto.class))
+                .map(UnitResponseDto::new)
                 .collect(Collectors.toList());
     }
 

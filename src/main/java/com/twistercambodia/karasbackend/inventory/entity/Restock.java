@@ -12,10 +12,7 @@ public class Restock {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name="restock_id"
-    )
+    @OneToMany(mappedBy = "restock", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestockItem> items;
 
     @ManyToOne(fetch = FetchType.EAGER)
