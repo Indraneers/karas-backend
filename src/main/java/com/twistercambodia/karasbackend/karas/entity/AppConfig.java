@@ -16,7 +16,7 @@ public class AppConfig {
     @Column(nullable = false)
     private String branchNameKh = "ខេខេ សេវាកម្មប្តូរប្រេងម៉ាស៊ីន រថយន្ត និងម៉ូតូគ្រប់ប្រភេទ";
     @Column(nullable = false)
-    private String logo = "/karas/logo.png";
+    private String logo = "";
     @Column(nullable = false)
     private String addressEn =
             """

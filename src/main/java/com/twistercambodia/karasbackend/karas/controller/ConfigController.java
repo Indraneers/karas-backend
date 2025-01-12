@@ -45,15 +45,23 @@ public class ConfigController {
             createDefaultAppConfig();
         }
 
+        AppConfig appConfig = appConfigRepository.findAll().get(0);
+
         if (file != null) {
+            appConfig.setLogo("/karas/logo.png");
             storageService.uploadFile(
                     "/karas/logo.png",
                     file.getInputStream(),
                     "image/png"
             );
         }
+        appConfig.setPhoneNumbers(karasAppConfig.getPhoneNumbers());
+        appConfig.setBranchNameEn(karasAppConfig.getBranchNameEn());
+        appConfig.setBranchNameKh(karasAppConfig.getBranchNameKh());
+        appConfig.setAddressEn(karasAppConfig.getAddressEn());
+        appConfig.setAddressKh(karasAppConfig.getAddressKh());
 
-        return this.appConfigRepository.save(karasAppConfig);
+        return this.appConfigRepository.save(appConfig);
     }
 
     private void createDefaultAppConfig() {
