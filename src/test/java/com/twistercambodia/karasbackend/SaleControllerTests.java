@@ -290,8 +290,8 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreated(LocalDateTime.now().toString());
-        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
 
@@ -323,10 +323,10 @@ public class SaleControllerTests {
                         .value(saleRequestDto.getVehicleId()),
                 MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(saleRequestDto.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.created")
-                        .value(saleRequestDto.getCreated()),
-                MockMvcResultMatchers.jsonPath("$.dueDate")
-                        .value(saleRequestDto.getDueDate()),
+                MockMvcResultMatchers.jsonPath("$.createdAt")
+                        .value(saleRequestDto.getCreatedAt()),
+                MockMvcResultMatchers.jsonPath("$.dueAt")
+                        .value(saleRequestDto.getDueAt()),
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleRequestDto.getDiscount()),
                 MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
@@ -346,8 +346,8 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreated(LocalDateTime.now().toString());
-        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
 
@@ -413,10 +413,10 @@ public class SaleControllerTests {
                         .value(saleRequestDto.getVehicleId()),
                 MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(saleRequestDto.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.created")
-                        .value(saleRequestDto.getCreated()),
-                MockMvcResultMatchers.jsonPath("$.dueDate")
-                        .value(saleRequestDto.getDueDate()),
+                MockMvcResultMatchers.jsonPath("$.createdAt")
+                        .value(saleRequestDto.getCreatedAt()),
+                MockMvcResultMatchers.jsonPath("$.dueAt")
+                        .value(saleRequestDto.getDueAt()),
                 MockMvcResultMatchers.jsonPath("$.discount")
                         .value(saleRequestDto.getDiscount()),
                 MockMvcResultMatchers.jsonPath("$.items[0].unit.id")
@@ -437,8 +437,8 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreated(LocalDateTime.now().toString());
-        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
 

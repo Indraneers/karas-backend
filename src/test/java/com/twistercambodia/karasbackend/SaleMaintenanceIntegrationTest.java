@@ -77,7 +77,7 @@ public class SaleMaintenanceIntegrationTest {
 
     @BeforeAll
     public static void init() throws SQLException {
-        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8083")
+        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8086")
                 .start();
     }
 
@@ -194,8 +194,8 @@ public class SaleMaintenanceIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreated(LocalDateTime.now().toString());
-        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setItems(new ArrayList<>());
@@ -274,8 +274,8 @@ public class SaleMaintenanceIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreated(LocalDateTime.now().toString());
-        saleRequestDto.setDueDate(LocalDateTime.now().toString());
+        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setItems(new ArrayList<>());

@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class SaleRequestDto {
     private String id;
-    private String created;
-    private String dueDate;
+    private String createdAt;
+    private String dueAt;
     private int discount;
     private List<ItemRequestDto> items;
     private MaintenanceDto maintenance;
@@ -23,8 +23,8 @@ public class SaleRequestDto {
 
     public SaleRequestDto(Sale sale) {
         this.id = sale.getFormattedId();
-        this.created = sale.getCreated().toString();
-        this.dueDate = sale.getDueDate().toString();
+        this.createdAt = sale.getCreatedAt().toString();
+        this.dueAt = sale.getDueAt().toString();
         this.discount = sale.getDiscount();
 
         this.items = sale.getItems()
@@ -50,20 +50,20 @@ public class SaleRequestDto {
         this.id = id;
     }
 
-    public String getCreated() {
-        return created;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public String getDueDate() {
-        return dueDate;
+    public String getDueAt() {
+        return dueAt;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+    public void setDueAt(String dueAt) {
+        this.dueAt = dueAt;
     }
 
     public int getDiscount() {
@@ -126,8 +126,8 @@ public class SaleRequestDto {
     public String toString() {
         return "SaleRequestDto{" +
                 "id='" + id + '\'' +
-                ", created='" + created + '\'' +
-                ", dueDate='" + dueDate + '\'' +
+                ", created='" + createdAt + '\'' +
+                ", dueDate='" + dueAt + '\'' +
                 ", discount=" + discount +
                 ", items=" + items +
                 ", maintenance=" + maintenance +

@@ -29,17 +29,23 @@ public class Unit {
 
     @Transient
     public String getSubcategoryName() {
-        return product.getSubcategory().getName();
+        return product.getSubcategory() != null ? product.getSubcategory().getName() : "";
     }
 
     @Transient
     public String getSubcategoryImg() {
-        return product.getSubcategory().getImg();
+        return product.getSubcategory() != null ? product.getSubcategory().getImg() : "";
     }
 
     @Transient
     public String getCategoryName() {
-        return product.getSubcategory().getCategory().getName();
+        return
+                (
+                    product.getSubcategory() != null
+                    &&
+                    product.getSubcategory().getCategory() != null
+                )
+                ? product.getSubcategory().getCategory().getName() : "";
     }
 
 

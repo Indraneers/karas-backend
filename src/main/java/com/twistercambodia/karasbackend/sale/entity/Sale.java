@@ -17,10 +17,10 @@ public class Sale {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime created;
+    private LocalDateTime createdAt;
 
     @Column
-    private LocalDateTime dueDate;
+    private LocalDateTime dueAt;
 
     @Column
     private int discount;
@@ -58,20 +58,20 @@ public class Sale {
         this.id = id;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
+    public void setCreatedAt(LocalDateTime created) {
+        this.createdAt = created;
     }
 
-    public LocalDateTime getDueDate() {
-        return dueDate;
+    public LocalDateTime getDueAt() {
+        return dueAt;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
-        this.dueDate = dueDate;
+    public void setDueAt(LocalDateTime dueDate) {
+        this.dueAt = dueDate;
     }
 
     public int getDiscount() {
@@ -134,8 +134,8 @@ public class Sale {
     public String toString() {
         return "Sale{" +
                 "id=" + id +
-                ", created=" + created +
-                ", dueDate=" + dueDate +
+                ", created=" + createdAt +
+                ", dueDate=" + dueAt +
                 ", discount=" + discount +
                 ", items=" + items +
                 ", maintenance=" + maintenance +

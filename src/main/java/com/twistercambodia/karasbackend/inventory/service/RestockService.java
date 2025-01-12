@@ -49,16 +49,18 @@ public class RestockService {
 
         User user = this.userService.findByIdOrThrowError(restockRequestDto.getUserId());
         restock.setUser(user);
-        restock.getItems().clear();;
+        restock.getItems().clear();
         restock.setCreatedAt(LocalDateTime.parse(restockRequestDto.getCreatedAt()));
 
         for (RestockItemRequestDto item : restockRequestDto.getItems()) {
             RestockItem restockItem = this.objectMapper.map(item, RestockItem.class);
+
             Unit unit = unitService.findByIdOrThrowError(item.getUnitId());
+            restockItem.setId(null);
             restockItem.setUnit(unit);
 
-            restockItem.setRestock(restock);
             restock.getItems().add(restockItem);
+            restockItem.setRestock(restock);
         }
 
         unitService.batchStockUpdate(restock.getItems());

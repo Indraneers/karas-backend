@@ -2,7 +2,6 @@ package com.twistercambodia.karasbackend.sale.service;
 
 import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.auth.service.UserService;
-import com.twistercambodia.karasbackend.autoService.service.AutoServiceService;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
@@ -19,7 +18,6 @@ import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -75,8 +73,8 @@ public class SaleService {
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setCreated(LocalDateTime.parse(saleRequestDto.getCreated()));
-        sale.setDueDate(LocalDateTime.parse(saleRequestDto.getDueDate()));
+        sale.setCreatedAt(LocalDateTime.parse(saleRequestDto.getCreatedAt()));
+        sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
@@ -117,8 +115,8 @@ public class SaleService {
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setCreated(LocalDateTime.parse(saleRequestDto.getCreated()));
-        sale.setDueDate(LocalDateTime.parse(saleRequestDto.getDueDate()));
+        sale.setCreatedAt(LocalDateTime.parse(saleRequestDto.getCreatedAt()));
+        sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
