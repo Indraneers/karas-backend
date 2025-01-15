@@ -12,6 +12,7 @@ public class CategoryDto {
     private List<SubcategoryRequestDto> subcategories;
     private int subcategoryCount;
     private String img;
+    private String color;
 
     public CategoryDto() {}
 
@@ -71,5 +72,13 @@ public class CategoryDto {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

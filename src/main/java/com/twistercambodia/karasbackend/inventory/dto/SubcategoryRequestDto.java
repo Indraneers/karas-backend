@@ -11,6 +11,7 @@ public class SubcategoryRequestDto {
     private String name;
     private String categoryId;
     private int productCount;
+    private String color;
 
     public SubcategoryRequestDto() {}
 
@@ -52,5 +53,13 @@ public class SubcategoryRequestDto {
 
     public void setProductCount(int productCount) {
         this.productCount = productCount;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

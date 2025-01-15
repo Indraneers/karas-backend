@@ -14,6 +14,7 @@ public class SubcategoryResponseDto {
     private List<ProductRequestDto> products;
     private int productCount;
     private String img;
+    private String color;
 
     public SubcategoryResponseDto() {}
 
@@ -79,5 +80,13 @@ public class SubcategoryResponseDto {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

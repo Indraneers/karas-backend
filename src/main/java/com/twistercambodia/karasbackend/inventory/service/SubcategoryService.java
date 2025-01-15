@@ -70,6 +70,7 @@ public class SubcategoryService {
 
         subcategory.setName(subcategoryRequestDto.getName());
         subcategory.setCategory(category);
+        subcategory.setColor(subcategoryRequestDto.getColor());
         return this.subcategoryRepository.save(subcategory);
     }
 

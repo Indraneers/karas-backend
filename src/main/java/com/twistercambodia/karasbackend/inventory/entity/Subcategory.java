@@ -28,6 +28,9 @@ public class Subcategory {
     @Column
     private String img = "";
 
+    @Column
+    private String color = "";
+
     public String getId() {
         return id;
     }
@@ -76,6 +79,14 @@ public class Subcategory {
         this.img = img;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "Subcategory{" +
@@ -84,6 +95,7 @@ public class Subcategory {
                 ", products=" + products +
                 ", productCount=" + productCount +
                 ", img=" + img +
+                ", color=" + color +
                 '}';
     }
 }

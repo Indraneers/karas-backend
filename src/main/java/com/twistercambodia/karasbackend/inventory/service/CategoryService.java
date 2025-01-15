@@ -58,6 +58,7 @@ public class CategoryService {
         }
 
         category.setName(categoryDto.getName());
+        category.setColor(categoryDto.getColor());
 
         return this.categoryRepository.save(category);
     }

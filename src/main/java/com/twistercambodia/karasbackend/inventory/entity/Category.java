@@ -24,6 +24,9 @@ public class Category {
     @Column
     private String img = "";
 
+    @Column
+    private String color = "";
+
     public String getId() {
         return id;
     }
@@ -64,6 +67,14 @@ public class Category {
         this.img = img;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
@@ -72,6 +83,7 @@ public class Category {
                 ", subcategories=" + subcategories +
                 ", subcategoryCount=" + subcategoryCount +
                 ", img=" + img +
+                ", color=" + color +
                 '}';
     }
 }
