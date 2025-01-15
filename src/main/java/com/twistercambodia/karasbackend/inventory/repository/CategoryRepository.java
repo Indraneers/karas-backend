@@ -11,6 +11,7 @@ public interface CategoryRepository extends CrudRepository<Category, String> {
         select c from Category c 
         where 
             (?1 is null or lower(cast(c.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+        order by size(c.subcategories) desc
     """)
     List<Category> findAll(String q);
 }
