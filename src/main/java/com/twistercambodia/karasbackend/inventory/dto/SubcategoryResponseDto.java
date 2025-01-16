@@ -32,6 +32,7 @@ public class SubcategoryResponseDto {
                 new ArrayList<>();
         this.productCount = subcategory.getProductCount();
         this.img = subcategory.getImg();
+        this.color = subcategory.getColor();
     }
 
     public String getId() {
