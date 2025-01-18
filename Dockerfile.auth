@@ -45,4 +45,4 @@ RUN /opt/keycloak/bin/kc.sh build \
 
 RUN /opt/keycloak/bin/kc.sh show-config
 
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm"]
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm", "--import-file=/opt/keycloak/data/import/karas-keycloak-realm.json"]
