@@ -1,9 +1,9 @@
 name: Build and deploy backend to Digital Ocean
-run-name: ${{ github.actor }} is deploying to development server 🚀
+run-name: ${{ github.actor }} is deploying to main server 🚀
 on:
   push:
     branches:
-      - development
+      - main
 jobs:
   build-and-publish:
     name: build and publish image
@@ -18,8 +18,8 @@ jobs:
 
       - name: Build and Publish
         run: |
-          echo ${{ secrets.DEV_ENV_FILE }} > .env
-        
+          echo ${{ secrets.PROD_ENV_FILE }} > .env
+          
           docker compose -f docker-compose.yml build --no-cache
           docker compose -f docker-compose.yml push
   deployment:
@@ -36,14 +36,14 @@ jobs:
           switches: -avzr --delete
           path: docker-compose.yml
           remote_path: karas-backend
-          remote_host: ${{ secrets.SSH_DEV_HOST }}
+          remote_host: ${{ secrets.SSH_PROD_HOST }}
           remote_user: ${{ secrets.SSH_USERNAME }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: connect and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_DEV_HOST }}
+          host: ${{ secrets.SSH_PROD_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
