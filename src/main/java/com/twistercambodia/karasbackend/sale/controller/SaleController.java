@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.sale.controller;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
+import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.sale.service.SaleService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -56,6 +57,27 @@ public class SaleController {
         this.logger.info("Updating Sale={}", sale);
         return this.saleService.convertToSaleResponseDto(sale);
     }
+
+    @PutMapping("pay/{id}")
+    public SaleResponseDto paySale(
+            @PathVariable("id") String id
+    ) throws Exception {
+        Sale saleItem = this.saleService.findByIdOrThrowException(id);
+        if (saleItem.getStatus() == SaleStatus.PAID) {
+            return this.saleService.convertToSaleResponseDto(saleItem);
+        }
+
+        saleItem.setStatus(SaleStatus.PAID);
+
+        Sale sale = this.saleService.update(
+                saleItem.getFormattedId(),
+                new SaleRequestDto(saleItem)
+        );
+
+        this.logger.info("Paying Sale={}", sale);
+        return this.saleService.convertToSaleResponseDto(sale);
+    }
+
 
     @DeleteMapping("{id}")
     public SaleResponseDto updateSale(
