@@ -11,22 +11,34 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
+    @Column
+    private String identifier;
+
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="product_id")
+    @JoinColumn(
+            name="product_id")
     private List<Unit> units;
 
     @Formula("(select count(*) from unit u where u.product_id = id)")
     private int unitCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "subcategory_id", nullable = false)
+    private Subcategory subcategory;
+
+    @Column
+    private String baseUnit;
+
+    @Column(nullable = false)
+    private boolean variable;
+
+    @Column
+    private String img = "";
 
     // Getters/Setters
-
     public String getId() {
         return id;
     }
@@ -41,6 +53,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public List<Unit> getUnits() {
@@ -59,24 +79,49 @@ public class Product {
         this.unitCount = unitTotal;
     }
 
-    public Category getCategory() {
-        return category;
+    public Subcategory getSubcategory() {
+        return subcategory;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setSubcategory(Subcategory subcategory) {
+        this.subcategory = subcategory;
     }
 
-    // define toString() method
+    public String getBaseUnit() {
+        return baseUnit;
+    }
+
+    public void setBaseUnit(String baseUnit) {
+        this.baseUnit = baseUnit;
+    }
+
+    public boolean isVariable() {
+        return variable;
+    }
+
+    public void setVariable(boolean variable) {
+        this.variable = variable;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     @Override
     public String toString() {
         return "Product{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", units=" + units +
+                "variable=" + variable +
+                ", baseUnit='" + baseUnit + '\'' +
                 ", unitCount=" + unitCount +
-                ", category=" + category +
+                ", units=" + units +
+                ", name='" + name + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", id='" + id + '\'' +
+                ", img=" + img + '\'' +
                 '}';
     }
 }

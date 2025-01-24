@@ -6,20 +6,21 @@ import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
+import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
-import com.twistercambodia.karasbackend.sale.dto.ItemDto;
-import com.twistercambodia.karasbackend.sale.dto.SaleDto;
+import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
+import com.twistercambodia.karasbackend.maintenance.service.MaintenanceService;
+import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
+import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
+import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Item;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import jakarta.transaction.Transactional;
-import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,8 +33,9 @@ public class SaleService {
     private final UserService userService;
     private final CustomerService customerService;
     private final VehicleService vehicleService;
-    private final ModelMapper modelMapper;
     private final UnitService unitService;
+    private final MaintenanceService maintenanceService;
+    private final ModelMapper modelMapper;
 
     public SaleService(
             SaleRepository saleRepository,
@@ -41,7 +43,8 @@ public class SaleService {
             UserService userService,
             CustomerService customerService,
             VehicleService vehicleService,
-            UnitService unitService
+            UnitService unitService,
+            MaintenanceService maintenanceService
     ) {
         this.saleRepository = saleRepository;
         this.modelMapper = modelMapper;
@@ -49,6 +52,7 @@ public class SaleService {
         this.customerService = customerService;
         this.vehicleService = vehicleService;
         this.unitService = unitService;
+        this.maintenanceService = maintenanceService;
     }
 
     public List<Sale> findAll() {
@@ -56,87 +60,139 @@ public class SaleService {
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
-        return this.saleRepository.findById(id).orElseThrow(
+        return this.saleRepository.findById(extractNumber(id)).orElseThrow(
                 () -> new NotFoundException("Sale not found with ID={}" + id)
         );
     }
 
-    public Sale create(SaleDto saleDto) throws Exception {
-        Sale sale = this.convertToSale(saleDto);
+    @Transactional
+    public Sale create(SaleRequestDto saleRequestDto) throws Exception {
+        Sale sale = this.convertToSale(saleRequestDto);
 
-        User user = this.userService.findByIdOrThrowError(saleDto.getUserId());
-        Customer customer = this.customerService.findByIdOrThrowError(saleDto.getCustomerId());
-        Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleDto.getVehicleId());
+        User user = this.userService.findByIdOrThrowError(saleRequestDto.getUserId());
+        Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
+        Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setCreated(LocalDateTime.parse(saleDto.getCreated()));
-        sale.setDueDate(LocalDateTime.parse(saleDto.getDueDate()));
+        sale.setCreatedAt(LocalDateTime.parse(saleRequestDto.getCreatedAt()));
+        sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
 
         List<Item> items = new ArrayList<>();
 
-        for (ItemDto itemDto : saleDto.getItems()) {
-            Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
-            Item item = this.modelMapper.map(itemDto, Item.class);
+        for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
+            Item item = this.modelMapper.map(itemRequestDto, Item.class);
 
+            Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
             item.setUnit(unit);
 
+            item.setSale(sale);
             items.add(item);
         }
 
         sale.setItems(items);
 
-        return this.saleRepository.save(sale);
+
+        Sale saleResult = this.saleRepository.save(sale);
+
+        unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
+
+        if (saleRequestDto.getMaintenance() != null) {
+            saleRequestDto.getMaintenance().setSaleId(saleResult.getId());
+            Maintenance maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+            saleResult.setMaintenance(maintenance);
+        }
+
+        return saleResult;
     }
 
-    public Sale update(String id, SaleDto saleDto) throws Exception {
+    @Transactional
+    public Sale update(String id, SaleRequestDto saleRequestDto) throws Exception {
         Sale sale = this.findByIdOrThrowException(id);
 
-        User user = this.userService.findByIdOrThrowError(saleDto.getUserId());
-        Customer customer = this.customerService.findByIdOrThrowError(saleDto.getCustomerId());
-        Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleDto.getVehicleId());
+        User user = this.userService.findByIdOrThrowError(saleRequestDto.getUserId());
+        Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
+        Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setCreated(LocalDateTime.parse(saleDto.getCreated()));
-        sale.setDueDate(LocalDateTime.parse(saleDto.getDueDate()));
+        sale.setCreatedAt(LocalDateTime.parse(saleRequestDto.getCreatedAt()));
+        sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
+        sale.setDiscount(saleRequestDto.getDiscount());
+        sale.setStatus(saleRequestDto.getStatus());
+
+        unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
 
         sale.getItems().clear();
 
         List<Item> items = new ArrayList<>();
-        for (ItemDto itemDto : saleDto.getItems()) {
-            Unit unit = this.unitService.findByIdOrThrowError(itemDto.getUnitId());
-            Item item = this.modelMapper.map(itemDto, Item.class);
 
+        for (ItemRequestDto itemRequestDto : saleRequestDto.getItems()) {
+            Item item = this.modelMapper.map(itemRequestDto, Item.class);
+
+            Unit unit = this.unitService.findByIdOrThrowError(itemRequestDto.getUnitId());
             item.setUnit(unit);
+
+            item.setSale(sale);
             items.add(item);
         }
 
         sale.getItems().addAll(items);
 
-        return this.saleRepository.save(sale);
+        Sale saleResult = this.saleRepository.save(sale);
+
+        if (saleRequestDto.getMaintenance() != null) {
+            Maintenance maintenance;
+            sale.getMaintenance().setVehicle(vehicle);
+            saleRequestDto.getMaintenance().setVehicleId(vehicle.getId());
+            if (sale.getMaintenance() != null) {
+                maintenance = this.maintenanceService.update(
+                        sale.getMaintenance().getId(),
+                        saleRequestDto.getMaintenance()
+                );
+            } else {
+                saleRequestDto.getMaintenance().setSaleId(saleResult.getId());
+                maintenance = this.maintenanceService.create(saleRequestDto.getMaintenance());
+            }
+            sale.setMaintenance(maintenance);
+        }
+
+        unitService.batchStockUpdate(saleResult.getItems(), StockUpdate.SALE);
+
+        return saleResult;
     }
 
+    @Transactional
     public Sale delete(String id) throws Exception {
         Sale sale = this.findByIdOrThrowException(id);
+        unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
         this.saleRepository.delete(sale);
         return sale;
     }
 
-    public SaleDto convertToSaleDto(Sale sale) {
-        return this.modelMapper.map(sale, SaleDto.class);
-    }
-
-    public List<SaleDto> convertToSaleDto(List<Sale> sales) {
+    public List<SaleResponseDto> convertToSaleResponseDto(List<Sale> sales) {
         return sales
                 .stream()
-                .map((s) -> modelMapper.map(s, SaleDto.class))
+                .map(SaleResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public Sale convertToSale(SaleDto saleDto) {
-        return this.modelMapper.map(saleDto, Sale.class);
+    public SaleResponseDto convertToSaleResponseDto(Sale sale) {
+        return new SaleResponseDto(sale);
     }
+
+    public Sale convertToSale(SaleRequestDto saleRequestDto) {
+        return this.modelMapper.map(saleRequestDto, Sale.class);
+    }
+
+    public static Long extractNumber(String formattedId) {
+        if (formattedId == null || !formattedId.startsWith("TW-") || formattedId.length() != 11) {
+            throw new IllegalArgumentException("Invalid TW ID format: " + formattedId);
+        }
+        // Extract the numeric part (8 digits after "TW-")
+        return Long.parseLong(formattedId.substring(3));
+    }
+
 }

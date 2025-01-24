@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.vehicle.dto;
 
+import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 
 public class VehicleDto {
@@ -11,18 +12,19 @@ public class VehicleDto {
     private String note;
     private String plateNumber;
     private String makeAndModel;
+    private CustomerDto customer;
 
     public VehicleDto() {}
 
     public VehicleDto(Vehicle vehicle) {
         this.id = vehicle.getId();
-        this.customerId = vehicle.getCustomer().getId();
         this.vinNo = vehicle.getVinNo();
         this.engineNo = vehicle.getEngineNo();
         this.mileage = vehicle.getMileage();
         this.note = vehicle.getNote();
         this.plateNumber = vehicle.getPlateNumber();
         this.makeAndModel = vehicle.getMakeAndModel();
+        this.customer = new CustomerDto(vehicle.getCustomer());
     }
 
     public String getId() {
@@ -31,14 +33,6 @@ public class VehicleDto {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
     }
 
     public String getVinNo() {
@@ -87,5 +81,13 @@ public class VehicleDto {
 
     public void setMakeAndModel(String makeAndModel) {
         this.makeAndModel = makeAndModel;
+    }
+
+    public CustomerDto getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerDto customer) {
+        this.customer = customer;
     }
 }

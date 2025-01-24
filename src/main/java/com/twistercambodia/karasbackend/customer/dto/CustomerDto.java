@@ -12,20 +12,24 @@ public class CustomerDto {
     private String id;
     private String name;
     private String note;
-    private Set<VehicleDto> vehicles;
+    private String address;
+    private String contact;
+
+//    private Set<VehicleDto> vehicles;
 
     public CustomerDto() {}
 
     public CustomerDto(Customer customer) {
-        ModelMapper modelMapper = new ModelMapper();
         this.name = customer.getId();
         this.name = customer.getName();
         this.note = customer.getNote();
-        this.vehicles = customer
-                .getVehicles()
-                .stream()
-                .map((v) -> modelMapper.map(v, VehicleDto.class))
-                .collect(Collectors.toSet());
+        this.address = customer.getAddress();
+        this.contact = customer.getContact();
+//        this.vehicles = customer
+//                .getVehicles()
+//                .stream()
+//                .map((v) -> modelMapper.map(v, VehicleDto.class))
+//                .collect(Collectors.toSet());
     }
 
     public CustomerDto(String name, String note) {
@@ -57,11 +61,28 @@ public class CustomerDto {
         this.note = note;
     }
 
-    public Set<VehicleDto> getVehicles() {
-        return vehicles;
+    public String getAddress() {
+        return address;
     }
 
-    public void setVehicles(Set<VehicleDto> vehicles) {
-        this.vehicles = vehicles;
+    public void setAddress(String address) {
+        this.address = address;
     }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    //
+//    public Set<VehicleDto> getVehicles() {
+//        return vehicles;
+//    }
+//
+//    public void setVehicles(Set<VehicleDto> vehicles) {
+//        this.vehicles = vehicles;
+//    }
 }

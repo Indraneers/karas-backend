@@ -7,6 +7,11 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface CategoryRepository extends CrudRepository<Category, String> {
-    @Query("select c as productCount from Category c")
-    List<Category> findAll();
+    @Query("""
+        select c from Category c 
+        where 
+            (?1 is null or lower(cast(c.name as string)) like lower(concat('%', concat(cast(?1 as string), '%'))))
+        order by size(c.subcategories) desc
+    """)
+    List<Category> findAll(String q);
 }

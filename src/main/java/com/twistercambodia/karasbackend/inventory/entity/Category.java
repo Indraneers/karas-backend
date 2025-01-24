@@ -1,7 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Formula;
 
 import java.util.List;
@@ -16,11 +15,17 @@ public class Category {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="category_id")
-    private List<Product> products;
+    @JoinColumn(name = "category_id")
+    private List<Subcategory> subcategories;
 
-    @Formula("(select count(*) from product p where p.category_id = id)")
-    private int productCount;
+    @Formula("(select count(*) from subcategory sc where sc.category_id = id)")
+    private int subcategoryCount;
+
+    @Column
+    private String img = "";
+
+    @Column
+    private String color = "";
 
     public String getId() {
         return id;
@@ -38,30 +43,47 @@ public class Category {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<Subcategory> getSubcategories() {
+        return subcategories;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setSubcategories(List<Subcategory> subcategories) {
+        this.subcategories = subcategories;
     }
 
-    public int getProductCount() {
-        return productCount;
+    public int getSubcategoryCount() {
+        return subcategoryCount;
     }
 
-    public void setProductCount(int productCount) {
-        this.productCount = productCount;
+    public void setSubcategoryCount(int subcategoryCount) {
+        this.subcategoryCount = subcategoryCount;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 
     @Override
     public String toString() {
         return "Category{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", products=" + products +
-                ", productCount=" + productCount +
+                ", subcategories=" + subcategories +
+                ", subcategoryCount=" + subcategoryCount +
+                ", img=" + img +
+                ", color=" + color +
                 '}';
     }
 }

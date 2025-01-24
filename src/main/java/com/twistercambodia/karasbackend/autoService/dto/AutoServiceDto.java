@@ -6,7 +6,7 @@ public class AutoServiceDto {
     private String id;
     private String name;
     private boolean isActive;
-    private int originalPrice;
+    private int price;
 
     public AutoServiceDto() {}
 
@@ -14,7 +14,7 @@ public class AutoServiceDto {
         this.id = autoService.getId();
         this.name = autoService.getName();
         this.isActive = autoService.isActive();
-        this.originalPrice = autoService.getOriginalPrice();
+        this.price = autoService.getPrice();
     }
 
     public String getId() {
@@ -41,11 +41,11 @@ public class AutoServiceDto {
         isActive = active;
     }
 
-    public int getOriginalPrice() {
-        return originalPrice;
+    public int getPrice() {
+        return price;
     }
 
-    public void setOriginalPrice(int originalPrice) {
-        this.originalPrice = originalPrice;
+    public void setPrice(int originalPrice) {
+        this.price = originalPrice;
     }
 }

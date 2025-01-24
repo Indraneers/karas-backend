@@ -1,7 +1,10 @@
 package com.twistercambodia.karasbackend.autoService.entity;
 
 import com.twistercambodia.karasbackend.autoService.dto.AutoServiceDto;
+import com.twistercambodia.karasbackend.sale.entity.Item;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class AutoService {
@@ -16,7 +19,7 @@ public class AutoService {
     private boolean isActive;
 
     @Column
-    private int originalPrice;
+    private int price;
 
     public AutoService() {}
 
@@ -24,7 +27,7 @@ public class AutoService {
         this.id = autoServiceDto.getId();
         this.name = autoServiceDto.getName();
         this.isActive = autoServiceDto.isActive();
-        this.originalPrice = autoServiceDto.getOriginalPrice();
+        this.price = autoServiceDto.getPrice();
     }
 
     public String getId() {
@@ -51,12 +54,12 @@ public class AutoService {
         isActive = active;
     }
 
-    public int getOriginalPrice() {
-        return originalPrice;
+    public int getPrice() {
+        return price;
     }
 
-    public void setOriginalPrice(int originalPrice) {
-        this.originalPrice = originalPrice;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     @Override
@@ -65,7 +68,7 @@ public class AutoService {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", isActive=" + isActive +
-                ", originalPrice=" + originalPrice +
+                ", price=" + price +
                 '}';
     }
 }

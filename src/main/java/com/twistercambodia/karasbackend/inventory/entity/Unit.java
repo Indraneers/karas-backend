@@ -15,9 +15,9 @@ public class Unit {
     private String name;
 
     @Column
-    private int quantity;
+    private long quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="product_id", nullable = false)
     private Product product;
 
@@ -25,7 +25,29 @@ public class Unit {
     private int price;
 
     @Column
-    private String sku;
+    private long toBaseUnit;
+
+    @Transient
+    public String getSubcategoryName() {
+        return product.getSubcategory() != null ? product.getSubcategory().getName() : "";
+    }
+
+    @Transient
+    public String getSubcategoryImg() {
+        return product.getSubcategory() != null ? product.getSubcategory().getImg() : "";
+    }
+
+    @Transient
+    public String getCategoryName() {
+        return
+                (
+                    product.getSubcategory() != null
+                    &&
+                    product.getSubcategory().getCategory() != null
+                )
+                ? product.getSubcategory().getCategory().getName() : "";
+    }
+
 
     public String getId() {
         return id;
@@ -43,11 +65,11 @@ public class Unit {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -67,12 +89,12 @@ public class Unit {
         this.price = price;
     }
 
-    public String getSku() {
-        return sku;
+    public long getToBaseUnit() {
+        return toBaseUnit;
     }
 
-    public void setSku(String sku) {
-        this.sku = sku;
+    public void setToBaseUnit(long toBaseUnit) {
+        this.toBaseUnit = toBaseUnit;
     }
 
     @Override
@@ -82,7 +104,7 @@ public class Unit {
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
-                ", sku='" + sku + '\'' +
+                ", toBaseUnit=" + toBaseUnit +
                 '}';
     }
 }

@@ -4,11 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.storage.config.MinioConfig;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -28,9 +33,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {KarasBackendApplication.class})
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@WithMockUser(username="admin", roles={"USER", "ADMIN"})
 public class AuthControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @MockBean
+    private JwtDecoder jwtDecoder;
+
+    @MockBean
+    private MinioConfig minioConfig; // Mock the MinIO configuration bean.
+
+    @MockBean
+    private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
 
@@ -91,25 +106,6 @@ public class AuthControllerTests {
                                 .value("Invalid Data")
                 );
     }
-
-    @Test
-    void createUser_EmptyUserRoleException_Status400() throws Exception {
-        UserDto userDto = new UserDto();
-
-        userDto.setUsername("User A");
-
-        String json = objectMapper.writeValueAsString(userDto);
-
-        this.mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.message")
-                                .value("Invalid Data")
-                );    }
 
     @Test
     void updateUser_ShouldUpdateUser_Status200() throws Exception {

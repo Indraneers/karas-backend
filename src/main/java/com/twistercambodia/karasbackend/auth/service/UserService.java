@@ -30,6 +30,12 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    public User findByUsername(String username) throws Exception {
+        return this.userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
     public User create(UserDto userDto) {
         User user = this.convertToUser(userDto);
         return this.userRepository.save(user);
@@ -38,6 +44,7 @@ public class UserService {
     public User update(String id, UserDto userDto) throws Exception {
         User user = this.findByIdOrThrowError(id);
 
+        user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
         user.setRole(userDto.getRole());
 

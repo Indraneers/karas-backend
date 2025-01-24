@@ -2,23 +2,23 @@ package com.twistercambodia.karasbackend.inventory.dto;
 
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 
-public class UnitDto {
+public class UnitRequestDto {
     private String id;
     private String name;
-    private int quantity;
+    private long quantity;
     private String productId;
     private int price;
-    private String sku;
+    private long toBaseUnit;
 
-    public UnitDto() {}
+    public UnitRequestDto() {}
 
-    public UnitDto(Unit unit) {
+    public UnitRequestDto(Unit unit) {
         this.id = unit.getId();
         this.name = unit.getName();
         this.quantity = unit.getQuantity();
         this.productId = unit.getProduct().getId();
         this.price = unit.getPrice();
-        this.sku = unit.getSku();
+        this.toBaseUnit = unit.getToBaseUnit();
     }
 
     public String getId() {
@@ -37,11 +37,11 @@ public class UnitDto {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -61,11 +61,11 @@ public class UnitDto {
         this.price = price;
     }
 
-    public String getSku() {
-        return sku;
+    public long getToBaseUnit() {
+        return toBaseUnit;
     }
 
-    public void setSku(String sku) {
-        this.sku = sku;
+    public void setToBaseUnit(long toBaseUnit) {
+        this.toBaseUnit = toBaseUnit;
     }
 }

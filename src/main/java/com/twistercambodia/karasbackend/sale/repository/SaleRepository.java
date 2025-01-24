@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface SaleRepository extends CrudRepository<Sale, String> {
-    @Query("SELECT s FROM Sale s")
+public interface SaleRepository extends CrudRepository<Sale, Long> {
+    @Query("SELECT s FROM Sale s order by s.id desc")
     List<Sale> findAll();
 }

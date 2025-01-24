@@ -4,16 +4,23 @@ import com.twistercambodia.karasbackend.autoService.entity.AutoService;
 import jakarta.persistence.*;
 
 @Entity
-public class MaintenanceService {
+public class MaintenanceAutoService {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maintenance_id")
     private Maintenance maintenance;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private AutoService autoService;
+
+    @Column(nullable = false)
+    private int price;
+
+    @Column
+    private int discount;
 
     public String getId() {
         return id;
@@ -39,12 +46,37 @@ public class MaintenanceService {
         this.autoService = autoService;
     }
 
+    public AutoService getAutoService() {
+        return autoService;
+    }
+
+    public void setAutoService(AutoService autoService) {
+        this.autoService = autoService;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
     @Override
     public String toString() {
         return "MaintenanceService{" +
                 "id='" + id + '\'' +
-                ", maintenance=" + maintenance +
-                ", service=" + autoService +
+                ", autoService=" + autoService.getId() +
+                ", price=" + price +
+                ", discount=" + discount +
                 '}';
     }
 }

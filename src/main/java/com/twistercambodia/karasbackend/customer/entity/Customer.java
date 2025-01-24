@@ -20,8 +20,14 @@ public class Customer {
     @Column
     private String note;
 
+    @Column
+    private String address;
+
+    @Column
+    private String contact;
+
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "customer"
     )
@@ -60,6 +66,22 @@ public class Customer {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     public Set<Vehicle> getVehicles() {

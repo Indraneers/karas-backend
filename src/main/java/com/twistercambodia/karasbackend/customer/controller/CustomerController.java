@@ -20,9 +20,18 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers() {
+    public List<CustomerDto> getAllCustomers(
+            @RequestParam(value = "q", required = false) String q
+    ) {
         return this.customerService.convertToCustomerDto(
-                this.customerService.findAll()
+                this.customerService.findAll(q)
+        );
+    }
+
+    @GetMapping("{id}")
+    public CustomerDto getCustomer(@PathVariable("id") String id) {
+        return this.customerService.convertToCustomerDto(
+                this.customerService.findByIdOrThrowError((id))
         );
     }
 

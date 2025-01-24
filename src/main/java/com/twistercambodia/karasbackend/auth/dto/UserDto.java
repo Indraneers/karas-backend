@@ -5,6 +5,7 @@ import com.twistercambodia.karasbackend.auth.entity.UserRole;
 
 public class UserDto {
     private String id;
+    private String email;
     private String username;
     private UserRole role;
 
@@ -12,6 +13,7 @@ public class UserDto {
 
     public UserDto(User user) {
         this.id = user.getId();
+        this.email = user.getEmail();
         this.username = user.getUsername();
         this.role = user.getRole();
     }
@@ -22,6 +24,14 @@ public class UserDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {

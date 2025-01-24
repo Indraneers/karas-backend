@@ -1,0 +1,74 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    image: postgres-multiple-db
+    restart: always
+    env_file: '.env.developmental'
+    environment:
+      POSTGRES_INITDB_ARGS: "-c max_prepared_transactions=100"
+    ports:
+      - '5431:5432'
+    volumes:
+      - postgres-data:/docker-entrypoint-initdb.d
+    networks:
+      - nginx_network
+  backend:
+    container_name: karas-backend-spring-boot
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file: '.env.developmental'
+    image: "ghcr.io/chheangg/karas-backend:latest"
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+      - ./.m2:/root/.m2
+    working_dir: /app
+    command: sh run.sh
+    ports:
+      - 8080:8080
+      - 35729:35729
+      - 5005:5005
+    networks:
+      - nginx_network
+  keycloak:
+    container_name: karas-keycloak
+    image: quay.io/keycloak/keycloak:26.0.7
+    depends_on:
+      - postgres
+      - backend
+    command:
+      - start-dev
+      - --verbose
+    ports:
+      - 3000:3000
+    volumes:
+      - ./keycloak/providers/:/opt/keycloak/providers/
+      - ./keycloak/conf/:/opt/keycloak/conf/
+      - ./keycloak/import:/opt/keycloak/data/import/
+    env_file: '.env.developmental'
+    environment:
+      KC_HTTP_PORT: 3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - nginx_network
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    env_file: '.env.developmental'
+    volumes:
+      - ./minio/data:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    networks:
+      - nginx_network
+networks:
+  nginx_network:
+    external: true
+volumes:
+  postgres-data:

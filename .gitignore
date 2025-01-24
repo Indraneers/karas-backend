@@ -36,9 +36,15 @@ build/
 pgdata
 postgres-data
 
+### MiniO ###
+minio
+
 ### Hot Swapping ###
 .m2
 
 ### environment variable config ###
 .env.developmental
 .env
+
+#TODO: ADD GITHUB ACTIONS AND NEW REPO FOR KEYCLOAK AND IGNORE THIS FOLDER
+### Keycloak ###

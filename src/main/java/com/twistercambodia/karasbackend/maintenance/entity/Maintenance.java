@@ -1,11 +1,14 @@
 package com.twistercambodia.karasbackend.maintenance.entity;
 
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
+import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Maintenance {
@@ -13,28 +16,25 @@ public class Maintenance {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    private Sale sale;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Vehicle vehicle;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(nullable = false)
     private int mileage;
 
     @Column
     private String note;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<MaintenanceService> maintenanceServices;
+    @OneToMany(mappedBy = "maintenance", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MaintenanceAutoService> services;
 
     public Maintenance() {}
-
-    public Maintenance(MaintenanceDto maintenanceDto) {
-        this.createdAt = maintenanceDto.getCreatedAt();
-        this.mileage = maintenanceDto.getMileage();
-        this.note = maintenanceDto.getNote();
-    }
 
     public String getId() {
         return id;
@@ -42,6 +42,14 @@ public class Maintenance {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
     }
 
     public Vehicle getVehicle() {
@@ -76,23 +84,23 @@ public class Maintenance {
         this.note = note;
     }
 
-    public Set<MaintenanceService> getMaintenanceServices() {
-        return maintenanceServices;
+    public Set<MaintenanceAutoService> getServices() {
+        return services;
     }
 
-    public void setMaintenanceServices(Set<MaintenanceService> maintenanceServices) {
-        this.maintenanceServices = maintenanceServices;
+    public void setServices(Set<MaintenanceAutoService> services) {
+        this.services = services;
     }
 
     @Override
     public String toString() {
         return "Maintenance{" +
                 "id='" + id + '\'' +
-                ", vehicle=" + vehicle +
+                ", vehicle=" + vehicle.getId() +
                 ", createdAt=" + createdAt +
                 ", mileage=" + mileage +
                 ", note='" + note + '\'' +
-                ", maintenanceService=" + maintenanceServices +
+                ", services=" + services +
                 '}';
     }
 }

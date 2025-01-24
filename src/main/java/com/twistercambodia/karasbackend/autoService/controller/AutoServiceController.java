@@ -23,6 +23,16 @@ public class AutoServiceController {
         );
     }
 
+
+    @GetMapping("{id}")
+    public AutoServiceDto getAutoServiceById(
+            @PathVariable("id") String id
+    ) {
+        return this.autoServiceService.convertToAutoServiceDto(
+                this.autoServiceService.findByIdOrThrowError(id)
+        );
+    }
+
     @PostMapping
     public AutoServiceDto createAutoService(
             @RequestBody AutoServiceDto autoServiceDto
@@ -31,12 +41,22 @@ public class AutoServiceController {
         return this.autoServiceService.convertToAutoServiceDto(autoService);
     }
 
-    @PutMapping(":id")
+    @PutMapping("{id}")
     public AutoServiceDto updateAutoService(
             @RequestBody AutoServiceDto autoServiceDto,
             @PathVariable("id") String id
     ) {
         AutoService autoService = this.autoServiceService.update(id, autoServiceDto);
         return this.autoServiceService.convertToAutoServiceDto(autoService);
+    }
+
+    @DeleteMapping("{id}")
+    public AutoServiceDto deleteAutoService(
+            @PathVariable("id") String id
+    ) {
+        AutoService autoService = this.autoServiceService.delete(id);
+        return this.autoServiceService.convertToAutoServiceDto(
+                autoService
+        );
     }
 }
