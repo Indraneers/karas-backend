@@ -57,4 +57,6 @@ jobs:
             echo "${{ secrets.PAT }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
             docker compose pull
             docker compose up -d
-          
+            
+            cd ../karas-frontend
+            docker compose restart
