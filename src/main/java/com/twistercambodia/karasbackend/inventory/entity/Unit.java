@@ -2,6 +2,8 @@ package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="unit")
 public class Unit {
@@ -20,6 +22,9 @@ public class Unit {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="product_id", nullable = false)
     private Product product;
+
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestockItem> restockItems;
 
     @Column
     private int price;
