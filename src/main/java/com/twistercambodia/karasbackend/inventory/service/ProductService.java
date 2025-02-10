@@ -83,7 +83,7 @@ public class ProductService {
 
         product.setName(productRequestDto.getName());
         product.setSubcategory(subcategory);
-        product.setVariable(product.isVariable());
+        product.setVariable(productRequestDto.isVariable());
         product.setBaseUnit(productRequestDto.getBaseUnit());
         product.setIdentifier(productRequestDto.getIdentifier());
 
