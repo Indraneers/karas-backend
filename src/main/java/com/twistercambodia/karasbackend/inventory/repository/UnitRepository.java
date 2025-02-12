@@ -20,7 +20,7 @@ public interface UnitRepository extends CrudRepository<Unit, String> {
                 )
                 AND
                 (?2 is null or u.product.id = ?2)
-            order by u.name asc
+            order by u.product.id, u.toBaseUnit, u.name asc
             """
     )
     List<Unit> findAll(String q, String productId);
