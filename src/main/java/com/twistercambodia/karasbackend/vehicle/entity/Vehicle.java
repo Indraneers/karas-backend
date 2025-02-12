@@ -18,10 +18,10 @@ public class Vehicle {
     @JoinColumn(name="customer_id", nullable=false)
     private Customer customer;
 
-    @Column(unique = true)
+    @Column()
     private String vinNo;
 
-    @Column(unique = true)
+    @Column()
     private String engineNo;
 
     @Column()
@@ -33,7 +33,7 @@ public class Vehicle {
     @Column(unique = true)
     private String plateNumber;
 
-    @Column(unique = true)
+    @Column()
     private String makeAndModel;
 
     @OneToOne(fetch = FetchType.EAGER)
