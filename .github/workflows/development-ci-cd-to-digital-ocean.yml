@@ -18,8 +18,6 @@ jobs:
 
       - name: Build and Publish
         run: |
-          echo ${{ secrets.DEV_ENV_FILE }} > .env
-        
           docker compose -f docker-compose.yml build --no-cache
           docker compose -f docker-compose.yml push
   deployment:
@@ -56,7 +54,7 @@ jobs:
 
             echo "${{ secrets.PAT }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
             docker compose pull
-            docker compose up -d
+            docker compose --env-file .env up -d
             
             cd ../karas-frontend
             docker compose restart

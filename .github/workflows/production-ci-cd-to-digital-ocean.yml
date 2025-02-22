@@ -18,15 +18,16 @@ jobs:
 
       - name: Build and Publish
         run: |
-          echo ${{ secrets.PROD_ENV_FILE }} > .env
-          
           docker compose -f docker-compose.yml build --no-cache
           docker compose -f docker-compose.yml push
+
   deployment:
     needs: build-and-publish
     name: deploy image
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        env: [v1, v2]
     steps:
       - uses: actions/checkout@v3
 
@@ -36,14 +37,14 @@ jobs:
           switches: -avzr --delete
           path: docker-compose.yml
           remote_path: karas-backend
-          remote_host: ${{ secrets.SSH_PROD_HOST }}
+          remote_host: ${{ secrets[format('SSH_PROD_{0}_HOST', matrix.env)] }}
           remote_user: ${{ secrets.SSH_USERNAME }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: connect and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_PROD_HOST }}
+          host: ${{ secrets[format('SSH_PROD_{0}_HOST', matrix.env)] }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -52,11 +53,11 @@ jobs:
             cd karas-backend
 
             touch .env
-            echo "${{ secrets.PROD_ENV_FILE }}" > .env
+            echo "${{ secrets[format('PROD_{0}_ENV_FILE', matrix.env)] }}" > .env
 
             echo "${{ secrets.PAT }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
             docker compose pull
-            docker compose up -d
+            docker compose --env-file .env up -d
             
             cd ../karas-frontend
             docker compose restart
