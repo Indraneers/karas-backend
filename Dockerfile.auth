@@ -7,7 +7,6 @@ ENV QUARKUS_DATASOURCE_USER_STORE_DB_KIND=${QUARKUS_DATASOURCE_USER_STORE_DB_KIN
     QUARKUS_DATASOURCE_USER_STORE_JDBC_URL=${QUARKUS_DATASOURCE_USER_STORE_JDBC_URL:-jdbc:postgresql://postgres:5432/karas} \
     QUARKUS_DATASOURCE_USER_STORE_JDBC_TRANSACTIONS=${QUARKUS_DATASOURCE_USER_STORE_JDBC_TRANSACTIONS:-xa} \
     QUARKUS_HIBERNATE_ORM_LOG_SQL=${QUARKUS_HIBERNATE_ORM_LOG_SQL:-true}
-
 # Copy the JAR files from the local ./keycloak/providers directory to /opt/keycloak/providers/
 COPY --chown=keycloak keycloak/providers/*.jar /opt/keycloak/providers/
 COPY --chown=keycloak keycloak/conf/* /opt/keycloak/conf/
