@@ -16,6 +16,14 @@ jobs:
         run: |
           echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Create .env.keycloak file
+        run: |
+          echo "${{ secrets.DEV_KEYCLOAK_ENV_FILE }}" > .env.keycloak
+          echo "Contents of .env.keycloak:"
+          cat .env.keycloak
+          echo "Listing files in the directory:"
+          ls -la
+
       - name: Build and Publish
         run: |
           docker compose -f docker-compose.yml build --no-cache
@@ -50,7 +58,9 @@ jobs:
             cd karas-backend
 
             touch .env
+            touch .env.keycloak
             echo "${{ secrets.DEV_ENV_FILE }}" > .env
+            echo "${{ secrets.DEV_KEYCLOAK_ENV_FILE }}" > .env.keycloak
 
             echo "${{ secrets.PAT }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
             docker compose pull
