@@ -58,7 +58,9 @@ jobs:
             cd karas-backend
 
             touch .env
+            touch .env.keycloak
             echo "${{ secrets.DEV_ENV_FILE }}" > .env
+            echo "${{ secrets.DEV_KEYCLOAK_ENV_FILE }}" > .env.keycloak
 
             echo "${{ secrets.PAT }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
             docker compose pull

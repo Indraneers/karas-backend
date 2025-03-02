@@ -95,6 +95,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_ACCESS_SECRET: ${MINIO_ACCESS_SECRET}
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL}
     volumes:
       - ./minio/data:/data
     ports:
