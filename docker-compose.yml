@@ -40,8 +40,6 @@ services:
       - postgres
       - minio
     working_dir: /app
-    ports:
-      - 8080:8080
     networks:
       - nginx_network
   keycloak:
@@ -79,8 +77,6 @@ services:
     image: "ghcr.io/chheangg/karas-backend/keycloak:latest"
     depends_on:
       - postgres
-    ports:
-      - 3000:3000
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -94,13 +90,9 @@ services:
       MINIO_URL: ${MINIO_URL}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_ACCESS_SECRET: ${MINIO_ACCESS_SECRET}
-      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL}
     volumes:
       - ./minio/data:/data
-    ports:
-      - 9000:9000
-      - 9001:9001
     networks:
       - nginx_network
     healthcheck:
