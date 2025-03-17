@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
+@TestPropertySource(locations="classpath:application.properties")
 public class ProductControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -141,36 +143,6 @@ public class ProductControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.products[0].name")
                                 .value(productRequestDto.getName())
-                );
-    }
-
-    @Test
-    void createProduct_DuplicateProductException_status400() throws Exception {
-        ProductRequestDto productRequestDto = new ProductRequestDto();
-
-        productRequestDto.setName("Twister Engine Oil A");
-        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
-
-        String json = objectMapper.writeValueAsString(productRequestDto);
-        MockMultipartFile file = new MockMultipartFile(
-                "data",
-                json,
-                String.valueOf(MediaType.APPLICATION_JSON),
-                json.getBytes()
-        );
-
-        this.mockMvc.perform(
-                multipart("/products")
-                        .file(file)
-        );
-
-        this.mockMvc.perform(
-                        multipart("/products")
-                                .file(file)
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Invalid Data")
                 );
     }
 

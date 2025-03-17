@@ -24,9 +24,11 @@ public class SaleController {
     }
 
     @GetMapping
-    public List<SaleResponseDto> getAllSales() {
+    public List<SaleResponseDto> getAllSales(
+            @RequestParam int page
+    ) {
         return this.saleService.convertToSaleResponseDto(
-                this.saleService.findAll()
+                this.saleService.findAll(page)
         );
     }
 
