@@ -30,7 +30,6 @@ public class SaleController {
             @RequestParam() int page
             ) {
         Page<Sale> sales = this.saleService.findAll(page);
-        System.out.println(sales);
         return sales
                 .map(saleService::convertToSaleResponseDto);
     }

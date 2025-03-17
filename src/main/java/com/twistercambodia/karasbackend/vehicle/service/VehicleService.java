@@ -7,6 +7,8 @@ import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +29,8 @@ public class VehicleService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Vehicle> findAll(String query) {
-        return this.vehicleRepository.findAll(query);
+    public Page<Vehicle> findAll(String query, int page) {
+        return this.vehicleRepository.findAll(query, PageRequest.of(page, 10));
     }
 
     public Vehicle findByIdOrThrowException(String id) {
