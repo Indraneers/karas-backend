@@ -20,7 +20,9 @@ import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,8 +58,8 @@ public class SaleService {
         this.maintenanceService = maintenanceService;
     }
 
-    public List<Sale> findAll(int page) {
-        return this.saleRepository.findAll(PageRequest.of(page, 10));
+    public Page<Sale> findAll(int size) {
+        return this.saleRepository.findAll(PageRequest.of(size, 10));
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
