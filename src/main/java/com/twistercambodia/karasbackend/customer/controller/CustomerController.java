@@ -7,6 +7,7 @@ import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +28,12 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers(
-            @RequestParam(value = "q", required = false) String q
+    public Page<CustomerDto> getAllCustomers(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "page", required = true) int page
     ) {
-        return this.customerService.convertToCustomerDto(
-                this.customerService.findAll(q)
-        );
+        return this.customerService.findAll(q, page)
+                .map(customerService::convertToCustomerDto);
     }
 
     @GetMapping("{id}")
