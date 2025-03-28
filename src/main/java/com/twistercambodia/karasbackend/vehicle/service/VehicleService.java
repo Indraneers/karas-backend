@@ -52,6 +52,7 @@ public class VehicleService {
 
     public Vehicle update(String id, VehicleDto vehicleDto) {
         Vehicle vehicle = this.findByIdOrThrowException(id);
+        Customer customer = this.customerService.findByIdOrThrowError(vehicleDto.getCustomer().getId());
 
         vehicle.setVinNo(vehicleDto.getVinNo());
         vehicle.setEngineNo(vehicleDto.getEngineNo());
@@ -59,6 +60,7 @@ public class VehicleService {
         vehicle.setNote(vehicleDto.getNote());
         vehicle.setPlateNumber(vehicleDto.getPlateNumber());
         vehicle.setMakeAndModel(vehicleDto.getMakeAndModel());
+        vehicle.setCustomer(customer);
 
         return this.vehicleRepository.save(vehicle);
     }
