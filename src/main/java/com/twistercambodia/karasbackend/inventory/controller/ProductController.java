@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,13 +24,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductResponseDto> getAllProducts(
+    public Page<ProductResponseDto> getAllProducts(
             @RequestParam(value = "q", required = false) String q,
-            @RequestParam(value = "subcategoryId", required = false) String subcategoryId
+            @RequestParam(value = "subcategoryId", required = false) String subcategoryId,
+            @RequestParam(value = "page", required = true) int page
     ) {
-        return this.productService.convertToProductDto(
-                this.productService.findAll(q, subcategoryId)
-        );
+        return this.productService.findAll(q, subcategoryId, page)
+                .map(productService::convertToProductDto);
     }
 
     @GetMapping("{id}")
