@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
+import com.twistercambodia.karasbackend.vehicle.entity.VehicleType;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,6 +96,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -131,6 +133,10 @@ public class VehicleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.vinNo")
                                 .value((vehicleDto.getVinNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vehicleType")
+                                .value((vehicleDto.getVehicleType().name()))
                 );
     }
 
@@ -145,6 +151,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -176,6 +183,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -195,6 +203,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it an oil change next time!");
         vehicleDto.setPlateNumber("126 - 6294");
         vehicleDto.setVinNo("JX12345679");
+        vehicleDto.setVehicleType(VehicleType.COMMERCIAL_VEHICLE);
 
         json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -231,6 +240,10 @@ public class VehicleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.vinNo")
                                 .value((vehicleDto.getVinNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vehicleType")
+                                .value((vehicleDto.getVehicleType().name()))
                 );
     }
 
@@ -245,6 +258,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -287,6 +301,10 @@ public class VehicleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.vinNo")
                                 .value((vehicleDto.getVinNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vehicleType")
+                                .value((vehicleDto.getVehicleType().name()))
                 );
     }
 }

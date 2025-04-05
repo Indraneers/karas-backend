@@ -61,6 +61,7 @@ public class VehicleService {
         vehicle.setPlateNumber(vehicleDto.getPlateNumber());
         vehicle.setMakeAndModel(vehicleDto.getMakeAndModel());
         vehicle.setCustomer(customer);
+        vehicle.setVehicleType(vehicleDto.getVehicleType());
 
         return this.vehicleRepository.save(vehicle);
     }
