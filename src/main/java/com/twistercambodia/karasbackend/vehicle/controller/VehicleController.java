@@ -5,6 +5,7 @@ import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,18 +21,12 @@ public class VehicleController {
     }
 
     @GetMapping
-    public List<VehicleDto> getAllVehicles(
+    public Page<VehicleDto> getAllVehicles(
             @RequestParam(value = "q", required = false) String q,
-            @RequestParam(value = "customerId", required = false) String customerId
+            @RequestParam int page
     ) {
-        if (customerId != null) {
-            return this.vehicleService.convertToVehicleDto(
-                    this.vehicleService.findByCustomerId(customerId)
-            );
-        }
-        return this.vehicleService.convertToVehicleDto(
-          this.vehicleService.findAll(q)
-        );
+        return this.vehicleService.findAll(q, page)
+                .map(vehicleService::convertToVehicleDto);
     }
 
     @GetMapping("{id}")

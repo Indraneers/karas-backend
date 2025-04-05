@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import com.twistercambodia.karasbackend.inventory.service.UnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,13 +22,13 @@ public class UnitController {
     }
 
     @GetMapping
-    public List<UnitResponseDto> getAllUnits(
+    public Page<UnitResponseDto> getAllUnits(
             @RequestParam(value = "q", required = false) String q,
-            @RequestParam(value = "productId", required = false) String productId
+            @RequestParam(value = "productId", required = false) String productId,
+            @RequestParam(value = "page", required = true) int page
     ) {
-        return this.unitService.convertToUnitDto(
-                this.unitService.findAll(q, productId)
-        );
+        return this.unitService.findAll(q, productId, page)
+                .map(UnitResponseDto::new);
     }
 
     @GetMapping("{id}")

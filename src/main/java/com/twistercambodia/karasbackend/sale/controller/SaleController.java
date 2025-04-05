@@ -8,9 +8,12 @@ import com.twistercambodia.karasbackend.sale.service.SaleService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("sales")
@@ -18,16 +21,17 @@ public class SaleController {
     private final SaleService saleService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     public SaleController(SaleService saleService) {
         this.saleService = saleService;
     }
 
     @GetMapping
-    public List<SaleResponseDto> getAllSales() {
-        return this.saleService.convertToSaleResponseDto(
-                this.saleService.findAll()
-        );
+    public Page<SaleResponseDto> getAllSales(
+            @RequestParam() int page
+            ) {
+        Page<Sale> sales = this.saleService.findAll(page);
+        return sales
+                .map(saleService::convertToSaleResponseDto);
     }
 
     @GetMapping("{id}")

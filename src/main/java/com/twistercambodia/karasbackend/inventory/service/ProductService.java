@@ -11,6 +11,8 @@ import com.twistercambodia.karasbackend.inventory.repository.ProductRepository;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,8 +40,8 @@ public class ProductService {
         this.storageService = storageService;
     }
 
-    public List<Product> findAll(String query, String subcategoryId) {
-        return this.productRepository.findAll(query, subcategoryId);
+    public Page<Product> findAll(String query, String subcategoryId, int page) {
+        return this.productRepository.findAll(query, subcategoryId, PageRequest.of(page, 10));
     }
 
     public Product findByIdOrThrowError(String id) throws RuntimeException {

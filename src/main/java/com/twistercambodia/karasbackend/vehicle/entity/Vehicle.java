@@ -42,6 +42,9 @@ public class Vehicle {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Maintenance> maintenances;
 
+    @Column()
+    private VehicleType vehicleType;
+
     public String getId() {
         return id;
     }
@@ -120,6 +123,14 @@ public class Vehicle {
 
     public void setMaintenances(Set<Maintenance> maintenances) {
         this.maintenances = maintenances;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     @Override

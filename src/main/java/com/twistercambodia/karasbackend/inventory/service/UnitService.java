@@ -11,6 +11,8 @@ import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
 import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
 import com.twistercambodia.karasbackend.sale.entity.Item;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class UnitService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Unit> findAll(String query, String productId) {
-        return this.unitRepository.findAll(query, productId);
+    public Page<Unit> findAll(String query, String productId, int page) {
+        return this.unitRepository.findAll(query, productId, PageRequest.of(page, 10));
     }
 
     public Unit findByIdOrThrowError(String id) throws RuntimeException {
