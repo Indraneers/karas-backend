@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +42,9 @@ public class ProductService {
     }
 
     public Page<Product> findAll(String query, String subcategoryId, int page) {
+        if (Objects.equals(query, "")) {
+            return this.productRepository.findAll(null, subcategoryId, PageRequest.of(page, 10));
+        }
         return this.productRepository.findAll(query, subcategoryId, PageRequest.of(page, 10));
     }
 

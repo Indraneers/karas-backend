@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +32,9 @@ public class UnitService {
     }
 
     public Page<Unit> findAll(String query, String productId, int page) {
+        if (Objects.equals(query, "")) {
+            return this.unitRepository.findAll(null, productId, PageRequest.of(page, 10));
+        }
         return this.unitRepository.findAll(query, productId, PageRequest.of(page, 10));
     }
 

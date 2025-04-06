@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +31,9 @@ public class VehicleService {
     }
 
     public Page<Vehicle> findAll(String query, int page) {
+        if (Objects.equals(query, "")) {
+            return this.vehicleRepository.findAll(null, PageRequest.of(page, 10));
+        }
         return this.vehicleRepository.findAll(query, PageRequest.of(page, 10));
     }
 
