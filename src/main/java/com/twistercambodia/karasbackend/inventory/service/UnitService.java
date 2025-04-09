@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
+import com.twistercambodia.karasbackend.exception.exceptions.BadRequestException;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitResponseDto;
@@ -63,12 +64,17 @@ public class UnitService {
         Unit unit = findByIdOrThrowError(id);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
+        boolean isInvalidToBaseUnit = unitRequestDto.getToBaseUnit() == 0;
         boolean invalidVariableUnit =
                 product.isVariable()
-                        && unitRequestDto.getToBaseUnit() == 0;
+                        && isInvalidToBaseUnit;
 
         if (invalidVariableUnit) {
             throw new InvalidVariableUnit();
+        }
+
+        if (isInvalidToBaseUnit) {
+            throw new BadRequestException("Invalid to base unit field, it must be greater than 0");
         }
 
         unit.setName(unitRequestDto.getName());
