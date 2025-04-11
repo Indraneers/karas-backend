@@ -31,7 +31,7 @@ public class VehicleService {
     }
 
     public Page<Vehicle> findAll(String query, int page) {
-        if (Objects.equals(query, "")) {
+        if (Objects.equals(query, "") || query.isEmpty() || query.isBlank()) {
             return this.vehicleRepository.findAll(null, PageRequest.of(page, 10));
         }
         return this.vehicleRepository.findAll(query, PageRequest.of(page, 10));
