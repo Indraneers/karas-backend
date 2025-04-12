@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
+import io.micrometer.common.util.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,7 @@ public class VehicleService {
     }
 
     public Page<Vehicle> findAll(String query, int page) {
-        if (Objects.equals(query, "") || query.isEmpty() || query.isBlank()) {
+        if (StringUtils.isBlank(query)) {
             return this.vehicleRepository.findAll(null, PageRequest.of(page, 10));
         }
         return this.vehicleRepository.findAll(query, PageRequest.of(page, 10));
