@@ -1,23 +1,11 @@
--- Step 1: Create the enum type
-CREATE TYPE vehicle_type AS ENUM (
-  'MOTORBIKE',
-  'TUK_TUK',
-  'PASSENGER_CAR',
-  'COMMERCIAL_VEHICLE',
-  'OTHER'
-);
-
--- Step 2: Add the column to the vehicle table
+-- Replace your enum creation with a simple VARCHAR column
 ALTER TABLE vehicle
-    ADD COLUMN vehicle_type vehicle_type;
+    ADD COLUMN vehicle_type VARCHAR(20) NOT NULL DEFAULT 'OTHER';
 
--- Optional: Set a default (if you want future inserts to default to OTHER)
+-- If you already created the enum type and need to migrate:
 ALTER TABLE vehicle
-    ALTER COLUMN vehicle_type SET DEFAULT 'OTHER';
+ALTER COLUMN vehicle_type TYPE VARCHAR(20)
+    USING vehicle_type::text;
 
-UPDATE vehicle
-    SET vehicle_type = 'PASSENGER_CAR'
-    WHERE vehicle_type IS NULL;
-
-ALTER TABLE vehicle
-    ALTER COLUMN vehicle_type SET NOT NULL;
+-- Then you can drop the enum type if you want
+DROP TYPE vehicle_type;

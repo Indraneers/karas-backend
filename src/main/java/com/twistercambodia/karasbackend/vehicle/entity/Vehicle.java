@@ -3,9 +3,6 @@ package com.twistercambodia.karasbackend.vehicle.entity;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import java.util.Set;
 
 @Entity
@@ -42,6 +39,7 @@ public class Vehicle {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Maintenance> maintenances;
 
+    @Convert(converter = VehicleTypeConverter.class)
     @Column()
     private VehicleType vehicleType;
 
