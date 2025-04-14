@@ -1,6 +1,8 @@
 package com.twistercambodia.karasbackend.inventory.repository;
 
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -23,5 +25,5 @@ public interface UnitRepository extends CrudRepository<Unit, String> {
             order by u.product.id, u.toBaseUnit, u.name asc
             """
     )
-    List<Unit> findAll(String q, String productId);
+    Page<Unit> findAll(String q, String productId, Pageable pageable);
 }

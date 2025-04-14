@@ -49,6 +49,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
 @TestPropertySource(properties = "server.port=0")
+@TestPropertySource(locations="classpath:application.properties")
 public class RestockUnitIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;

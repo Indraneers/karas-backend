@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.service;
 
+import com.twistercambodia.karasbackend.exception.exceptions.BadRequestException;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitResponseDto;
@@ -11,9 +12,12 @@ import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
 import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
 import com.twistercambodia.karasbackend.sale.entity.Item;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,8 +32,11 @@ public class UnitService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Unit> findAll(String query, String productId) {
-        return this.unitRepository.findAll(query, productId);
+    public Page<Unit> findAll(String query, String productId, int page) {
+        if (Objects.equals(query, "")) {
+            return this.unitRepository.findAll(null, productId, PageRequest.of(page, 10));
+        }
+        return this.unitRepository.findAll(query, productId, PageRequest.of(page, 10));
     }
 
     public Unit findByIdOrThrowError(String id) throws RuntimeException {
@@ -57,12 +64,17 @@ public class UnitService {
         Unit unit = findByIdOrThrowError(id);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
+        boolean isInvalidToBaseUnit = unitRequestDto.getToBaseUnit() == 0;
         boolean invalidVariableUnit =
                 product.isVariable()
-                        && unitRequestDto.getToBaseUnit() == 0;
+                        && isInvalidToBaseUnit;
 
         if (invalidVariableUnit) {
             throw new InvalidVariableUnit();
+        }
+
+        if (isInvalidToBaseUnit) {
+            throw new BadRequestException("Invalid to base unit field, it must be greater than 0");
         }
 
         unit.setName(unitRequestDto.getName());

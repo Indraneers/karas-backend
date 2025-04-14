@@ -5,9 +5,13 @@ import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.repository.CustomerRepository;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,8 +24,11 @@ public class CustomerService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Customer> findAll(String query) {
-        return this.customerRepository.findAll(query);
+    public Page<Customer> findAll(String query, int page) {
+        if (Objects.equals(query, "")) {
+            return this.customerRepository.findAll(null, PageRequest.of(page, 10));
+        }
+        return this.customerRepository.findAll(query, PageRequest.of(page, 10));
     }
 
     public Customer findByIdOrThrowError(String id) throws RuntimeException {

@@ -14,6 +14,7 @@ import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
+import com.twistercambodia.karasbackend.vehicle.entity.VehicleType;
 import org.h2.tools.Server;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,6 +28,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,6 +52,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
+@TestPropertySource(locations="classpath:application.properties")
 public class SaleMaintenanceIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -173,6 +176,7 @@ public class SaleMaintenanceIntegrationTest {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         json = objectMapper.writeValueAsString(vehicleDto);
 

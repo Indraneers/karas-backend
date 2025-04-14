@@ -4,5 +4,6 @@ public enum ExceptionType {
     DataIntegrityViolation,
     DataNotFound,
     InvalidVariableProduct,
-    InvalidVariableUnit
+    InvalidVariableUnit,
+    BadRequestException,
 }

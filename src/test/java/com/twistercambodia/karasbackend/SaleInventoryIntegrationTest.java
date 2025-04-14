@@ -16,6 +16,7 @@ import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
+import com.twistercambodia.karasbackend.vehicle.entity.VehicleType;
 import org.h2.tools.Server;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
 @TestPropertySource(properties = "server.port=0")
+@TestPropertySource(locations="classpath:application.properties")
 public class SaleInventoryIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -263,6 +265,7 @@ public class SaleInventoryIntegrationTest {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         json = objectMapper.writeValueAsString(vehicleDto);
 

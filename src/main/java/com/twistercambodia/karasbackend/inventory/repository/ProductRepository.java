@@ -1,6 +1,8 @@
 package com.twistercambodia.karasbackend.inventory.repository;
 
 import com.twistercambodia.karasbackend.inventory.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -20,5 +22,5 @@ public interface ProductRepository extends CrudRepository<Product, String> {
             (?2 is null or p.subcategory.id = ?2)
         """
     )
-    List<Product> findAll(String q, String subcategoryId);
+    Page<Product> findAll(String q, String subcategoryId, Pageable pageable);
 }

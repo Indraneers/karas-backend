@@ -11,9 +11,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - '5431:5432'
+      - '5431:5432' 
     volumes:
-      - postgres-data:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data  # Main data persistence
     networks:
       - nginx_network
   backend:
@@ -34,6 +34,7 @@ services:
       FLYWAY_URL: ${FLYWAY_URL}
       FLYWAY_LOCATIONS: ${FLYWAY_LOCATIONS}
       FLYWAY_SCHEMAS: ${FLYWAY_SCHEMAS}
+      FLYWAY_ENABLED: ${FLYWAY_ENABLED}
     image: "ghcr.io/chheangg/karas-backend/karas-backend:latest"
     user: 1000:1000
     depends_on:
@@ -121,4 +122,4 @@ networks:
   nginx_network:
     external: true
 volumes:
-  postgres-data:
+  postgres-data: {}  # This is the crucial fix - properly define the volume

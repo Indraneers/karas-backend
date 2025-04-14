@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.exception.advice;
 
+import com.twistercambodia.karasbackend.exception.exceptions.BadRequestException;
 import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.exception.dto.ExceptionResponse;
 import com.twistercambodia.karasbackend.exception.dto.ExceptionType;
@@ -60,6 +61,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 ExceptionType.InvalidVariableUnit,
                 "Invalid Data"
+        );
+    }
+
+
+    @ExceptionHandler(value = BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse badRequest(BadRequestException exception) {
+        this.logger.error("Throwing BadRequestException with message={}", exception.getMessage());
+
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ExceptionType.InvalidVariableUnit,
+                "Bad request with message: " + exception.getMessage()
         );
     }
 }

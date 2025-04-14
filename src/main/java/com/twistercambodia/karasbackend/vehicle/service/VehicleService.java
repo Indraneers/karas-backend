@@ -6,10 +6,14 @@ import com.twistercambodia.karasbackend.exception.exceptions.NotFoundException;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
+import io.micrometer.common.util.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +31,11 @@ public class VehicleService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Vehicle> findAll(String query) {
-        return this.vehicleRepository.findAll(query);
+    public Page<Vehicle> findAll(String query, int page) {
+        if (StringUtils.isBlank(query)) {
+            return this.vehicleRepository.findAll(null, PageRequest.of(page, 10));
+        }
+        return this.vehicleRepository.findAll(query, PageRequest.of(page, 10));
     }
 
     public Vehicle findByIdOrThrowException(String id) {
@@ -50,6 +57,7 @@ public class VehicleService {
 
     public Vehicle update(String id, VehicleDto vehicleDto) {
         Vehicle vehicle = this.findByIdOrThrowException(id);
+        Customer customer = this.customerService.findByIdOrThrowError(vehicleDto.getCustomer().getId());
 
         vehicle.setVinNo(vehicleDto.getVinNo());
         vehicle.setEngineNo(vehicleDto.getEngineNo());
@@ -57,6 +65,8 @@ public class VehicleService {
         vehicle.setNote(vehicleDto.getNote());
         vehicle.setPlateNumber(vehicleDto.getPlateNumber());
         vehicle.setMakeAndModel(vehicleDto.getMakeAndModel());
+        vehicle.setCustomer(customer);
+        vehicle.setVehicleType(vehicleDto.getVehicleType());
 
         return this.vehicleRepository.save(vehicle);
     }

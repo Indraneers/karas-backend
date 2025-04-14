@@ -6,6 +6,7 @@ import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
+import com.twistercambodia.karasbackend.vehicle.entity.VehicleType;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,12 +14,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
+@TestPropertySource(locations="classpath:application.properties")
 public class VehicleControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -91,6 +96,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -127,6 +133,10 @@ public class VehicleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.vinNo")
                                 .value((vehicleDto.getVinNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vehicleType")
+                                .value((vehicleDto.getVehicleType().name()))
                 );
     }
 
@@ -141,6 +151,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -172,6 +183,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -191,6 +203,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it an oil change next time!");
         vehicleDto.setPlateNumber("126 - 6294");
         vehicleDto.setVinNo("JX12345679");
+        vehicleDto.setVehicleType(VehicleType.COMMERCIAL_VEHICLE);
 
         json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -227,6 +240,10 @@ public class VehicleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.vinNo")
                                 .value((vehicleDto.getVinNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vehicleType")
+                                .value((vehicleDto.getVehicleType().name()))
                 );
     }
 
@@ -241,6 +258,7 @@ public class VehicleControllerTests {
         vehicleDto.setNote("Give it a bath next time!");
         vehicleDto.setPlateNumber("126 - 629");
         vehicleDto.setVinNo("JX12345678");
+        vehicleDto.setVehicleType(VehicleType.PASSENGER_CAR);
 
         String json = objectMapper.writeValueAsString(vehicleDto);
 
@@ -283,6 +301,10 @@ public class VehicleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.vinNo")
                                 .value((vehicleDto.getVinNo()))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.vehicleType")
+                                .value((vehicleDto.getVehicleType().name()))
                 );
     }
 }
