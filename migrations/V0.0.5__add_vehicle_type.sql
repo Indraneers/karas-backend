@@ -6,6 +6,3 @@ ALTER TABLE vehicle
 ALTER TABLE vehicle
 ALTER COLUMN vehicle_type TYPE VARCHAR(20)
     USING vehicle_type::text;
-
--- Then you can drop the enum type if you want
-DROP TYPE vehicle_type;
