@@ -1,31 +1,22 @@
 #!/bin/bash
-set -e
-set -u
+set -e  # Exit immediately on error
+set -u  # Treat unset variables as errors
 
 function create_user_and_database() {
-    local db=$1
-    echo "Ensuring user and database '$db' exist..."
-
+    local database=$1
+    echo "Creating user and database '$database'"
     psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
-      DO \$\$
-      BEGIN
-        IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '$db') THEN
-          CREATE DATABASE "$db";
-        END IF;
-
-        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '$db') THEN
-          CREATE USER "$db" WITH PASSWORD '$db';
-        END IF;
-
-        GRANT ALL PRIVILEGES ON DATABASE "$db" TO "$db";
-      END
-      \$\$;
+        CREATE USER "$database";
+        CREATE DATABASE "$database";
+        GRANT ALL PRIVILEGES ON DATABASE "$database" TO "$database";
 EOSQL
 }
 
+# Hardcoded database list
 DATABASES=("karas" "keycloak")
+
+echo "Creating hardcoded databases: ${DATABASES[*]}"
 for db in "${DATABASES[@]}"; do
     create_user_and_database "$db"
 done
-
-echo "Database setup complete!"
+echo "Database creation complete"
