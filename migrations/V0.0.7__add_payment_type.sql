@@ -1,0 +1,2 @@
+ALTER TABLE sale
+    ADD COLUMN payment_detail VARCHAR(20) NOT NULL DEFAULT 'BANK';

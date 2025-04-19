@@ -46,6 +46,9 @@ public class Sale {
     @Column(nullable = false)
     private SaleStatus status;
 
+    @Column(nullable = false)
+    private PaymentType paymentType;
+
     public Long getId() {
         return id;
     }
@@ -130,6 +133,14 @@ public class Sale {
         this.status = status;
     }
 
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
+
     @Override
     public String toString() {
         return "Sale{" +
@@ -143,6 +154,7 @@ public class Sale {
                 ", customer=" + customer +
                 ", vehicle=" + vehicle.getId() +
                 ", status=" + status +
+                ", paymentType=" + paymentType +
                 '}';
     }
 }
