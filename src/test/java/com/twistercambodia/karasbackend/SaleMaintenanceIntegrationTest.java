@@ -10,6 +10,7 @@ import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceAutoServiceDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
+import com.twistercambodia.karasbackend.sale.entity.PaymentType;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
@@ -203,6 +204,7 @@ public class SaleMaintenanceIntegrationTest {
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setItems(new ArrayList<>());
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         MaintenanceDto maintenanceDto = new MaintenanceDto();
 
@@ -283,6 +285,7 @@ public class SaleMaintenanceIntegrationTest {
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setItems(new ArrayList<>());
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         MaintenanceDto maintenanceDto = new MaintenanceDto();
 

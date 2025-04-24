@@ -125,6 +125,7 @@ public class SaleService {
         sale.setVehicle(vehicle);
         sale.setDiscount(saleRequestDto.getDiscount());
         sale.setStatus(saleRequestDto.getStatus());
+        sale.setPaymentType(saleRequestDto.getPaymentType());
 
         unitService.batchStockUpdate(sale.getItems(), StockUpdate.RESTOCK);
 

@@ -40,9 +40,7 @@ services:
     depends_on:
       - postgres
       - backend
-    command:
-      - start-dev
-      - --verbose
+    command: ["start-dev", "--import-realm"]
     ports:
       - 3000:3000
     volumes:

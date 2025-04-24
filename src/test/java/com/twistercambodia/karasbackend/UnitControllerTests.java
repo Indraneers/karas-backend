@@ -195,6 +195,7 @@ public class UnitControllerTests {
         unitRequestDto.setId(id);
         unitRequestDto.setName("2L");
         unitRequestDto.setProductId(this.productRequestDto.getId());
+        unitRequestDto.setToBaseUnit(1);
         unitRequestDto.setPrice(200);
         unitRequestDto.setQuantity(25);
 

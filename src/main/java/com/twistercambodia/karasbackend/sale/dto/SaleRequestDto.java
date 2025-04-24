@@ -1,6 +1,7 @@
 package com.twistercambodia.karasbackend.sale.dto;
 
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
+import com.twistercambodia.karasbackend.sale.entity.PaymentType;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 
@@ -18,6 +19,7 @@ public class SaleRequestDto {
     private String customerId;
     private String vehicleId;
     private SaleStatus status;
+    private PaymentType paymentType;
 
     public SaleRequestDto() {}
 
@@ -40,6 +42,7 @@ public class SaleRequestDto {
         this.customerId = sale.getCustomer().getId();
         this.vehicleId = sale.getVehicle().getId();
         this.status = sale.getStatus();
+        this.paymentType = sale.getPaymentType();
     }
 
     public String getId() {
@@ -122,6 +125,14 @@ public class SaleRequestDto {
         this.status = status;
     }
 
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
+
     @Override
     public String toString() {
         return "SaleRequestDto{" +
@@ -135,6 +146,7 @@ public class SaleRequestDto {
                 ", customerId='" + customerId + '\'' +
                 ", vehicleId='" + vehicleId + '\'' +
                 ", status=" + status +
+                ", paymentType=" + paymentType +
                 '}';
     }
 }

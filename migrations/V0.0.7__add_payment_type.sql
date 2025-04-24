@@ -1,0 +1,2 @@
+ALTER TABLE sale
+    ADD COLUMN payment_type SMALLINT NOT NULL DEFAULT 0;

@@ -12,6 +12,7 @@ import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
+import com.twistercambodia.karasbackend.sale.entity.PaymentType;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
@@ -298,6 +299,7 @@ public class SaleControllerTests {
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
@@ -339,7 +341,9 @@ public class SaleControllerTests {
                         .value(saleRequestDto.getItems().get(1).getUnitId()),
                 MockMvcResultMatchers.jsonPath("$.items", hasSize(4)),
                 MockMvcResultMatchers.jsonPath("$.status")
-                        .value(saleRequestDto.getStatus().toString())
+                        .value(saleRequestDto.getStatus().toString()),
+                MockMvcResultMatchers.jsonPath("$.paymentType")
+                        .value(saleRequestDto.getPaymentType().toString())
         );
     }
 
@@ -354,6 +358,7 @@ public class SaleControllerTests {
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
@@ -430,7 +435,9 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.items[1].unit.id")
                         .value(not(itemIdTwo)),
                 MockMvcResultMatchers.jsonPath("$.status")
-                        .value(saleRequestDto.getStatus().toString())
+                        .value(saleRequestDto.getStatus().toString()),
+                MockMvcResultMatchers.jsonPath("$.paymentType")
+                        .value(saleRequestDto.getPaymentType().toString())
         );
     }
 
@@ -445,6 +452,7 @@ public class SaleControllerTests {
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 

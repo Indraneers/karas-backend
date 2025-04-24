@@ -12,6 +12,7 @@ import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
+import com.twistercambodia.karasbackend.sale.entity.PaymentType;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
@@ -393,6 +394,7 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
@@ -449,6 +451,7 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
@@ -520,6 +523,7 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
 
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
 
