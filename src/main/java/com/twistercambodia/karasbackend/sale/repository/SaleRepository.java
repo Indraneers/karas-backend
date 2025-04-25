@@ -12,4 +12,6 @@ import java.util.List;
 public interface SaleRepository extends CrudRepository<Sale, Long> {
     @Query("SELECT s FROM Sale s order by s.id desc")
     Page<Sale> findAll(Pageable pageable);
+
+    Page<Sale> findAllByCustomerId(String customerId, Pageable pageable);
 }

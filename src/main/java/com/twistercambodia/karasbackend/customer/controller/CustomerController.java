@@ -3,6 +3,8 @@ package com.twistercambodia.karasbackend.customer.controller;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
+import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
+import com.twistercambodia.karasbackend.sale.service.SaleService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.slf4j.Logger;
@@ -17,14 +19,17 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
     private final VehicleService vehicleService;
+    private final SaleService saleService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public CustomerController(
             CustomerService customerService,
-            VehicleService vehicleService
+            VehicleService vehicleService,
+            SaleService saleService
     ) {
         this.customerService = customerService;
         this.vehicleService = vehicleService;
+        this.saleService = saleService;
     }
 
     @GetMapping
@@ -34,6 +39,15 @@ public class CustomerController {
     ) {
         return this.customerService.findAll(q, page)
                 .map(customerService::convertToCustomerDto);
+    }
+
+    @GetMapping("{id}/sales")
+    public Page<SaleResponseDto> getCustomerSales(
+            @PathVariable("id") String id,
+            @RequestParam(value = "page", required = true) int page
+    ) {
+        return this.saleService.findAllByCustomerId(id, page)
+                .map(saleService::convertToSaleResponseDto);
     }
 
     @GetMapping("{id}")

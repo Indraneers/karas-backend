@@ -58,8 +58,12 @@ public class SaleService {
         this.maintenanceService = maintenanceService;
     }
 
-    public Page<Sale> findAll(int size) {
-        return this.saleRepository.findAll(PageRequest.of(size, 10));
+    public Page<Sale> findAll(int page) {
+        return this.saleRepository.findAll(PageRequest.of(page, 10));
+    }
+
+    public Page<Sale> findAllByCustomerId(String customerId, int page) {
+        return this.saleRepository.findAllByCustomerId(customerId, PageRequest.of(page, 10));
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
