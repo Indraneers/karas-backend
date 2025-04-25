@@ -348,6 +348,75 @@ public class SaleControllerTests {
     }
 
     @Test
+    public void getBySalesByCustomerId_shouldReturnSales_status200() throws Exception {
+        SaleRequestDto saleRequestDto = new SaleRequestDto();
+
+        saleRequestDto.setCustomerId(customerDto.getId());
+        saleRequestDto.setVehicleId(vehicleDto.getId());
+        saleRequestDto.setUserId(userDto.getId());
+        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDiscount(100); // $1 Discount
+        saleRequestDto.setStatus(SaleStatus.PAID);
+        saleRequestDto.setPaymentType(PaymentType.BANK);
+
+        List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
+
+        // Create item
+        for (int i = 0; i < unitRequestDtos.size(); ++i) {
+            // Create Items
+            ItemRequestDto itemRequestDto = new ItemRequestDto();
+
+            itemRequestDto.setUnitId(unitRequestDtos.get(i).getId());
+            itemRequestDto.setPrice(unitRequestDtos.get(i).getPrice());
+            itemRequestDto.setQuantity(2);
+            itemRequestDtos.add(itemRequestDto);
+        }
+
+        saleRequestDto.setItems(itemRequestDtos);
+
+        String json = objectMapper.writeValueAsString(saleRequestDto);
+
+        this.mockMvc.perform(
+                post("/sales")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        );
+
+        json = this.mockMvc.perform(
+                get("/customers/" + customerDto.getId() + "/sales?page=" + 0)
+        ).andReturn().getResponse().getContentAsString();
+
+        System.out.println(json);
+
+        this.mockMvc.perform(
+                get("/customers/" + customerDto.getId() + "/sales?page=" + 0)
+        ).andExpectAll(
+                MockMvcResultMatchers.jsonPath("$.content[0].customer.id")
+                        .value(saleRequestDto.getCustomerId()),
+                MockMvcResultMatchers.jsonPath("$.content[0].vehicle.id")
+                        .value(saleRequestDto.getVehicleId()),
+                MockMvcResultMatchers.jsonPath("$.content[0].user.id")
+                        .value(saleRequestDto.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.content[0].createdAt")
+                        .value(saleRequestDto.getCreatedAt()),
+                MockMvcResultMatchers.jsonPath("$.content[0].dueAt")
+                        .value(saleRequestDto.getDueAt()),
+                MockMvcResultMatchers.jsonPath("$.content[0].discount")
+                        .value(saleRequestDto.getDiscount()),
+                MockMvcResultMatchers.jsonPath("$.content[0].items[0].unit.id")
+                        .value(saleRequestDto.getItems().get(0).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.content[0].items[1].unit.id")
+                        .value(saleRequestDto.getItems().get(1).getUnitId()),
+                MockMvcResultMatchers.jsonPath("$.content[0].items", hasSize(4)),
+                MockMvcResultMatchers.jsonPath("$.content[0].status")
+                        .value(saleRequestDto.getStatus().toString()),
+                MockMvcResultMatchers.jsonPath("$.content[0].paymentType")
+                        .value(saleRequestDto.getPaymentType().toString())
+        );
+    }
+
+    @Test
     public void updateSale_shouldReturnUpdatedSaleAndPruneOldItems_status200() throws Exception {
         SaleRequestDto saleRequestDto = new SaleRequestDto();
 
