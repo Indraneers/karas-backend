@@ -8,13 +8,16 @@ import java.time.LocalDateTime;
 
 public class SaleSpecification {
     public static final String CREATEDAT = "createdAt";
+    public static final String CUSTOMER = "customer";
+    public static final String ID = "id";
 
     private SaleSpecification() {}
 
     public static Specification<Sale> filterBy(SaleFilter saleFilter) {
         return Specification
                 .where(hasCreatedAtGreaterThan(saleFilter.getCreatedAtFrom()))
-                .and(hasCreatedAtLessThan(saleFilter.getCreatedAtTo()));
+                .and(hasCreatedAtLessThan(saleFilter.getCreatedAtTo()))
+                .and(hasCustomerId(saleFilter.getCustomerId()));
     }
 
     private static Specification<Sale> hasCreatedAtGreaterThan(LocalDateTime createdAtFrom) {
@@ -29,5 +32,12 @@ public class SaleSpecification {
                 cb.conjunction()
                 :
                 cb.lessThan(root.get(CREATEDAT), createdAtTo);
+    }
+
+    private static Specification<Sale> hasCustomerId(String customerId) {
+        return (root, query, cb) -> customerId == null ?
+                cb.conjunction()
+                :
+                cb.equal(root.get(CUSTOMER).get(ID), customerId);
     }
 }

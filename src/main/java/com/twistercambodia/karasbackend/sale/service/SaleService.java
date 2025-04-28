@@ -60,8 +60,7 @@ public class SaleService {
         this.maintenanceService = maintenanceService;
     }
 
-
-    public Page<Sale> findAll(int page, SaleFilter saleFilter) {
+    public Page<Sale> findAll(SaleFilter saleFilter, int page) {
         Specification<Sale> saleSpecification = SaleSpecification.filterBy(saleFilter);
         return this.saleRepository.findAll(saleSpecification, PageRequest.of(page, 10));
     }

@@ -29,10 +29,10 @@ public class SaleController {
     @GetMapping
     public Page<SaleResponseDto> getAllSales(
             @RequestParam() int page,
-            @ModelAttribute() SaleFilter saleFilter
+            SaleFilter saleFilter
             ) {
         System.out.println(saleFilter.getCreatedAtFrom());
-        Page<Sale> sales = this.saleService.findAll(page, saleFilter);
+        Page<Sale> sales = this.saleService.findAll(saleFilter, page);
         return sales
                 .map(saleService::convertToSaleResponseDto);
     }
