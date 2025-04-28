@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.sale.controller;
 
+import com.twistercambodia.karasbackend.sale.dto.SaleFilter;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
@@ -27,9 +28,11 @@ public class SaleController {
 
     @GetMapping
     public Page<SaleResponseDto> getAllSales(
-            @RequestParam() int page
+            @RequestParam() int page,
+            @ModelAttribute() SaleFilter saleFilter
             ) {
-        Page<Sale> sales = this.saleService.findAll(page);
+        System.out.println(saleFilter.getCreatedAtFrom());
+        Page<Sale> sales = this.saleService.findAll(page, saleFilter);
         return sales
                 .map(saleService::convertToSaleResponseDto);
     }

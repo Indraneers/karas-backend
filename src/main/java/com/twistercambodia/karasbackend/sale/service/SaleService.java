@@ -11,18 +11,20 @@ import com.twistercambodia.karasbackend.inventory.service.UnitService;
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import com.twistercambodia.karasbackend.maintenance.service.MaintenanceService;
 import com.twistercambodia.karasbackend.sale.dto.ItemRequestDto;
+import com.twistercambodia.karasbackend.sale.dto.SaleFilter;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.entity.Item;
 import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
+import com.twistercambodia.karasbackend.sale.specification.SaleSpecification;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -58,12 +60,10 @@ public class SaleService {
         this.maintenanceService = maintenanceService;
     }
 
-    public Page<Sale> findAll(int page) {
-        return this.saleRepository.findAll(PageRequest.of(page, 10));
-    }
 
-    public Page<Sale> findAllByCustomerId(String customerId, int page) {
-        return this.saleRepository.findAllByCustomerId(customerId, PageRequest.of(page, 10));
+    public Page<Sale> findAll(int page, SaleFilter saleFilter) {
+        Specification<Sale> saleSpecification = SaleSpecification.filterBy(saleFilter);
+        return this.saleRepository.findAll(saleSpecification, PageRequest.of(page, 10));
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
