@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,10 @@ public class SaleService {
 
     public Page<Sale> findAll(SaleFilter saleFilter, int page) {
         Specification<Sale> saleSpecification = SaleSpecification.filterBy(saleFilter);
-        return this.saleRepository.findAll(saleSpecification, PageRequest.of(page, 10));
+        return this.saleRepository.findAll(
+                saleSpecification,
+                PageRequest.of(page, 10, Sort.by("id").descending())
+        );
     }
 
     public Sale findByIdOrThrowException(String id) throws Exception {
