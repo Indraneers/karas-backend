@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.customer.controller;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
+import com.twistercambodia.karasbackend.sale.dto.SaleFilter;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.service.SaleService;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
@@ -46,7 +47,9 @@ public class CustomerController {
             @PathVariable("id") String id,
             @RequestParam(value = "page", required = true) int page
     ) {
-        return this.saleService.findAllByCustomerId(id, page)
+        SaleFilter saleFilter = new SaleFilter();
+        saleFilter.setCustomerId(id);
+        return this.saleService.findAll(saleFilter, page)
                 .map(saleService::convertToSaleResponseDto);
     }
 
