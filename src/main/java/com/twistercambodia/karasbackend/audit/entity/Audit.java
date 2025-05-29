@@ -27,10 +27,10 @@ public class Audit {
     @Column(nullable = false)
     private String requestUrl;
 
-    @Column
+    @Column(length = 10000)
     private String oldValue;
 
-    @Column
+    @Column(length = 10000)
     private String newValue;
 
     @ManyToOne(fetch = FetchType.EAGER)
