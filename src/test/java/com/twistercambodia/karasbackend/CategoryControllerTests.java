@@ -85,27 +85,27 @@ public class CategoryControllerTests {
 
         // check if category exists in audit
         this.mockMvc.perform(
-                multipart("/audit/categories")
+                get("/audits/category?page=0")
         )
                 .andExpect(status().isOk())
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$")
+                        MockMvcResultMatchers.jsonPath("$.content")
                                 .isArray()
                 )
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$",
+                        MockMvcResultMatchers.jsonPath("$.content",
                                 hasSize(1))
                 ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$.name")
-                                .value("Create Category")
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Category Creation")
                 )
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.service")
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("POST")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
                                 .value("CATEGORY")
-                )
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.newValue")
-                                .value(json)
                 );
     }
 

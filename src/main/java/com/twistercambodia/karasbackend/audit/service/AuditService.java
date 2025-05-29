@@ -1,0 +1,79 @@
+package com.twistercambodia.karasbackend.audit.service;
+
+import com.twistercambodia.karasbackend.audit.dto.AuditDTO;
+import com.twistercambodia.karasbackend.audit.entity.Audit;
+import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
+import com.twistercambodia.karasbackend.audit.repository.AuditRepository;
+import com.twistercambodia.karasbackend.utility.GZIPCompression;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+
+
+@Service
+public class AuditService {
+    private final AuditRepository auditRepository;
+    private final ModelMapper modelMapper;
+
+    public AuditService(AuditRepository auditRepository) {
+        this.auditRepository = auditRepository;
+        this.modelMapper = new ModelMapper();
+    }
+
+    public Page<Audit> findByService(ServiceEnum service, int page) {
+        return auditRepository.findAuditsByService(
+                service,
+                PageRequest.of(page, 10, Sort.by("timestamp").descending()))
+                .map((a) -> {
+                    try {
+                        return decompressAudit(a);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
+    public Audit create(AuditDTO auditDTO) throws IOException {
+
+        Audit audit = this.convertToAudit(auditDTO);
+        return this.auditRepository.save(compressAudit(audit));
+    }
+
+    public Audit compressAudit(Audit audit) throws IOException {
+        if (audit.getNewValue() != null) {
+            audit.setNewValue(GZIPCompression.decompress(audit.getNewValue()));
+        }
+        if (audit.getOldValue() != null) {
+            audit.setOldValue(GZIPCompression.decompress(audit.getOldValue()));
+        }
+
+        return audit;
+    }
+
+    public Audit decompressAudit(Audit audit) throws IOException {
+        if (audit.getNewValue() != null) {
+            audit.setNewValue(GZIPCompression.compress(audit.getNewValue()));
+        }
+        if (audit.getOldValue() != null) {
+            audit.setOldValue(GZIPCompression.compress(audit.getOldValue()));
+        }
+
+        return audit;
+    }
+
+    public Audit convertToAudit(AuditDTO auditDTO) {
+        return modelMapper.map(auditDTO, Audit.class);
+    }
+
+    public Page<AuditDTO> convertToAuditDTO(Page<Audit> audits) {
+        return audits.map(this::convertToAuditDTO);
+    }
+
+    public AuditDTO convertToAuditDTO(Audit audit) {
+        return modelMapper.map(audit, AuditDTO.class);
+    }
+}

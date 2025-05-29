@@ -31,7 +31,6 @@ public class SaleController {
             @RequestParam() int page,
             SaleFilter saleFilter
             ) {
-        System.out.println(saleFilter.getCreatedAtFrom());
         Page<Sale> sales = this.saleService.findAll(saleFilter, page);
         return sales
                 .map(saleService::convertToSaleResponseDto);
