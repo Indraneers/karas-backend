@@ -7,7 +7,7 @@ CREATE TABLE audit
     service TEXT,
     http_method TEXT,
     request_url TEXT,
-    old_value JSONB,
-    new_value JSONB,
+    old_value TEXT,
+    new_value TEXT,
     user_id VARCHAR(255) REFERENCES user_account (id)
 );
