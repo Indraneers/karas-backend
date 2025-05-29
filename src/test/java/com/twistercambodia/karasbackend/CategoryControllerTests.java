@@ -181,6 +181,31 @@ public class CategoryControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((categoryDto.getName()))
                 );
+
+        // check if category exists in audit
+        this.mockMvc.perform(
+                        get("/audits/category?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Category Update")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("PUT")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CATEGORY")
+                );
     }
 
     @Test
@@ -213,6 +238,31 @@ public class CategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((categoryDto.getName()))
+                );
+
+        // check if category exists in audit
+        this.mockMvc.perform(
+                        get("/audits/category?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Category Deletion")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("DELETE")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CATEGORY")
                 );
     }
 }

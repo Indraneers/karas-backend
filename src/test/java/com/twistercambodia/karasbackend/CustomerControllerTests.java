@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,6 +79,31 @@ public class CustomerControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.note")
                                 .value((customerDto.getNote()))
+                );
+
+        // check if customer exists in audit
+        this.mockMvc.perform(
+                        get("/audits/customer?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(1))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Customer Creation")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("POST")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CUSTOMER")
                 );
     }
 
@@ -143,6 +169,31 @@ public class CustomerControllerTests {
                         MockMvcResultMatchers.jsonPath("$.note")
                                 .value((customerDto.getNote()))
                 );
+
+        // check if customer exists in audit
+        this.mockMvc.perform(
+                        get("/audits/customer?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Customer Update")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("PUT")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CUSTOMER")
+                );
     }
 
     @Test
@@ -175,6 +226,31 @@ public class CustomerControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.note")
                                 .value((customerDto.getNote()))
+                );
+
+        // check if customer exists in audit
+        this.mockMvc.perform(
+                        get("/audits/customer?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Customer Deletion")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("DELETE")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CUSTOMER")
                 );
     }
 }

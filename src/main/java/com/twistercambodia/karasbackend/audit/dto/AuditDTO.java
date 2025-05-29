@@ -5,8 +5,6 @@ import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
 import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
 import com.twistercambodia.karasbackend.auth.entity.User;
 
-import java.time.LocalDate;
-
 public class AuditDTO {
     private String id;
     private String timestamp;

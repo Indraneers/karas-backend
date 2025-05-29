@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twistercambodia.karasbackend.audit.dto.AuditDTO;
 import com.twistercambodia.karasbackend.audit.entity.Audit;
@@ -93,19 +94,61 @@ public class CategoryController {
     public CategoryDto updateCategory(
             @RequestPart(value = "data", required = true) CategoryDto categoryDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @PathVariable("id") String id
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
         Category category = this.categoryService.update(id, categoryDto, file);
         this.logger.info("Updating category={}", category);
+
+        CategoryDto categoryDTO = this.categoryService.convertToCategoryDto(category);
+
+        // create audit log of Category Creation
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(categoryDTO);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Category Update");
+        auditDTO.setRequestUrl("/categories/" + id);
+        auditDTO.setService(ServiceEnum.CATEGORY);
+        auditDTO.setHttpMethod(HttpMethod.PUT);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+        this.logger.info("Adding audit log for category={}", audit);
+
         return this.categoryService.convertToCategoryDto(category);
     }
 
     @DeleteMapping("{id}")
     public CategoryDto deleteCategory(
-            @PathVariable("id") String id
-    ) throws RuntimeException {
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal User user
+    ) throws RuntimeException, IOException {
         Category category = this.categoryService.delete(id);
         this.logger.info("Deleting category={}", category);
+
+        CategoryDto categoryDTO = this.categoryService.convertToCategoryDto(category);
+
+        // create audit log of Category Creation
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(categoryDTO);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Category Deletion");
+        auditDTO.setRequestUrl("/categories/" + id);
+        auditDTO.setService(ServiceEnum.CATEGORY);
+        auditDTO.setHttpMethod(HttpMethod.DELETE);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+        this.logger.info("Adding audit log for category={}", audit);
+
         return this.categoryService.convertToCategoryDto(category);
     }
 }

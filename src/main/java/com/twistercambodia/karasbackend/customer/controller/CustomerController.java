@@ -1,8 +1,17 @@
 package com.twistercambodia.karasbackend.customer.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twistercambodia.karasbackend.audit.dto.AuditDTO;
+import com.twistercambodia.karasbackend.audit.entity.Audit;
+import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
+import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
+import com.twistercambodia.karasbackend.audit.service.AuditService;
+import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.customer.service.CustomerService;
+import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleFilter;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
 import com.twistercambodia.karasbackend.sale.service.SaleService;
@@ -11,8 +20,10 @@ import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,16 +32,22 @@ public class CustomerController {
     private final CustomerService customerService;
     private final VehicleService vehicleService;
     private final SaleService saleService;
+    private final AuditService auditService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper objectMapper;
 
     public CustomerController(
             CustomerService customerService,
             VehicleService vehicleService,
-            SaleService saleService
+            SaleService saleService,
+            AuditService auditService,
+            ObjectMapper objectMapper
     ) {
         this.customerService = customerService;
         this.vehicleService = vehicleService;
         this.saleService = saleService;
+        this.auditService = auditService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -54,7 +71,7 @@ public class CustomerController {
     }
 
     @GetMapping("{id}")
-    public CustomerDto getCustomer(@PathVariable("id") String id) {
+    public CustomerDto getCustomer(@PathVariable("id") String id) throws IOException {
         return this.customerService.convertToCustomerDto(
                 this.customerService.findByIdOrThrowError((id))
         );
@@ -69,29 +86,95 @@ public class CustomerController {
 
     @PostMapping
     public CustomerDto createCustomer(
-            @RequestBody CustomerDto customerDto
-    ) {
+            @RequestBody CustomerDto customerDto,
+            @AuthenticationPrincipal User user
+    ) throws IOException {
         Customer customer = this.customerService.create(customerDto);
         this.logger.info("Creating customer={}", customer);
-        return this.customerService.convertToCustomerDto(customer);
+
+        CustomerDto createdCustomer = this.customerService.convertToCustomerDto(customer);;
+
+        // create audit log of Customer Creation
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(createdCustomer);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Customer Creation");
+        auditDTO.setRequestUrl("/customers");
+        auditDTO.setService(ServiceEnum.CUSTOMER);
+        auditDTO.setHttpMethod(HttpMethod.POST);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+
+        this.logger.info("Adding audit log for customer={}", audit);
+
+        return createdCustomer;
     }
 
     @PutMapping("{id}")
     public CustomerDto updateCustomer(
             @RequestBody CustomerDto customerDto,
-            @PathVariable("id") String id
-    ) throws RuntimeException {
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal User user
+    ) throws RuntimeException, IOException {
         Customer customer = this.customerService.update(id, customerDto);
         this.logger.info("Updating customer={}", customer);
+
+        CustomerDto updatedCustomer = this.customerService.convertToCustomerDto(customer);;
+
+        // create audit log of Customer Creation
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(updatedCustomer);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Customer Update");
+        auditDTO.setRequestUrl("/customers/" + id);
+        auditDTO.setService(ServiceEnum.CUSTOMER);
+        auditDTO.setHttpMethod(HttpMethod.PUT);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+
+        this.logger.info("Adding audit log for customer={}", audit);
+
         return this.customerService.convertToCustomerDto(customer);
     }
 
     @DeleteMapping("{id}")
     public CustomerDto deleteCustomer(
-            @PathVariable("id") String id
-    ) throws RuntimeException {
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal User user
+    ) throws RuntimeException, IOException {
         Customer customer = this.customerService.delete(id);
         this.logger.info("Deleting customer={}", customer);
+
+        CustomerDto deletedCustomer = this.customerService.convertToCustomerDto(customer);;
+
+        // create audit log of Customer Deleted
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(deletedCustomer);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Customer Deletion");
+        auditDTO.setRequestUrl("/customers/" + id);
+        auditDTO.setService(ServiceEnum.CUSTOMER);
+        auditDTO.setHttpMethod(HttpMethod.DELETE);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+
+        this.logger.info("Adding audit log for customer={}", audit);
+
         return this.customerService.convertToCustomerDto(customer);
     }
 }
