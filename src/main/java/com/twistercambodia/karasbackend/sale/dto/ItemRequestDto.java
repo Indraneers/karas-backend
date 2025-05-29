@@ -2,7 +2,7 @@ package com.twistercambodia.karasbackend.sale.dto;
 
 import com.twistercambodia.karasbackend.sale.entity.Item;
 
-public class ItemRequestDto {
+public class    ItemRequestDto {
     private String id;
     private int price;
     private int quantity;

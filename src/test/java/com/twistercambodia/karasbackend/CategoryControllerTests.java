@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,6 +81,31 @@ public class CategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((categoryDto.getName()))
+                );
+
+        // check if category exists in audit
+        this.mockMvc.perform(
+                multipart("/audit/categories")
+        )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$",
+                                hasSize(1))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.name")
+                                .value("Create Category")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.service")
+                                .value("CATEGORY")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.newValue")
+                                .value(json)
                 );
     }
 
