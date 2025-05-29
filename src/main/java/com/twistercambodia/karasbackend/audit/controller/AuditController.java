@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.audit.controller;
 
+import com.twistercambodia.karasbackend.audit.dto.AuditDTO;
 import com.twistercambodia.karasbackend.audit.entity.Audit;
 import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
 import com.twistercambodia.karasbackend.audit.service.AuditService;
@@ -19,11 +20,11 @@ public class AuditController {
     }
 
     @GetMapping("{service}")
-    public Page<Audit> getAllAudits(
+    public Page<AuditDTO> getAllAudits(
             @RequestParam() int page,
             @PathVariable("service")ServiceEnum serviceEnum
             ) {
         Page<Audit> audits = this.auditService.findByService(serviceEnum, page);
-        return audits;
+        return auditService.convertToAuditDTO(audits);
     }
 }

@@ -4,6 +4,7 @@ import com.twistercambodia.karasbackend.auth.entity.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Audit {
@@ -12,15 +13,15 @@ public class Audit {
     private String id;
 
     @Column(nullable = false)
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)  // or EnumType.ORDINAL
     private ServiceEnum service;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)  // or EnumType.ORDINAL
     private HttpMethod httpMethod;
 
     @Column(nullable = false)
@@ -44,11 +45,11 @@ public class Audit {
         this.id = id;
     }
 
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

@@ -1,7 +1,7 @@
 -- Table: audit
 CREATE TABLE audit
 (
-    id UUID PRIMARY KEY,
+    id VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     name TEXT,
     service TEXT,
@@ -9,5 +9,6 @@ CREATE TABLE audit
     request_url TEXT,
     old_value TEXT,
     new_value TEXT,
-    user_id VARCHAR(255) REFERENCES user_account (id)
+    user_id VARCHAR(255) REFERENCES user_account (id),
+    CONSTRAINT pk_audit PRIMARY KEY (id)
 );

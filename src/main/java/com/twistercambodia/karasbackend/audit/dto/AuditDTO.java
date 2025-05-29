@@ -1,5 +1,6 @@
 package com.twistercambodia.karasbackend.audit.dto;
 
+import com.twistercambodia.karasbackend.audit.entity.Audit;
 import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
 import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
 import com.twistercambodia.karasbackend.auth.entity.User;
@@ -8,14 +9,28 @@ import java.time.LocalDate;
 
 public class AuditDTO {
     private String id;
-    private LocalDate timestamp;
+    private String timestamp;
     private String name;
-    private ServiceEnum serviceEnum;
+    private ServiceEnum service;
     private HttpMethod httpMethod;
     private String requestUrl;
     private String oldValue;;
     private String newValue;
     private User user;
+
+    public AuditDTO(Audit audit) {
+        this.id = audit.getId();
+        this.timestamp = audit.getTimestamp().toString();
+        this.name = audit.getName();
+        this.httpMethod = audit.getHttpMethod();
+        this.requestUrl = audit.getRequestUrl();
+        this.service = audit.getService();
+        this.oldValue = audit.getOldValue();
+        this.newValue = audit.getNewValue();
+        this.user = audit.getUser();
+    }
+
+    public AuditDTO() {}
 
     public String getId() {
         return id;
@@ -25,11 +40,11 @@ public class AuditDTO {
         this.id = id;
     }
 
-    public LocalDate getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -41,12 +56,12 @@ public class AuditDTO {
         this.name = name;
     }
 
-    public ServiceEnum getServiceEnum() {
-        return serviceEnum;
+    public ServiceEnum getService() {
+        return service;
     }
 
-    public void setServiceEnum(ServiceEnum serviceEnum) {
-        this.serviceEnum = serviceEnum;
+    public void setService(ServiceEnum service) {
+        this.service = service;
     }
 
     public HttpMethod getHttpMethod() {

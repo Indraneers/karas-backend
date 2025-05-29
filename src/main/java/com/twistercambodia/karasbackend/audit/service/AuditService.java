@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 
 @Service
@@ -38,12 +39,21 @@ public class AuditService {
     }
 
     public Audit create(AuditDTO auditDTO) throws IOException {
+        Audit audit = new Audit();
 
-        Audit audit = this.convertToAudit(auditDTO);
+        audit.setTimestamp(LocalDateTime.now());
+        audit.setHttpMethod(auditDTO.getHttpMethod());
+        audit.setName(auditDTO.getName());
+        audit.setRequestUrl(auditDTO.getRequestUrl());
+        audit.setService(auditDTO.getService());
+        audit.setUser(auditDTO.getUser());
+        audit.setOldValue(auditDTO.getOldValue());
+        audit.setNewValue(auditDTO.getNewValue());
+
         return this.auditRepository.save(compressAudit(audit));
     }
 
-    public Audit compressAudit(Audit audit) throws IOException {
+    public Audit decompressAudit(Audit audit) throws IOException {
         if (audit.getNewValue() != null) {
             audit.setNewValue(GZIPCompression.decompress(audit.getNewValue()));
         }
@@ -54,7 +64,7 @@ public class AuditService {
         return audit;
     }
 
-    public Audit decompressAudit(Audit audit) throws IOException {
+    public Audit compressAudit(Audit audit) throws IOException {
         if (audit.getNewValue() != null) {
             audit.setNewValue(GZIPCompression.compress(audit.getNewValue()));
         }
@@ -65,15 +75,11 @@ public class AuditService {
         return audit;
     }
 
-    public Audit convertToAudit(AuditDTO auditDTO) {
-        return modelMapper.map(auditDTO, Audit.class);
-    }
-
     public Page<AuditDTO> convertToAuditDTO(Page<Audit> audits) {
         return audits.map(this::convertToAuditDTO);
     }
 
     public AuditDTO convertToAuditDTO(Audit audit) {
-        return modelMapper.map(audit, AuditDTO.class);
+        return new AuditDTO(audit);
     }
 }
