@@ -548,7 +548,7 @@ public class SaleControllerTests {
                                 hasSize(2))
                 ).andExpect(
                         MockMvcResultMatchers.jsonPath("$.content[0].name")
-                                .value("Sale Updated    ")
+                                .value("Sale Updated")
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
