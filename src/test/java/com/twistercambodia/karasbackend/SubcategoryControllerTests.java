@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -117,6 +118,31 @@ public class SubcategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.subcategories[0].name")
                                 .value(subcategoryRequestDto.getName())
+                );
+
+        // check if subcategory exists in audit
+        this.mockMvc.perform(
+                        get("/audits/subcategory?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(1))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Subcategory Creation")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("POST")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("SUBCATEGORY")
                 );
     }
 
@@ -219,6 +245,31 @@ public class SubcategoryControllerTests {
                         MockMvcResultMatchers.jsonPath("$.subcategories[0].name")
                                 .value(subcategoryRequestDto.getName())
                 );
+
+        // check if subcategory exists in audit
+        this.mockMvc.perform(
+                        get("/audits/subcategory?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Subcategory Update")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("PUT")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("SUBCATEGORY")
+                );
     }
 
     @Test
@@ -262,6 +313,31 @@ public class SubcategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.subcategoryCount")
                                 .value(0)
+                );
+
+        // check if subcategory exists in audit
+        this.mockMvc.perform(
+                        get("/audits/subcategory?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Subcategory Deletion")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("DELETE")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("SUBCATEGORY")
                 );
     }
 }
