@@ -88,7 +88,7 @@ public class ProductController {
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
-        this.logger.info("Adding audit log for subcategory={}", audit);
+        this.logger.info("Adding audit log for product={}", audit);
 
         return productResponseDto;
     }
@@ -121,7 +121,7 @@ public class ProductController {
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
-        this.logger.info("Adding audit log for subcategory={}", audit);
+        this.logger.info("Adding audit log for product={}", audit);
 
         return productResponseDto;
     }
@@ -145,14 +145,14 @@ public class ProductController {
         auditDTO.setOldValue(null);
         auditDTO.setNewValue(newValueJSON);
 
-        auditDTO.setName("Product DELETION");
+        auditDTO.setName("Product Deletion");
         auditDTO.setRequestUrl("/products/" + id);
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
-        this.logger.info("Adding audit log for subcategory={}", audit);
+        this.logger.info("Adding audit log for product={}", audit);
 
         return productResponseDto;
     }
