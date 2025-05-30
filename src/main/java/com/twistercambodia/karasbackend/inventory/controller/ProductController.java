@@ -1,12 +1,23 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twistercambodia.karasbackend.audit.dto.AuditDTO;
+import com.twistercambodia.karasbackend.audit.entity.Audit;
+import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
+import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
+import com.twistercambodia.karasbackend.audit.service.AuditService;
+import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductResponseDto;
+import com.twistercambodia.karasbackend.inventory.dto.SubcategoryResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.service.ProductService;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +28,18 @@ import java.util.List;
 @RequestMapping("products")
 public class ProductController {
     private final ProductService productService;
+    private final AuditService auditService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper objectMapper;
 
-    public ProductController(ProductService productService) {
+    public ProductController(
+            ProductService productService,
+            AuditService auditService,
+            ObjectMapper objectMapper
+    ) {
         this.productService = productService;
+        this.auditService = auditService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -45,30 +64,96 @@ public class ProductController {
     @PostMapping
     public ProductResponseDto createProduct(
             @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
-            @RequestParam(name = "file", required = false) MultipartFile file
+            @RequestParam(name = "file", required = false) MultipartFile file,
+            @AuthenticationPrincipal User user
     ) throws IOException {
         Product product = this.productService.create(productRequestDto, file);
         this.logger.info("Creating product={}", product);
-        return this.productService.convertToProductDto(product);
+
+        ProductResponseDto productResponseDto =
+                this.productService.convertToProductDto(product);
+
+        // create audit log of Category Deletion
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(productResponseDto);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Product Creation");
+        auditDTO.setRequestUrl("/products");
+        auditDTO.setService(ServiceEnum.PRODUCT);
+        auditDTO.setHttpMethod(HttpMethod.POST);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+        this.logger.info("Adding audit log for subcategory={}", audit);
+
+        return productResponseDto;
     }
 
     @PutMapping("{id}")
     public ProductResponseDto updateProduct(
             @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @PathVariable("id") String id
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
         Product product = this.productService.update(id, productRequestDto, file);
         this.logger.info("Updating product={}", product);
-        return this.productService.convertToProductDto(product);
+
+        ProductResponseDto productResponseDto =
+                this.productService.convertToProductDto(product);
+
+        // create audit log of Category Deletion
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(productResponseDto);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Product Update");
+        auditDTO.setRequestUrl("/products/" + id);
+        auditDTO.setService(ServiceEnum.PRODUCT);
+        auditDTO.setHttpMethod(HttpMethod.PUT);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+        this.logger.info("Adding audit log for subcategory={}", audit);
+
+        return productResponseDto;
     }
 
     @DeleteMapping("{id}")
     public ProductResponseDto deleteProduct(
-            @PathVariable("id") String id
-    ) throws RuntimeException {
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal User user
+    ) throws RuntimeException, IOException {
         Product product = this.productService.delete(id);
         this.logger.info("Deleting product={}", product);
-        return this.productService.convertToProductDto(product);
+
+        ProductResponseDto productResponseDto =
+                this.productService.convertToProductDto(product);
+
+        // create audit log of Product Deletion
+        AuditDTO auditDTO = new AuditDTO();
+
+        String newValueJSON = objectMapper.writeValueAsString(productResponseDto);
+
+        auditDTO.setOldValue(null);
+        auditDTO.setNewValue(newValueJSON);
+
+        auditDTO.setName("Product DELETION");
+        auditDTO.setRequestUrl("/products/" + id);
+        auditDTO.setService(ServiceEnum.PRODUCT);
+        auditDTO.setHttpMethod(HttpMethod.DELETE);
+        auditDTO.setUser(user);
+
+        Audit audit = this.auditService.create(auditDTO);
+        this.logger.info("Adding audit log for subcategory={}", audit);
+
+        return productResponseDto;
     }
 }
