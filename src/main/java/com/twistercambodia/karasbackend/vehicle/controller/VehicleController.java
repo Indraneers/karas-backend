@@ -81,6 +81,8 @@ public class VehicleController {
 
         Audit audit = this.auditService.create(auditDTO);
 
+        this.logger.info("Adding audit log for vehicle={}", audit);
+
         return createdVehicle;
     }
 
@@ -111,7 +113,9 @@ public class VehicleController {
 
         Audit audit = this.auditService.create(auditDTO);
 
-        return this.vehicleService.convertToVehicleDto(vehicle);
+        this.logger.info("Adding audit log for vehicle={}", audit);
+
+        return updatedVehicle;
     }
 
     @DeleteMapping("{id}")
@@ -140,6 +144,8 @@ public class VehicleController {
 
         Audit audit = this.auditService.create(auditDTO);
 
-        return this.vehicleService.convertToVehicleDto(vehicle);
+        this.logger.info("Adding audit log for vehicle={}", audit);
+
+        return deletedVehicle;
     }
 }
