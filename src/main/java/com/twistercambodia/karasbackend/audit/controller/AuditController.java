@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("audits")
 public class AuditController {
@@ -22,7 +24,7 @@ public class AuditController {
     @GetMapping("{id}")
     public AuditDTO getAuditById(
             @PathVariable("id") String id
-    ) {
+    ) throws IOException {
         Audit audit = this.auditService.findById(id);
         return auditService.convertToAuditDTO(audit);
     }
