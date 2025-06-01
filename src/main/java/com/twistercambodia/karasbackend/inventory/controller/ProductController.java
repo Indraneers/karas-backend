@@ -100,18 +100,21 @@ public class ProductController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Product oldProduct = this.productService.findByIdOrThrowError(id);
         Product product = this.productService.update(id, productRequestDto, file);
         this.logger.info("Updating product={}", product);
 
+        ProductResponseDto oldProductDto = this.productService.convertToProductDto(oldProduct);
         ProductResponseDto productResponseDto =
                 this.productService.convertToProductDto(product);
 
         // create audit log of Category Deletion
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldProductDto);
         String newValueJSON = objectMapper.writeValueAsString(productResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Product Update");
@@ -131,18 +134,21 @@ public class ProductController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Product oldProduct = this.productService.findByIdOrThrowError(id);
         Product product = this.productService.delete(id);
         this.logger.info("Deleting product={}", product);
 
+        ProductResponseDto oldProductDto = this.productService.convertToProductDto(oldProduct);
         ProductResponseDto productResponseDto =
                 this.productService.convertToProductDto(product);
 
         // create audit log of Product Deletion
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldProductDto);
         String newValueJSON = objectMapper.writeValueAsString(productResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Product Deletion");

@@ -98,18 +98,21 @@ public class SubcategoryController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Subcategory oldSubcategory = this.subcategoryService.findByIdOrThrowError(id);
         Subcategory subcategory = this.subcategoryService.update(id, subcategoryRequestDto, file);
         this.logger.info("Updating subcategory={}", subcategory);
 
+        SubcategoryResponseDto oldSubcategoryDto = this.subcategoryService.convertToSubcategoryDto(oldsubcategory);
         SubcategoryResponseDto subcategoryResponseDto =
                 this.subcategoryService.convertToSubcategoryDto(subcategory);
 
         // create audit log of Category Update
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldSubcategoryDto);
         String newValueJSON = objectMapper.writeValueAsString(subcategoryResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Subcategory Update");
@@ -129,18 +132,21 @@ public class SubcategoryController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Subcategory oldSubcategory = this.subcategoryService.findByIdOrThrowError(id);
         Subcategory subcategory = this.subcategoryService.delete(id);
         this.logger.info("Deleting subcategory={}", subcategory);
 
+        SubcategoryResponseDto oldSubcategoryDTO = this.subcategoryService.convertToSubcategoryDto(oldSubcategory);
         SubcategoryResponseDto subcategoryResponseDto =
                 this.subcategoryService.convertToSubcategoryDto(subcategory);
 
         // create audit log of Category Deletion
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldSubcategoryDTO);
         String newValueJSON = objectMapper.writeValueAsString(subcategoryResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Subcategory Deletion");

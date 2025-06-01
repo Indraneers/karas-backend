@@ -94,18 +94,21 @@ public class UnitController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Unit oldUnit = this.unitService.findByIdOrThrowError(id);
         Unit unit = this.unitService.update(id, unitRequestDto);
         this.logger.info("Updating unit={}", unit);
 
+        UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
         UnitResponseDto unitResponseDto =
                 this.unitService.convertToUnitDto(unit);
 
         // create audit log of Product Deletion
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldUnitResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(unitResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Unit Update");
@@ -125,18 +128,21 @@ public class UnitController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Unit oldUnit = this.unitService.findByIdOrThrowError(id);
         Unit unit = this.unitService.delete(id);
         this.logger.info("Deleting unit={}", unit);
 
+        UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
         UnitResponseDto unitResponseDto =
                 this.unitService.convertToUnitDto(unit);
 
         // create audit log of Product Deletion
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldUnitResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(unitResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Unit Deletion");

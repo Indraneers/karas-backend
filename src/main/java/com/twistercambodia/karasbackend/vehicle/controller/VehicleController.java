@@ -92,17 +92,20 @@ public class VehicleController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws IOException {
+        Vehicle oldVehicle = this.vehicleService.findByIdOrThrowException(id);
         Vehicle vehicle = this.vehicleService.update(id, vehicleDto);
         this.logger.info("Updating vehicle={}", vehicle);
 
+        VehicleDto oldVehicleDto = this.vehicleService.convertToVehicleDto(oldVehicle);
         VehicleDto updatedVehicle = this.vehicleService.convertToVehicleDto(vehicle);
 
         // create audit log of Vehicle updated
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldVehicleDto);
         String newValueJSON = objectMapper.writeValueAsString(updatedVehicle);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Vehicle Update");
@@ -123,17 +126,20 @@ public class VehicleController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws IOException {
+        Vehicle oldVehicle = this.vehicleService.findByIdOrThrowException(id);
         Vehicle vehicle = this.vehicleService.delete(id);
         this.logger.info("Deleted vehicle={}", vehicle);
 
+        VehicleDto oldVehicleDto = this.vehicleService.convertToVehicleDto(oldVehicle);
         VehicleDto deletedVehicle = this.vehicleService.convertToVehicleDto(vehicle);
 
         // create audit log of Vehicle updated
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldVehicleDto);
         String newValueJSON = objectMapper.writeValueAsString(deletedVehicle);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Vehicle Deletion");

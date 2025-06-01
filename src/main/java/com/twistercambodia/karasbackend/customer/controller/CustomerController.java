@@ -121,17 +121,20 @@ public class CustomerController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Customer oldCustomer = this.customerService.findByIdOrThrowError(id);
         Customer customer = this.customerService.update(id, customerDto);
         this.logger.info("Updating customer={}", customer);
 
-        CustomerDto updatedCustomer = this.customerService.convertToCustomerDto(customer);;
+        CustomerDto oldCustomerDto = this.customerService.convertToCustomerDto(oldCustomer);
+        CustomerDto updatedCustomerDto = this.customerService.convertToCustomerDto(customer);
 
         // create audit log of Customer Creation
         AuditDTO auditDTO = new AuditDTO();
 
-        String newValueJSON = objectMapper.writeValueAsString(updatedCustomer);
+        String oldValueJSON = objectMapper.writeValueAsString(oldCustomerDto);
+        String newValueJSON = objectMapper.writeValueAsString(updatedCustomerDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Customer Update");
@@ -152,17 +155,20 @@ public class CustomerController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Customer oldCustomer = this.customerService.findByIdOrThrowError(id);
         Customer customer = this.customerService.delete(id);
         this.logger.info("Deleting customer={}", customer);
 
-        CustomerDto deletedCustomer = this.customerService.convertToCustomerDto(customer);;
+        CustomerDto oldCustomerDto = this.customerService.convertToCustomerDto(oldCustomer);
+        CustomerDto deletedCustomerDto = this.customerService.convertToCustomerDto(customer);
 
         // create audit log of Customer Deleted
         AuditDTO auditDTO = new AuditDTO();
 
-        String newValueJSON = objectMapper.writeValueAsString(deletedCustomer);
+        String oldValueJSON = objectMapper.writeValueAsString(oldCustomerDto);
+        String newValueJSON = objectMapper.writeValueAsString(deletedCustomerDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Customer Deletion");

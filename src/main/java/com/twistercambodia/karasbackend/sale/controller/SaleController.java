@@ -99,17 +99,20 @@ public class SaleController {
             @RequestBody SaleRequestDto saleRequestDto,
             @AuthenticationPrincipal User user
     ) throws Exception {
+        Sale oldSale = this.saleService.findByIdOrThrowException(id);
         Sale sale = this.saleService.update(id, saleRequestDto);
         this.logger.info("Updating Sale={}", sale);
 
+        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
         SaleResponseDto saleResponseDto = this.saleService.convertToSaleResponseDto(sale);
 
         // create audit log of Sale updated
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldSaleResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(saleResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Sale Updated");
@@ -130,29 +133,31 @@ public class SaleController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws Exception {
-        Sale saleItem = this.saleService.findByIdOrThrowException(id);
+        Sale oldSale = this.saleService.findByIdOrThrowException(id);
 
-        if (saleItem.getStatus() == SaleStatus.PAID) {
-            return this.saleService.convertToSaleResponseDto(saleItem);
+        if (oldSale.getStatus() == SaleStatus.PAID) {
+            return this.saleService.convertToSaleResponseDto(oldSale);
         }
 
-        saleItem.setStatus(SaleStatus.PAID);
+        oldSale.setStatus(SaleStatus.PAID);
 
         Sale sale = this.saleService.update(
-                saleItem.getFormattedId(),
-                new SaleRequestDto(saleItem)
+                oldSale.getFormattedId(),
+                new SaleRequestDto(oldSale)
         );
 
         this.logger.info("Paying Sale={}", sale);
 
+        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
         SaleResponseDto saleResponseDto = this.saleService.convertToSaleResponseDto(sale);
 
         // create audit log of Sale paid
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldSaleResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(saleResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Sale Paid");
@@ -174,17 +179,20 @@ public class SaleController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws Exception {
+        Sale oldSale = this.saleService.findByIdOrThrowException(id);
         Sale sale = this.saleService.delete(id);
         this.logger.info("Deleting Sale={}", sale);
 
+        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
         SaleResponseDto saleResponseDto = this.saleService.convertToSaleResponseDto(sale);
 
         // create audit log of Sale updated
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldSaleResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(saleResponseDto);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Sale Deletion");

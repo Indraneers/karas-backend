@@ -97,17 +97,20 @@ public class CategoryController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Category oldCategory = this.categoryService.findByIdOrThrowError(id);
         Category category = this.categoryService.update(id, categoryDto, file);
         this.logger.info("Updating category={}", category);
 
+        CategoryDto oldCategoryDTO = this.categoryService.convertToCategoryDto(oldCategory);
         CategoryDto categoryDTO = this.categoryService.convertToCategoryDto(category);
 
         // create audit log of Category Creation
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldCategoryDTO);
         String newValueJSON = objectMapper.writeValueAsString(categoryDTO);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Category Update");
@@ -127,17 +130,20 @@ public class CategoryController {
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
+        Category oldCategory = this.categoryService.findByIdOrThrowError(id);
         Category category = this.categoryService.delete(id);
         this.logger.info("Deleting category={}", category);
 
+        CategoryDto oldCategoryDTO = this.categoryService.convertToCategoryDto(oldCategory);
         CategoryDto categoryDTO = this.categoryService.convertToCategoryDto(category);
 
         // create audit log of Category Creation
         AuditDTO auditDTO = new AuditDTO();
 
+        String oldValueJSON = objectMapper.writeValueAsString(oldCategoryDTO);
         String newValueJSON = objectMapper.writeValueAsString(categoryDTO);
 
-        auditDTO.setOldValue(null);
+        auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Category Deletion");
