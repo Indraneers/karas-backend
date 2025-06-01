@@ -102,7 +102,7 @@ public class SubcategoryController {
         Subcategory subcategory = this.subcategoryService.update(id, subcategoryRequestDto, file);
         this.logger.info("Updating subcategory={}", subcategory);
 
-        SubcategoryResponseDto oldSubcategoryDto = this.subcategoryService.convertToSubcategoryDto(oldsubcategory);
+        SubcategoryResponseDto oldSubcategoryDto = this.subcategoryService.convertToSubcategoryDto(oldSubcategory);
         SubcategoryResponseDto subcategoryResponseDto =
                 this.subcategoryService.convertToSubcategoryDto(subcategory);
 
@@ -144,10 +144,9 @@ public class SubcategoryController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldSubcategoryDTO);
-        String newValueJSON = objectMapper.writeValueAsString(subcategoryResponseDto);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Subcategory Deletion");
         auditDTO.setRequestUrl("/subcategories/" + id);

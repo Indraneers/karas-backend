@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class CustomerController {
     @PostMapping
     public CustomerDto createCustomer(
             @RequestBody CustomerDto customerDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Customer customer = this.customerService.create(customerDto);
         this.logger.info("Creating customer={}", customer);
@@ -106,6 +107,10 @@ public class CustomerController {
         auditDTO.setRequestUrl("/customers");
         auditDTO.setService(ServiceEnum.CUSTOMER);
         auditDTO.setHttpMethod(HttpMethod.POST);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -119,7 +124,7 @@ public class CustomerController {
     public CustomerDto updateCustomer(
             @RequestBody CustomerDto customerDto,
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Customer oldCustomer = this.customerService.findByIdOrThrowError(id);
         Customer customer = this.customerService.update(id, customerDto);
@@ -141,6 +146,10 @@ public class CustomerController {
         auditDTO.setRequestUrl("/customers/" + id);
         auditDTO.setService(ServiceEnum.CUSTOMER);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -153,7 +162,7 @@ public class CustomerController {
     @DeleteMapping("{id}")
     public CustomerDto deleteCustomer(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Customer oldCustomer = this.customerService.findByIdOrThrowError(id);
         Customer customer = this.customerService.delete(id);
@@ -166,15 +175,18 @@ public class CustomerController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldCustomerDto);
-        String newValueJSON = objectMapper.writeValueAsString(deletedCustomerDto);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Customer Deletion");
         auditDTO.setRequestUrl("/customers/" + id);
         auditDTO.setService(ServiceEnum.CUSTOMER);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);

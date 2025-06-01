@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class UnitController {
     @PostMapping
     public UnitResponseDto createUnit(
             @RequestBody UnitRequestDto unitRequestDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Unit unit = this.unitService.create(unitRequestDto);
         this.logger.info("Creating unit={}", unit);
@@ -80,6 +81,10 @@ public class UnitController {
         auditDTO.setRequestUrl("/units");
         auditDTO.setService(ServiceEnum.UNIT);
         auditDTO.setHttpMethod(HttpMethod.POST);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -92,7 +97,7 @@ public class UnitController {
     public UnitResponseDto updateUnit(
             @RequestBody UnitRequestDto unitRequestDto,
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Unit oldUnit = this.unitService.findByIdOrThrowError(id);
         Unit unit = this.unitService.update(id, unitRequestDto);
@@ -115,6 +120,10 @@ public class UnitController {
         auditDTO.setRequestUrl("/units/" + id);
         auditDTO.setService(ServiceEnum.UNIT);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -126,7 +135,7 @@ public class UnitController {
     @DeleteMapping("{id}")
     public UnitResponseDto deleteUnit(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Unit oldUnit = this.unitService.findByIdOrThrowError(id);
         Unit unit = this.unitService.delete(id);
@@ -140,15 +149,18 @@ public class UnitController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldUnitResponseDto);
-        String newValueJSON = objectMapper.writeValueAsString(unitResponseDto);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Unit Deletion");
         auditDTO.setRequestUrl("/units/" + id);
         auditDTO.setService(ServiceEnum.UNIT);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);

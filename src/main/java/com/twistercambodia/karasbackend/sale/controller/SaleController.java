@@ -7,6 +7,7 @@ import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
 import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
 import com.twistercambodia.karasbackend.audit.service.AuditService;
 import com.twistercambodia.karasbackend.auth.entity.User;
+import com.twistercambodia.karasbackend.auth.service.UserService;
 import com.twistercambodia.karasbackend.sale.dto.SaleFilter;
 import com.twistercambodia.karasbackend.sale.dto.SaleRequestDto;
 import com.twistercambodia.karasbackend.sale.dto.SaleResponseDto;
@@ -19,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +68,7 @@ public class SaleController {
     @PostMapping
     public SaleResponseDto createSale(
             @RequestBody SaleRequestDto saleRequestDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale sale = this.saleService.create(saleRequestDto);
         this.logger.info("Creating Sale={}", sale);
@@ -84,6 +87,10 @@ public class SaleController {
         auditDTO.setRequestUrl("/sales");
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.POST);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -97,7 +104,7 @@ public class SaleController {
     public SaleResponseDto updateSale(
             @PathVariable("id") String id,
             @RequestBody SaleRequestDto saleRequestDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale oldSale = this.saleService.findByIdOrThrowException(id);
         Sale sale = this.saleService.update(id, saleRequestDto);
@@ -119,6 +126,10 @@ public class SaleController {
         auditDTO.setRequestUrl("/sales/" + id);
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -131,7 +142,7 @@ public class SaleController {
     @PutMapping("pay/{id}")
     public SaleResponseDto paySale(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale oldSale = this.saleService.findByIdOrThrowException(id);
 
@@ -164,6 +175,10 @@ public class SaleController {
         auditDTO.setRequestUrl("/sales/" + id);
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -175,9 +190,9 @@ public class SaleController {
 
 
     @DeleteMapping("{id}")
-    public SaleResponseDto updateSale(
+    public SaleResponseDto deleteSale(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale oldSale = this.saleService.findByIdOrThrowException(id);
         Sale sale = this.saleService.delete(id);
@@ -190,15 +205,18 @@ public class SaleController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldSaleResponseDto);
-        String newValueJSON = objectMapper.writeValueAsString(saleResponseDto);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Sale Deletion");
         auditDTO.setRequestUrl("/sales/" + id);
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);

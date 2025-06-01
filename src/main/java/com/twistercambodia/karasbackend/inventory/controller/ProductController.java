@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +66,7 @@ public class ProductController {
     public ProductResponseDto createProduct(
             @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Product product = this.productService.create(productRequestDto, file);
         this.logger.info("Creating product={}", product);
@@ -85,6 +86,10 @@ public class ProductController {
         auditDTO.setRequestUrl("/products");
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.POST);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -98,7 +103,7 @@ public class ProductController {
             @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Product oldProduct = this.productService.findByIdOrThrowError(id);
         Product product = this.productService.update(id, productRequestDto, file);
@@ -112,15 +117,18 @@ public class ProductController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldProductDto);
-        String newValueJSON = objectMapper.writeValueAsString(productResponseDto);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Product Update");
         auditDTO.setRequestUrl("/products/" + id);
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -132,7 +140,7 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ProductResponseDto deleteProduct(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Product oldProduct = this.productService.findByIdOrThrowError(id);
         Product product = this.productService.delete(id);
@@ -155,6 +163,10 @@ public class ProductController {
         auditDTO.setRequestUrl("/products/" + id);
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);

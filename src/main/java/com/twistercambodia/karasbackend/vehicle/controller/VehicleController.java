@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class VehicleController {
     @PostMapping
     public VehicleDto createVehicle(
             @RequestBody VehicleDto vehicleDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Vehicle vehicle = this.vehicleService.create(vehicleDto);
         this.logger.info("Creating vehicle={}", vehicle);
@@ -77,6 +78,10 @@ public class VehicleController {
         auditDTO.setRequestUrl("/vehicles");
         auditDTO.setService(ServiceEnum.VEHICLE);
         auditDTO.setHttpMethod(HttpMethod.POST);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -90,7 +95,7 @@ public class VehicleController {
     public VehicleDto updateVehicle(
             @RequestBody VehicleDto vehicleDto,
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Vehicle oldVehicle = this.vehicleService.findByIdOrThrowException(id);
         Vehicle vehicle = this.vehicleService.update(id, vehicleDto);
@@ -112,6 +117,10 @@ public class VehicleController {
         auditDTO.setRequestUrl("/vehicles/" + id);
         auditDTO.setService(ServiceEnum.VEHICLE);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -124,7 +133,7 @@ public class VehicleController {
     @DeleteMapping("{id}")
     public VehicleDto deleteVehicle(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Vehicle oldVehicle = this.vehicleService.findByIdOrThrowException(id);
         Vehicle vehicle = this.vehicleService.delete(id);
@@ -137,15 +146,18 @@ public class VehicleController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldVehicleDto);
-        String newValueJSON = objectMapper.writeValueAsString(deletedVehicle);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Vehicle Deletion");
         auditDTO.setRequestUrl("/vehicles/" + id);
         auditDTO.setService(ServiceEnum.VEHICLE);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);

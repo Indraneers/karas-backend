@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,7 +64,7 @@ public class CategoryController {
     public CategoryDto createCategory(
             @RequestPart(value = "data", required = true) CategoryDto categoryDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Category category = this.categoryService.create(categoryDto, file);
         this.logger.info("Creating category={}", category);
@@ -82,6 +83,10 @@ public class CategoryController {
         auditDTO.setRequestUrl("/categories");
         auditDTO.setService(ServiceEnum.CATEGORY);
         auditDTO.setHttpMethod(HttpMethod.POST);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -95,7 +100,7 @@ public class CategoryController {
             @RequestPart(value = "data", required = true) CategoryDto categoryDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Category oldCategory = this.categoryService.findByIdOrThrowError(id);
         Category category = this.categoryService.update(id, categoryDto, file);
@@ -117,6 +122,10 @@ public class CategoryController {
         auditDTO.setRequestUrl("/categories/" + id);
         auditDTO.setService(ServiceEnum.CATEGORY);
         auditDTO.setHttpMethod(HttpMethod.PUT);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
@@ -128,7 +137,7 @@ public class CategoryController {
     @DeleteMapping("{id}")
     public CategoryDto deleteCategory(
             @PathVariable("id") String id,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Category oldCategory = this.categoryService.findByIdOrThrowError(id);
         Category category = this.categoryService.delete(id);
@@ -141,15 +150,18 @@ public class CategoryController {
         AuditDTO auditDTO = new AuditDTO();
 
         String oldValueJSON = objectMapper.writeValueAsString(oldCategoryDTO);
-        String newValueJSON = objectMapper.writeValueAsString(categoryDTO);
 
         auditDTO.setOldValue(oldValueJSON);
-        auditDTO.setNewValue(newValueJSON);
+        auditDTO.setNewValue(null);
 
         auditDTO.setName("Category Deletion");
         auditDTO.setRequestUrl("/categories/" + id);
         auditDTO.setService(ServiceEnum.CATEGORY);
         auditDTO.setHttpMethod(HttpMethod.DELETE);
+
+        User user = new User();
+        user.setId(jwt.getSubject());
+
         auditDTO.setUser(user);
 
         Audit audit = this.auditService.create(auditDTO);
