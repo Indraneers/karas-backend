@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,6 +81,31 @@ public class CategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((categoryDto.getName()))
+                );
+
+        // check if category exists in audit
+        this.mockMvc.perform(
+                get("/audits/audit-service/category?page=0")
+        )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(1))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Category Creation")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("POST")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CATEGORY")
                 );
     }
 
@@ -155,6 +181,31 @@ public class CategoryControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((categoryDto.getName()))
                 );
+
+        // check if category exists in audit
+        this.mockMvc.perform(
+                        get("/audits/audit-service/category?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Category Update")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("PUT")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CATEGORY")
+                );
     }
 
     @Test
@@ -187,6 +238,31 @@ public class CategoryControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((categoryDto.getName()))
+                );
+
+        // check if category exists in audit
+        this.mockMvc.perform(
+                        get("/audits/audit-service/category?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Category Deletion")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("DELETE")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("CATEGORY")
                 );
     }
 }

@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -144,6 +145,31 @@ public class ProductControllerTests {
                         MockMvcResultMatchers.jsonPath("$.products[0].name")
                                 .value(productRequestDto.getName())
                 );
+
+        // check if product exists in audit
+        this.mockMvc.perform(
+                        get("/audits/audit-service/product?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(1))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Product Creation")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("POST")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("PRODUCT")
+                );
     }
 
     @Test
@@ -194,6 +220,31 @@ public class ProductControllerTests {
                         MockMvcResultMatchers.jsonPath("$.name")
                                 .value((productRequestDto.getName()))
                 );
+
+        // check if product exists in audit
+        this.mockMvc.perform(
+                        get("/audits/audit-service/product?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Product Update")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("PUT")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("PRODUCT")
+                );
     }
 
     @Test
@@ -243,6 +294,31 @@ public class ProductControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.products")
                                 .isEmpty()
+                );
+
+        // check if product exists in audit
+        this.mockMvc.perform(
+                        get("/audits/audit-service/product?page=0")
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content")
+                                .isArray()
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content",
+                                hasSize(2))
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].name")
+                                .value("Product Deletion")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].httpMethod")
+                                .value("DELETE")
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content[0].service")
+                                .value("PRODUCT")
                 );
     }
 }
