@@ -122,7 +122,7 @@ public class SubcategoryControllerTests {
 
         // check if subcategory exists in audit
         this.mockMvc.perform(
-                        get("/audits/subcategory?page=0")
+                        get("/audits/audit-service/subcategory?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -248,7 +248,7 @@ public class SubcategoryControllerTests {
 
         // check if subcategory exists in audit
         this.mockMvc.perform(
-                        get("/audits/subcategory?page=0")
+                        get("/audits/audit-service/subcategory?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -317,7 +317,7 @@ public class SubcategoryControllerTests {
 
         // check if subcategory exists in audit
         this.mockMvc.perform(
-                        get("/audits/subcategory?page=0")
+                        get("/audits/audit-service/subcategory?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(

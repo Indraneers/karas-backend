@@ -46,6 +46,22 @@ public class SaleController {
         this.objectMapper = objectMapper;
     }
 
+    private static String getSaleResourceName(Sale sale) {
+        return sale.getCustomer().getName()
+                +
+                " - "
+                +
+                sale.getVehicle().getMakeAndModel()
+                +
+                (
+                        sale.getVehicle().getPlateNumber().isEmpty()
+                        ?
+                        (" (" + sale.getVehicle().getPlateNumber() + ')')
+                        : ""
+                );
+
+    }
+
     @GetMapping
     public Page<SaleResponseDto> getAllSales(
             @RequestParam() int page,
@@ -84,6 +100,7 @@ public class SaleController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Sale Creation");
+        auditDTO.setResourceName(getSaleResourceName(sale));
         auditDTO.setRequestUrl("/sales");
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -123,6 +140,7 @@ public class SaleController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Sale Updated");
+        auditDTO.setResourceName(getSaleResourceName(sale));
         auditDTO.setRequestUrl("/sales/" + id);
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -172,6 +190,7 @@ public class SaleController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Sale Paid");
+        auditDTO.setResourceName(getSaleResourceName(sale));
         auditDTO.setRequestUrl("/sales/" + id);
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -210,6 +229,7 @@ public class SaleController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Sale Deletion");
+        auditDTO.setResourceName(getSaleResourceName(sale));
         auditDTO.setRequestUrl("/sales/" + id);
         auditDTO.setService(ServiceEnum.SALE);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

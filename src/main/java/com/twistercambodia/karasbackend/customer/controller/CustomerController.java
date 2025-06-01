@@ -104,6 +104,7 @@ public class CustomerController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Customer Creation");
+        auditDTO.setResourceName(customer.getName());
         auditDTO.setRequestUrl("/customers");
         auditDTO.setService(ServiceEnum.CUSTOMER);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -143,6 +144,7 @@ public class CustomerController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Customer Update");
+        auditDTO.setResourceName(customer.getName());
         auditDTO.setRequestUrl("/customers/" + id);
         auditDTO.setService(ServiceEnum.CUSTOMER);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -180,6 +182,7 @@ public class CustomerController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Customer Deletion");
+        auditDTO.setResourceName(customer.getName());
         auditDTO.setRequestUrl("/customers/" + id);
         auditDTO.setService(ServiceEnum.CUSTOMER);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

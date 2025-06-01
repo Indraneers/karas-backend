@@ -19,8 +19,16 @@ public class AuditController {
         this.auditService = auditService;
     }
 
-    @GetMapping("{service}")
-    public Page<AuditDTO> getAllAudits(
+    @GetMapping("{id}")
+    public AuditDTO getAuditById(
+            @PathVariable("id") String id
+    ) {
+        Audit audit = this.auditService.findById(id);
+        return auditService.convertToAuditDTO(audit);
+    }
+
+    @GetMapping("audit-service/{service}")
+    public Page<AuditDTO> getAuditsByService(
             @RequestParam() int page,
             @PathVariable("service")ServiceEnum serviceEnum
             ) {

@@ -38,12 +38,18 @@ public class AuditService {
                 });
     }
 
+    public Audit findById(String id) throws IOException {
+        Audit audit = auditRepository.findById(id).orElseThrow(() -> new RuntimeException("Audit Not Found with ID=" + id));
+        return decompressAudit(audit);
+    }
+
     public Audit create(AuditDTO auditDTO) throws IOException {
         Audit audit = new Audit();
 
         audit.setTimestamp(LocalDateTime.now());
         audit.setHttpMethod(auditDTO.getHttpMethod());
         audit.setName(auditDTO.getName());
+        audit.setResourceName(auditDTO.getResourceName());
         audit.setRequestUrl(auditDTO.getRequestUrl());
         audit.setService(auditDTO.getService());
         audit.setUser(auditDTO.getUser());

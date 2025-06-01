@@ -348,7 +348,7 @@ public class SaleControllerTests {
 
         // check if category exists in audit
         this.mockMvc.perform(
-                        get("/audits/sale?page=0")
+                        get("/audits/audit-service/sale?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -536,7 +536,7 @@ public class SaleControllerTests {
 
         // check if sale exists in audit
         this.mockMvc.perform(
-                        get("/audits/sale?page=0")
+                        get("/audits/audit-service/sale?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -614,7 +614,7 @@ public class SaleControllerTests {
 
         // check if sales exists in audit
         this.mockMvc.perform(
-                        get("/audits/sale?page=0")
+                        get("/audits/audit-service/sale?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(

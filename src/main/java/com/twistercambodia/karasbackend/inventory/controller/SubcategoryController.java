@@ -80,6 +80,7 @@ public class SubcategoryController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Subcategory Creation");
+        auditDTO.setResourceName(subcategory.getName());
         auditDTO.setRequestUrl("/subcategories");
         auditDTO.setService(ServiceEnum.SUBCATEGORY);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -116,6 +117,7 @@ public class SubcategoryController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Subcategory Update");
+        auditDTO.setResourceName(subcategory.getName());
         auditDTO.setRequestUrl("/subcategories/" + id);
         auditDTO.setService(ServiceEnum.SUBCATEGORY);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -149,6 +151,7 @@ public class SubcategoryController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Subcategory Deletion");
+        auditDTO.setResourceName(subcategory.getName());
         auditDTO.setRequestUrl("/subcategories/" + id);
         auditDTO.setService(ServiceEnum.SUBCATEGORY);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

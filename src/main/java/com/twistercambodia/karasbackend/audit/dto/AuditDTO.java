@@ -9,6 +9,7 @@ public class AuditDTO {
     private String id;
     private String timestamp;
     private String name;
+    private String resourceName;
     private ServiceEnum service;
     private HttpMethod httpMethod;
     private String requestUrl;
@@ -20,6 +21,7 @@ public class AuditDTO {
         this.id = audit.getId();
         this.timestamp = audit.getTimestamp().toString();
         this.name = audit.getName();
+        this.resourceName = audit.getResourceName();
         this.httpMethod = audit.getHttpMethod();
         this.requestUrl = audit.getRequestUrl();
         this.service = audit.getService();
@@ -52,6 +54,14 @@ public class AuditDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
     public ServiceEnum getService() {

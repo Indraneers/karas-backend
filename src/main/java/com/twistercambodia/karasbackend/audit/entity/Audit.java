@@ -18,6 +18,9 @@ public class Audit {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String resourceName;
+
     @Enumerated(EnumType.STRING)  // or EnumType.ORDINAL
     private ServiceEnum service;
 
@@ -59,6 +62,14 @@ public class Audit {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
     public ServiceEnum getService() {
@@ -112,14 +123,15 @@ public class Audit {
     @Override
     public String toString() {
         return "Audit{" +
-                "newValue='" + newValue + '\'' +
-                ", oldValue='" + oldValue + '\'' +
-                ", requestUrl='" + requestUrl + '\'' +
-                ", httpMethod=" + httpMethod +
-                ", service=" + service +
-                ", name='" + name + '\'' +
+                "id='" + id + '\'' +
                 ", timestamp=" + timestamp +
-                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", resourceName='" + resourceName + '\'' +
+                ", service=" + service +
+                ", httpMethod=" + httpMethod +
+                ", requestUrl='" + requestUrl + '\'' +
+                ", oldValue='" + oldValue + '\'' +
+                ", newValue='" + newValue + '\'' +
                 ", user=" + user +
                 '}';
     }

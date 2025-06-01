@@ -8,6 +8,7 @@ import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
 import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
 import com.twistercambodia.karasbackend.audit.service.AuditService;
 import com.twistercambodia.karasbackend.auth.entity.User;
+import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
@@ -38,6 +39,18 @@ public class VehicleController {
         this.vehicleService = vehicleService;
         this.auditService = auditService;
         this.objectMapper = objectMapper;
+    }
+
+    private static String getVehicleResourceName(Vehicle vehicle) {
+        return vehicle.getMakeAndModel()
+                +
+                (
+                        vehicle.getPlateNumber().isEmpty()
+                                ?
+                                (" (" + vehicle.getPlateNumber() + ')')
+                                : ""
+                );
+
     }
 
     @GetMapping
@@ -75,6 +88,7 @@ public class VehicleController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Vehicle Creation");
+        auditDTO.setResourceName(getVehicleResourceName(vehicle));
         auditDTO.setRequestUrl("/vehicles");
         auditDTO.setService(ServiceEnum.VEHICLE);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -114,6 +128,7 @@ public class VehicleController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Vehicle Update");
+        auditDTO.setResourceName(getVehicleResourceName(vehicle));
         auditDTO.setRequestUrl("/vehicles/" + id);
         auditDTO.setService(ServiceEnum.VEHICLE);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -151,6 +166,7 @@ public class VehicleController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Vehicle Deletion");
+        auditDTO.setResourceName(getVehicleResourceName(vehicle));
         auditDTO.setRequestUrl("/vehicles/" + id);
         auditDTO.setService(ServiceEnum.VEHICLE);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

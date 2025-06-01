@@ -83,6 +83,7 @@ public class ProductController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Product Creation");
+        auditDTO.setResourceName(product.getName());
         auditDTO.setRequestUrl("/products");
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -122,6 +123,7 @@ public class ProductController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Product Update");
+        auditDTO.setResourceName(product.getName());
         auditDTO.setRequestUrl("/products/" + id);
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -160,6 +162,7 @@ public class ProductController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Product Deletion");
+        auditDTO.setResourceName(product.getName());
         auditDTO.setRequestUrl("/products/" + id);
         auditDTO.setService(ServiceEnum.PRODUCT);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

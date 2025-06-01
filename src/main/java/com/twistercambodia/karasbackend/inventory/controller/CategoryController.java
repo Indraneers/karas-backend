@@ -80,6 +80,7 @@ public class CategoryController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Category Creation");
+        auditDTO.setResourceName(category.getName());
         auditDTO.setRequestUrl("/categories");
         auditDTO.setService(ServiceEnum.CATEGORY);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -119,6 +120,7 @@ public class CategoryController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Category Update");
+        auditDTO.setResourceName(category.getName());
         auditDTO.setRequestUrl("/categories/" + id);
         auditDTO.setService(ServiceEnum.CATEGORY);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -155,6 +157,7 @@ public class CategoryController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Category Deletion");
+        auditDTO.setResourceName(category.getName());
         auditDTO.setRequestUrl("/categories/" + id);
         auditDTO.setService(ServiceEnum.CATEGORY);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

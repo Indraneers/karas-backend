@@ -78,6 +78,7 @@ public class UnitController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Unit Creation");
+        auditDTO.setResourceName(unit.getName());
         auditDTO.setRequestUrl("/units");
         auditDTO.setService(ServiceEnum.UNIT);
         auditDTO.setHttpMethod(HttpMethod.POST);
@@ -117,6 +118,7 @@ public class UnitController {
         auditDTO.setNewValue(newValueJSON);
 
         auditDTO.setName("Unit Update");
+        auditDTO.setResourceName(unit.getName());
         auditDTO.setRequestUrl("/units/" + id);
         auditDTO.setService(ServiceEnum.UNIT);
         auditDTO.setHttpMethod(HttpMethod.PUT);
@@ -154,6 +156,7 @@ public class UnitController {
         auditDTO.setNewValue(null);
 
         auditDTO.setName("Unit Deletion");
+        auditDTO.setResourceName(unit.getName());
         auditDTO.setRequestUrl("/units/" + id);
         auditDTO.setService(ServiceEnum.UNIT);
         auditDTO.setHttpMethod(HttpMethod.DELETE);

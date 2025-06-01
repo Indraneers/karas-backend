@@ -83,7 +83,7 @@ public class CustomerControllerTests {
 
         // check if customer exists in audit
         this.mockMvc.perform(
-                        get("/audits/customer?page=0")
+                        get("/audits/audit-service/customer?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -172,7 +172,7 @@ public class CustomerControllerTests {
 
         // check if customer exists in audit
         this.mockMvc.perform(
-                        get("/audits/customer?page=0")
+                        get("/audits/audit-service/customer?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -230,7 +230,7 @@ public class CustomerControllerTests {
 
         // check if customer exists in audit
         this.mockMvc.perform(
-                        get("/audits/customer?page=0")
+                        get("/audits/audit-service/customer?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(

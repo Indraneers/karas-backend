@@ -148,7 +148,7 @@ public class ProductControllerTests {
 
         // check if product exists in audit
         this.mockMvc.perform(
-                        get("/audits/product?page=0")
+                        get("/audits/audit-service/product?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -223,7 +223,7 @@ public class ProductControllerTests {
 
         // check if product exists in audit
         this.mockMvc.perform(
-                        get("/audits/product?page=0")
+                        get("/audits/audit-service/product?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -298,7 +298,7 @@ public class ProductControllerTests {
 
         // check if product exists in audit
         this.mockMvc.perform(
-                        get("/audits/product?page=0")
+                        get("/audits/audit-service/product?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(

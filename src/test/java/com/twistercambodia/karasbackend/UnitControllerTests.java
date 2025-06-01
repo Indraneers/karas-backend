@@ -175,7 +175,7 @@ public class UnitControllerTests {
 
         // check if subcategory exists in audit
         this.mockMvc.perform(
-                        get("/audits/unit?page=0")
+                        get("/audits/audit-service/unit?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -252,7 +252,7 @@ public class UnitControllerTests {
 
         // check if unit exists in audit
         this.mockMvc.perform(
-                        get("/audits/unit?page=0")
+                        get("/audits/audit-service/unit?page=0")
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -296,7 +296,7 @@ public class UnitControllerTests {
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         this.mockMvc.perform(
-                        delete("/units/" + id)
+                        delete("/audits/audit-service/units/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )
