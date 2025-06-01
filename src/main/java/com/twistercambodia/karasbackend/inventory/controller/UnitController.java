@@ -101,10 +101,11 @@ public class UnitController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Unit oldUnit = this.unitService.findByIdOrThrowError(id);
+        UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
+
         Unit unit = this.unitService.update(id, unitRequestDto);
         this.logger.info("Updating unit={}", unit);
 
-        UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
         UnitResponseDto unitResponseDto =
                 this.unitService.convertToUnitDto(unit);
 
@@ -140,10 +141,11 @@ public class UnitController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Unit oldUnit = this.unitService.findByIdOrThrowError(id);
+        UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
+
         Unit unit = this.unitService.delete(id);
         this.logger.info("Deleting unit={}", unit);
 
-        UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
         UnitResponseDto unitResponseDto =
                 this.unitService.convertToUnitDto(unit);
 

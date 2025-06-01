@@ -100,10 +100,11 @@ public class SubcategoryController {
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
         Subcategory oldSubcategory = this.subcategoryService.findByIdOrThrowError(id);
+        SubcategoryResponseDto oldSubcategoryDto = this.subcategoryService.convertToSubcategoryDto(oldSubcategory);
+
         Subcategory subcategory = this.subcategoryService.update(id, subcategoryRequestDto, file);
         this.logger.info("Updating subcategory={}", subcategory);
 
-        SubcategoryResponseDto oldSubcategoryDto = this.subcategoryService.convertToSubcategoryDto(oldSubcategory);
         SubcategoryResponseDto subcategoryResponseDto =
                 this.subcategoryService.convertToSubcategoryDto(subcategory);
 
@@ -135,17 +136,18 @@ public class SubcategoryController {
             @AuthenticationPrincipal User user
     ) throws RuntimeException, IOException {
         Subcategory oldSubcategory = this.subcategoryService.findByIdOrThrowError(id);
+        SubcategoryResponseDto oldSubcategoryDto = this.subcategoryService.convertToSubcategoryDto(oldSubcategory);
+
         Subcategory subcategory = this.subcategoryService.delete(id);
         this.logger.info("Deleting subcategory={}", subcategory);
 
-        SubcategoryResponseDto oldSubcategoryDTO = this.subcategoryService.convertToSubcategoryDto(oldSubcategory);
         SubcategoryResponseDto subcategoryResponseDto =
                 this.subcategoryService.convertToSubcategoryDto(subcategory);
 
         // create audit log of Category Deletion
         AuditDTO auditDTO = new AuditDTO();
 
-        String oldValueJSON = objectMapper.writeValueAsString(oldSubcategoryDTO);
+        String oldValueJSON = objectMapper.writeValueAsString(oldSubcategoryDto);
 
         auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(null);

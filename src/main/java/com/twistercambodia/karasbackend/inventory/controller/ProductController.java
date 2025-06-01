@@ -107,10 +107,11 @@ public class ProductController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Product oldProduct = this.productService.findByIdOrThrowError(id);
+        ProductResponseDto oldProductDto = this.productService.convertToProductDto(oldProduct);
+
         Product product = this.productService.update(id, productRequestDto, file);
         this.logger.info("Updating product={}", product);
 
-        ProductResponseDto oldProductDto = this.productService.convertToProductDto(oldProduct);
         ProductResponseDto productResponseDto =
                 this.productService.convertToProductDto(product);
 
@@ -145,10 +146,11 @@ public class ProductController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Product oldProduct = this.productService.findByIdOrThrowError(id);
+        ProductResponseDto oldProductDto = this.productService.convertToProductDto(oldProduct);
+
         Product product = this.productService.delete(id);
         this.logger.info("Deleting product={}", product);
 
-        ProductResponseDto oldProductDto = this.productService.convertToProductDto(oldProduct);
         ProductResponseDto productResponseDto =
                 this.productService.convertToProductDto(product);
 

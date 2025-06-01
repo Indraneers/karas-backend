@@ -104,10 +104,11 @@ public class CategoryController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Category oldCategory = this.categoryService.findByIdOrThrowError(id);
+        CategoryDto oldCategoryDTO = this.categoryService.convertToCategoryDto(oldCategory);
+
         Category category = this.categoryService.update(id, categoryDto, file);
         this.logger.info("Updating category={}", category);
 
-        CategoryDto oldCategoryDTO = this.categoryService.convertToCategoryDto(oldCategory);
         CategoryDto categoryDTO = this.categoryService.convertToCategoryDto(category);
 
         // create audit log of Category Creation
@@ -142,10 +143,11 @@ public class CategoryController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Category oldCategory = this.categoryService.findByIdOrThrowError(id);
+        CategoryDto oldCategoryDTO = this.categoryService.convertToCategoryDto(oldCategory);
+
         Category category = this.categoryService.delete(id);
         this.logger.info("Deleting category={}", category);
 
-        CategoryDto oldCategoryDTO = this.categoryService.convertToCategoryDto(oldCategory);
         CategoryDto categoryDTO = this.categoryService.convertToCategoryDto(category);
 
         // create audit log of Category Creation

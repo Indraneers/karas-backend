@@ -124,10 +124,11 @@ public class SaleController {
             @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale oldSale = this.saleService.findByIdOrThrowException(id);
+        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
+
         Sale sale = this.saleService.update(id, saleRequestDto);
         this.logger.info("Updating Sale={}", sale);
 
-        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
         SaleResponseDto saleResponseDto = this.saleService.convertToSaleResponseDto(sale);
 
         // create audit log of Sale updated
@@ -135,6 +136,9 @@ public class SaleController {
 
         String oldValueJSON = objectMapper.writeValueAsString(oldSaleResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(saleResponseDto);
+
+        System.out.println(oldValueJSON);
+        System.out.println(newValueJSON);
 
         auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
@@ -163,6 +167,7 @@ public class SaleController {
             @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale oldSale = this.saleService.findByIdOrThrowException(id);
+        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
 
         if (oldSale.getStatus() == SaleStatus.PAID) {
             return this.saleService.convertToSaleResponseDto(oldSale);
@@ -177,7 +182,6 @@ public class SaleController {
 
         this.logger.info("Paying Sale={}", sale);
 
-        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
         SaleResponseDto saleResponseDto = this.saleService.convertToSaleResponseDto(sale);
 
         // create audit log of Sale paid
@@ -214,10 +218,11 @@ public class SaleController {
             @AuthenticationPrincipal Jwt jwt
     ) throws Exception {
         Sale oldSale = this.saleService.findByIdOrThrowException(id);
+        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
+
         Sale sale = this.saleService.delete(id);
         this.logger.info("Deleting Sale={}", sale);
 
-        SaleResponseDto oldSaleResponseDto = this.saleService.convertToSaleResponseDto(oldSale);
         SaleResponseDto saleResponseDto = this.saleService.convertToSaleResponseDto(sale);
 
         // create audit log of Sale updated

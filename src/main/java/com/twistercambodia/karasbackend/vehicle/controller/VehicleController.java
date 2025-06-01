@@ -112,10 +112,11 @@ public class VehicleController {
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Vehicle oldVehicle = this.vehicleService.findByIdOrThrowException(id);
+        VehicleDto oldVehicleDto = this.vehicleService.convertToVehicleDto(oldVehicle);
+
         Vehicle vehicle = this.vehicleService.update(id, vehicleDto);
         this.logger.info("Updating vehicle={}", vehicle);
 
-        VehicleDto oldVehicleDto = this.vehicleService.convertToVehicleDto(oldVehicle);
         VehicleDto updatedVehicle = this.vehicleService.convertToVehicleDto(vehicle);
 
         // create audit log of Vehicle updated
@@ -151,10 +152,11 @@ public class VehicleController {
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
         Vehicle oldVehicle = this.vehicleService.findByIdOrThrowException(id);
+        VehicleDto oldVehicleDto = this.vehicleService.convertToVehicleDto(oldVehicle);
+
         Vehicle vehicle = this.vehicleService.delete(id);
         this.logger.info("Deleted vehicle={}", vehicle);
 
-        VehicleDto oldVehicleDto = this.vehicleService.convertToVehicleDto(oldVehicle);
         VehicleDto deletedVehicle = this.vehicleService.convertToVehicleDto(vehicle);
 
         // create audit log of Vehicle updated

@@ -128,10 +128,11 @@ public class CustomerController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Customer oldCustomer = this.customerService.findByIdOrThrowError(id);
+        CustomerDto oldCustomerDto = this.customerService.convertToCustomerDto(oldCustomer);
+
         Customer customer = this.customerService.update(id, customerDto);
         this.logger.info("Updating customer={}", customer);
 
-        CustomerDto oldCustomerDto = this.customerService.convertToCustomerDto(oldCustomer);
         CustomerDto updatedCustomerDto = this.customerService.convertToCustomerDto(customer);
 
         // create audit log of Customer Creation
@@ -167,10 +168,11 @@ public class CustomerController {
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Customer oldCustomer = this.customerService.findByIdOrThrowError(id);
+        CustomerDto oldCustomerDto = this.customerService.convertToCustomerDto(oldCustomer);
+
         Customer customer = this.customerService.delete(id);
         this.logger.info("Deleting customer={}", customer);
 
-        CustomerDto oldCustomerDto = this.customerService.convertToCustomerDto(oldCustomer);
         CustomerDto deletedCustomerDto = this.customerService.convertToCustomerDto(customer);
 
         // create audit log of Customer Deleted
@@ -196,6 +198,6 @@ public class CustomerController {
 
         this.logger.info("Adding audit log for customer={}", audit);
 
-        return this.customerService.convertToCustomerDto(customer);
+        return deletedCustomerDto;
     }
 }
