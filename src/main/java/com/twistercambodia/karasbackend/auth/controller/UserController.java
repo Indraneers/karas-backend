@@ -31,6 +31,15 @@ public class UserController {
         );
     }
 
+    @GetMapping
+    public UserDto getUser(
+            @PathVariable String id
+    ) throws Exception {
+        return this.userService.convertToUserDto(
+                this.userService.findByIdOrThrowError(id)
+        );
+    }
+
     @PostMapping
     public UserDto createUser(@RequestBody UserDto userDto) {
         System.out.println("TEST" + userDto);
