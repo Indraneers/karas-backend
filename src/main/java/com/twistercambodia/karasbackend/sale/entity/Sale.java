@@ -31,7 +31,7 @@ public class Sale {
     @OneToOne(mappedBy = "sale", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Maintenance maintenance;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 

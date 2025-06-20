@@ -56,7 +56,9 @@ public class SecurityConfig {
             Converter<Map<String, Object>, Collection<GrantedAuthority>> authoritiesConverter) {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter
-                .setJwtGrantedAuthoritiesConverter(jwt -> authoritiesConverter.convert(jwt.getClaims()));
+                .setJwtGrantedAuthoritiesConverter(jwt -> {
+                    return authoritiesConverter.convert(jwt.getClaims());
+                });
         return jwtAuthenticationConverter;
     }
 
