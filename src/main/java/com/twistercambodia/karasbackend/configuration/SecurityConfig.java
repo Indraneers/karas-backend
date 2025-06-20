@@ -29,7 +29,6 @@ public class SecurityConfig {
     @Bean
     AuthoritiesConverter realmRolesAuthoritiesConverter() {
         return claims -> {
-            System.out.println("CALLED 2");
             // Extract resource_access from claims
             final var resourceAccess = Optional.ofNullable((Map<String, Object>) claims.get("resource_access"));
 
@@ -58,8 +57,6 @@ public class SecurityConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter
                 .setJwtGrantedAuthoritiesConverter(jwt -> {
-                    System.out.println("CALLED 3");
-                    System.out.println(jwt);
                     return authoritiesConverter.convert(jwt.getClaims());
                 });
         return jwtAuthenticationConverter;
