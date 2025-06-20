@@ -64,7 +64,7 @@ public class CategoryController {
     public CategoryDto createCategory(
             @RequestPart(value = "data", required = true) CategoryDto categoryDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @AuthenticationPrincipal Jwt jwt
+            @AuthenticationPrincipal(errorOnInvalidType=true) Jwt jwt
     ) throws IOException {
         Category category = this.categoryService.create(categoryDto, file);
         this.logger.info("Creating category={}", category);

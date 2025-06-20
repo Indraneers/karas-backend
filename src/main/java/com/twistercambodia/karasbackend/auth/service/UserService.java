@@ -72,6 +72,10 @@ public class UserService {
     }
 
     public User convertToUser(UserDto userDto) {
-        return modelMapper.map(userDto, User.class);
+        User user = new User();
+        user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
+        user.setRole(userDto.getRole());
+        return user;
     }
 }

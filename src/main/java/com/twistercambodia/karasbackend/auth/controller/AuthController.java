@@ -12,6 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("auth")
 public class AuthController {
+    public AuthController() {}
+
     @GetMapping("me")
     public UserInfoDto getMe(JwtAuthenticationToken auth) {
         return new UserInfoDto(

@@ -29,6 +29,7 @@ public class SecurityConfig {
     @Bean
     AuthoritiesConverter realmRolesAuthoritiesConverter() {
         return claims -> {
+            System.out.println("CALLED 2");
             // Extract resource_access from claims
             final var resourceAccess = Optional.ofNullable((Map<String, Object>) claims.get("resource_access"));
 
@@ -56,7 +57,11 @@ public class SecurityConfig {
             Converter<Map<String, Object>, Collection<GrantedAuthority>> authoritiesConverter) {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter
-                .setJwtGrantedAuthoritiesConverter(jwt -> authoritiesConverter.convert(jwt.getClaims()));
+                .setJwtGrantedAuthoritiesConverter(jwt -> {
+                    System.out.println("CALLED 3");
+                    System.out.println(jwt);
+                    return authoritiesConverter.convert(jwt.getClaims());
+                });
         return jwtAuthenticationConverter;
     }
 
@@ -69,6 +74,8 @@ public class SecurityConfig {
                 jwtDecoder.jwtAuthenticationConverter(jwtAuthenticationConverter);
             });
         });
+
+        System.out.println("CALLED 1");
 
         http.sessionManagement(sessions -> {
             sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
