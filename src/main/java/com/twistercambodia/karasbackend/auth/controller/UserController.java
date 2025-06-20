@@ -31,7 +31,7 @@ public class UserController {
         );
     }
 
-    @GetMapping
+    @GetMapping("{id}")
     public UserDto getUser(
             @PathVariable String id
     ) throws Exception {
