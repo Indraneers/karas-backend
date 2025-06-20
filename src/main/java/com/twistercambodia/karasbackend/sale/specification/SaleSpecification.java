@@ -9,15 +9,18 @@ import java.time.LocalDateTime;
 public class SaleSpecification {
     public static final String CREATEDAT = "createdAt";
     public static final String CUSTOMER = "customer";
+    public static final String USER = "user";
     public static final String ID = "id";
 
     private SaleSpecification() {}
 
     public static Specification<Sale> filterBy(SaleFilter saleFilter) {
+        System.out.println("USER ID:" + saleFilter.getUserId());
         return Specification
                 .where(hasCreatedAtGreaterThan(saleFilter.getCreatedAtFrom()))
                 .and(hasCreatedAtLessThan(saleFilter.getCreatedAtTo()))
-                .and(hasCustomerId(saleFilter.getCustomerId()));
+                .and(hasCustomerId(saleFilter.getCustomerId()))
+                .and(hasUserId(saleFilter.getUserId()));
     }
 
     private static Specification<Sale> hasCreatedAtGreaterThan(LocalDateTime createdAtFrom) {
@@ -39,5 +42,12 @@ public class SaleSpecification {
                 cb.conjunction()
                 :
                 cb.equal(root.get(CUSTOMER).get(ID), customerId);
+    }
+
+    private static Specification<Sale> hasUserId(String userId) {
+        return (root, query, cb) -> userId == null ?
+                cb.conjunction()
+                :
+                cb.equal(root.get(USER).get(ID), userId);
     }
 }

@@ -75,8 +75,6 @@ public class SecurityConfig {
             });
         });
 
-        System.out.println("CALLED 1");
-
         http.sessionManagement(sessions -> {
             sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         }).csrf(AbstractHttpConfigurer::disable);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
@@ -163,7 +164,7 @@ public class SaleControllerTests {
         this.setupUtility();
         this.mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.webApplicationContext)
-                .apply(springSecurity()) // Add Spring Security support
+                .apply(springSecurity())
                 .build();
 
 
@@ -611,6 +612,44 @@ public class SaleControllerTests {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.content[0].service")
                                 .value("SALE")
+                );
+    }
+
+    @Test
+    public void getSales_shouldFilterByUserId_status200() throws Exception {
+        SaleResponseDto saleResponseDto = createSaleObject();
+        String id = saleResponseDto.getId();
+
+        // create another user
+        UserDto user2 = new UserDto();
+        user2.setUsername("Sales Person B");
+        user2.setEmail("admin2@example.com");
+
+        String json =  objectMapper.writeValueAsString(user2);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+        ).andReturn();
+
+        user2.setId(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id"));
+
+        this.mockMvc.perform(
+                get("/sales?page=0&userId=" + user2.getId())
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+        )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isEmpty()
+                );
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&userId=" + userDto.getId())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isNotEmpty()
                 );
     }
 }
