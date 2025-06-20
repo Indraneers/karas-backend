@@ -103,7 +103,6 @@ public class SaleControllerTests {
 
     public void setupProducts() throws Exception {
         for (ProductRequestDto productRequestDto : productRequestDtos) {
-            System.out.println(productRequestDto.getName());
             String json = objectMapper.writeValueAsString(productRequestDto);
             MockMultipartFile file = new MockMultipartFile(
                     "data",
@@ -454,8 +453,6 @@ public class SaleControllerTests {
                         .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn().getResponse().getContentAsString();
 
-        System.out.println(json);
-
         this.mockMvc.perform(
                 get("/customers/" + customerDto.getId() + "/sales?page=" + 0)
                         .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
@@ -646,6 +643,136 @@ public class SaleControllerTests {
 
         this.mockMvc.perform(
                         get("/sales?page=0&userId=" + userDto.getId())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isNotEmpty()
+                );
+    }
+
+    @Test
+    public void getSales_shouldFilterByCustomerId_status200() throws Exception {
+        SaleResponseDto saleResponseDto = createSaleObject();
+        String id = saleResponseDto.getId();
+
+        // create another Customer
+        CustomerDto customer2 = new CustomerDto();
+
+        customer2.setName("Car Person B");
+        customer2.setNote("NOOOO DISCOUNT");
+
+
+        String json =  objectMapper.writeValueAsString(customer2);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/customers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+        ).andReturn();
+
+        customer2.setId(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id"));
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&customerId=" + customer2.getId())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isEmpty()
+                );
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&customerId=" + customerDto.getId())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isNotEmpty()
+                );
+    }
+
+    @Test
+    public void getSales_shouldFilterByVehicleId_status200() throws Exception {
+        SaleResponseDto saleResponseDto = createSaleObject();
+        String id = saleResponseDto.getId();
+
+        // create another Vehicle
+        VehicleDto vehicle2 = new VehicleDto();
+
+        vehicle2.setCustomer(customerDto);
+        vehicle2.setEngineNo("Engine No 2");
+        vehicle2.setMakeAndModel("Toyota Camry 2025 Hybrid");
+        vehicle2.setMileage(75000);
+        vehicle2.setNote("Give it a bath next time!");
+        vehicle2.setPlateNumber("126 - 610");
+        vehicle2.setVinNo("JX12345679");
+        vehicle2.setVehicleType(VehicleType.PASSENGER_CAR);
+
+
+        String json =  objectMapper.writeValueAsString(vehicle2);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/vehicles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+        ).andReturn();
+
+        vehicle2.setId(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id"));
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&vehicleId=" + vehicle2.getId())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isEmpty()
+                );
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&vehicleId=" + vehicleDto.getId())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isNotEmpty()
+                );
+    }
+
+    @Test
+    public void getSales_shouldFilterByPaymentType_status200() throws Exception {
+        SaleResponseDto saleResponseDto = createSaleObject();
+        String id = saleResponseDto.getId();
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&paymentType=" + PaymentType.CASH.toString())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isEmpty()
+                );
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&paymentType=" + PaymentType.BANK.toString())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isNotEmpty()
+                );
+    }
+
+    @Test
+    public void getSales_shouldFilterBySaleStatus_status200() throws Exception {
+        SaleResponseDto saleResponseDto = createSaleObject();
+        String id = saleResponseDto.getId();
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&status=" + SaleStatus.HOLD.toString())
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.content").isEmpty()
+                );
+
+        this.mockMvc.perform(
+                        get("/sales?page=0&status=" + SaleStatus.PAID.toString())
                                 .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(

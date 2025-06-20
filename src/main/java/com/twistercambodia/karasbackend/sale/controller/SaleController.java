@@ -137,9 +137,6 @@ public class SaleController {
         String oldValueJSON = objectMapper.writeValueAsString(oldSaleResponseDto);
         String newValueJSON = objectMapper.writeValueAsString(saleResponseDto);
 
-        System.out.println(oldValueJSON);
-        System.out.println(newValueJSON);
-
         auditDTO.setOldValue(oldValueJSON);
         auditDTO.setNewValue(newValueJSON);
 
