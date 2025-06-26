@@ -2,6 +2,9 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
@@ -58,16 +61,40 @@ public class UnitControllerTests {
     SubcategoryRequestDto subcategoryRequestDto;
 
     private ProductRequestDto productRequestDto;
+    
+    private UserDto userDto;
 
     @BeforeEach
     public void setup() throws Exception {
         this.objectMapper = new ObjectMapper();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+        userDto.setEmail("admin@example.com");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                                .with(TestSecurityConfig.testJwt("admin", "USER", "ADMIN"))
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
+        
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName("Engine Oil");
 
-        String json = objectMapper.writeValueAsString(categoryDto);
+        json = objectMapper.writeValueAsString(categoryDto);
         MockMultipartFile file = new MockMultipartFile(
                 "data",
                 json,
@@ -75,12 +102,12 @@ public class UnitControllerTests {
                 json.getBytes()
         );
 
-        MvcResult mvcResult = this.mockMvc.perform(
+        mvcResult = this.mockMvc.perform(
                 multipart("/categories")
                         .file(file)
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         categoryDto.setId(id);
 

@@ -6,6 +6,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
 import com.twistercambodia.karasbackend.autoService.dto.AutoServiceDto;
+import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceDto;
 import com.twistercambodia.karasbackend.maintenance.dto.MaintenanceAutoServiceDto;
@@ -45,8 +46,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {KarasBackendApplication.class})
@@ -94,7 +97,32 @@ public class SaleMaintenanceIntegrationTest {
     @BeforeEach
     public void setup() throws Exception {
         this.setupObjectMapper();
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .apply(springSecurity())
+                .build();
+
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+        userDto.setEmail("admin@example.com");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                                .with(TestSecurityConfig.testJwt("admin", "USER", "ADMIN"))
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
 
         this.autoServiceDtos = new ArrayList<>();
 
@@ -102,15 +130,16 @@ public class SaleMaintenanceIntegrationTest {
         autoServiceOne.setName("Tire refill");
         autoServiceOne.setPrice(500);
 
-        String json = objectMapper.writeValueAsString(autoServiceOne);
+        json = objectMapper.writeValueAsString(autoServiceOne);
 
-        MvcResult mvcResult = this.mockMvc.perform(
+        mvcResult = this.mockMvc.perform(
                 post("/auto-services")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
-        String id =JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id =JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
         autoServiceOne.setId(id);
 
         autoServiceDtos.add(autoServiceOne);
@@ -130,24 +159,8 @@ public class SaleMaintenanceIntegrationTest {
                 post("/auto-services")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
-
-        this.userDto = new UserDto();
-
-        userDto.setUsername("Service Person A");
-        userDto.setRole(UserRole.ADMIN);
-
-        json = objectMapper.writeValueAsString(userDto);
-
-        mvcResult = this.mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-        ).andReturn();
-
-        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
-
-        userDto.setId(id);
 
         // Create Customer
         customerDto = new CustomerDto();
@@ -161,6 +174,7 @@ public class SaleMaintenanceIntegrationTest {
                 post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -185,6 +199,7 @@ public class SaleMaintenanceIntegrationTest {
                 post("/vehicles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -252,12 +267,14 @@ public class SaleMaintenanceIntegrationTest {
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn().getResponse().getContentAsString());
 
         this.mockMvc.perform(
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpectAll(
                 MockMvcResultMatchers.jsonPath("$.maintenance.mileage")
                         .value(maintenanceDto.getMileage()),
@@ -320,6 +337,7 @@ public class SaleMaintenanceIntegrationTest {
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String saleId = JsonPath.read(
@@ -357,6 +375,7 @@ public class SaleMaintenanceIntegrationTest {
                 put("/sales/" + saleId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpectAll(
                 MockMvcResultMatchers.jsonPath("$.maintenance.mileage")
                         .value(maintenanceDto.getMileage()),
