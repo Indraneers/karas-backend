@@ -85,7 +85,6 @@ public class RestockUnitIntegrationTest {
     }
 
     public void setupProducts(ProductRequestDto requestProductRequestDto) throws Exception {
-        System.out.println(requestProductRequestDto.getName());
         String json = objectMapper.writeValueAsString(requestProductRequestDto);
         MockMultipartFile file = new MockMultipartFile(
                 "data",
