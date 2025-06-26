@@ -2,6 +2,9 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,10 +55,37 @@ public class CustomerControllerTests {
 
     private MockMvc mockMvc;
 
+    private UserDto userDto;
+
     @BeforeEach
     public void setup() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .apply(springSecurity())
+                .build();
         this.objectMapper = new ObjectMapper();
+
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+        userDto.setEmail("admin@example.com");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                                .with(TestSecurityConfig.testJwt("admin", "USER", "ADMIN"))
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
     }
 
     @Test
@@ -70,6 +101,7 @@ public class CustomerControllerTests {
                 post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -84,6 +116,7 @@ public class CustomerControllerTests {
         // check if customer exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/customer?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -120,12 +153,14 @@ public class CustomerControllerTests {
                 post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         );
 
         this.mockMvc.perform(
                         post("/customers")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(
@@ -147,6 +182,7 @@ public class CustomerControllerTests {
                         post("/customers")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 ).andReturn();
 
        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -159,6 +195,7 @@ public class CustomerControllerTests {
                         put("/customers/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -173,6 +210,7 @@ public class CustomerControllerTests {
         // check if customer exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/customer?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -209,6 +247,7 @@ public class CustomerControllerTests {
                 post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -217,6 +256,7 @@ public class CustomerControllerTests {
 
         this.mockMvc.perform(
                         delete("/customers/" + id)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -231,6 +271,7 @@ public class CustomerControllerTests {
         // check if customer exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/customer?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
