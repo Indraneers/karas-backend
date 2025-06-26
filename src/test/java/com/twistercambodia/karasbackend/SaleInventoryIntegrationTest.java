@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
@@ -46,6 +47,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,7 +94,6 @@ public class SaleInventoryIntegrationTest {
     }
 
     public void setupProducts(ProductRequestDto requestProductRequestDto) throws Exception {
-        System.out.println(requestProductRequestDto.getName());
         String json = objectMapper.writeValueAsString(requestProductRequestDto);
         MockMultipartFile file = new MockMultipartFile(
                 "data",
@@ -104,6 +105,7 @@ public class SaleInventoryIntegrationTest {
         MvcResult mvcResult = this.mockMvc.perform(
                 multipart("/products")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -128,6 +130,7 @@ public class SaleInventoryIntegrationTest {
                     post("/units")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(json)
+                            .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
             ).andReturn();
 
             String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -147,12 +150,37 @@ public class SaleInventoryIntegrationTest {
     @BeforeEach
     public void setup() throws Exception {
         this.setupObjectMapper();
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .apply(springSecurity())
+                .build();
+
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+        userDto.setEmail("admin@example.com");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                                .with(TestSecurityConfig.testJwt("admin", "USER", "ADMIN"))
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
 
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName("Engine Oil");
 
-        String json = objectMapper.writeValueAsString(categoryDto);
+        json = objectMapper.writeValueAsString(categoryDto);
         MockMultipartFile file = new MockMultipartFile(
                 "data",
                 json,
@@ -160,12 +188,13 @@ public class SaleInventoryIntegrationTest {
                 json.getBytes()
         );
 
-        MvcResult mvcResult = this.mockMvc.perform(
+        mvcResult = this.mockMvc.perform(
                 multipart("/categories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         categoryDto.setId(id);
 
@@ -184,6 +213,7 @@ public class SaleInventoryIntegrationTest {
         mvcResult = this.mockMvc.perform(
                 multipart("/subcategories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -220,24 +250,6 @@ public class SaleInventoryIntegrationTest {
 
         this.setupProductsWithUnits(unitRequestDtoMocks);
 
-        // Create User
-        this.userDto = new UserDto();
-
-        userDto.setUsername("Service Person A");
-        userDto.setRole(UserRole.ADMIN);
-
-        json = objectMapper.writeValueAsString(userDto);
-
-        mvcResult = this.mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-        ).andReturn();
-
-        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
-
-        userDto.setId(id);
-
         // Create Customer
         customerDto = new CustomerDto();
 
@@ -250,6 +262,7 @@ public class SaleInventoryIntegrationTest {
                 post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -274,6 +287,7 @@ public class SaleInventoryIntegrationTest {
                 post("/vehicles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -301,6 +315,7 @@ public class SaleInventoryIntegrationTest {
                 post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 status().isBadRequest()
         );
@@ -330,6 +345,7 @@ public class SaleInventoryIntegrationTest {
         this.mockMvc.perform(
                 multipart("/products")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 status().isBadRequest()
         );
@@ -354,6 +370,7 @@ public class SaleInventoryIntegrationTest {
                 post("/units")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 status().isBadRequest()
         );
@@ -378,6 +395,7 @@ public class SaleInventoryIntegrationTest {
                 put("/units/" + invalidUnitRequestDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
             ).andExpect(
                 status().isBadRequest()
         );
@@ -419,12 +437,14 @@ public class SaleInventoryIntegrationTest {
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         );
 
         this.mockMvc.perform(
                 get("/units/" + unitRequestDtos.get(0).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
                         .value(unitRequestDtos.get(0).getQuantity() - 10)
@@ -434,6 +454,7 @@ public class SaleInventoryIntegrationTest {
                 get("/units/" + unitRequestDtos.get(1).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
                         .value(unitRequestDtos.get(1).getQuantity() - 20)
@@ -476,6 +497,7 @@ public class SaleInventoryIntegrationTest {
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         itemRequestDtos.get(0).setQuantity(20);
@@ -491,12 +513,14 @@ public class SaleInventoryIntegrationTest {
                 put("/sales/" + saleId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         );
 
         this.mockMvc.perform(
                 get("/units/" + unitRequestDtos.get(0).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
                         .value(unitRequestDtos.get(0).getQuantity() - 20)
@@ -548,6 +572,7 @@ public class SaleInventoryIntegrationTest {
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String saleId = JsonPath.read(
@@ -556,12 +581,14 @@ public class SaleInventoryIntegrationTest {
 
         this.mockMvc.perform(
                 delete("/sales/" + saleId)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         );
 
         this.mockMvc.perform(
                 get("/units/" + unitRequestDtos.get(0).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
                         .value(unitRequestDtos.get(0).getQuantity())
@@ -571,6 +598,7 @@ public class SaleInventoryIntegrationTest {
                 get("/units/" + unitRequestDtos.get(1).getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.quantity")
                         .value(unitRequestDtos.get(1).getQuantity())
