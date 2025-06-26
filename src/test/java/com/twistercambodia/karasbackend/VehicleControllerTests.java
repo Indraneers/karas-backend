@@ -2,6 +2,9 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
@@ -35,6 +38,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,25 +67,54 @@ public class VehicleControllerTests {
 
     private CustomerDto customerDto;
 
+    private UserDto userDto;
+
     @BeforeEach
     public void setup() throws Exception {
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .apply(springSecurity())
+                .build();
+
         this.objectMapper = new ObjectMapper();
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+        userDto.setEmail("admin@example.com");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                                .with(TestSecurityConfig.testJwt("admin", "USER", "ADMIN"))
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
 
         customerDto = new CustomerDto();
 
         customerDto.setName("Car Person A");
         customerDto.setNote("Give them a discount next time!");
 
-        String json = objectMapper.writeValueAsString(customerDto);
+        json = objectMapper.writeValueAsString(customerDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(
+        mvcResult = this.mockMvc.perform(
                 post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         customerDto.setId(id);
     }
@@ -105,6 +138,7 @@ public class VehicleControllerTests {
                         post("/vehicles")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -143,6 +177,7 @@ public class VehicleControllerTests {
         // check if category exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/vehicle?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -185,12 +220,14 @@ public class VehicleControllerTests {
                         post("/vehicles")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 );
 
         this.mockMvc.perform(
                         post("/vehicles")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
@@ -217,6 +254,7 @@ public class VehicleControllerTests {
                 post("/vehicles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -237,6 +275,7 @@ public class VehicleControllerTests {
                         put("/vehicles/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -275,6 +314,7 @@ public class VehicleControllerTests {
         // check if category exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/vehicle?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -317,12 +357,14 @@ public class VehicleControllerTests {
                 post("/vehicles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         this.mockMvc.perform(
                         delete("/vehicles/" + id)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -361,6 +403,7 @@ public class VehicleControllerTests {
         // check if category exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/vehicle?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
