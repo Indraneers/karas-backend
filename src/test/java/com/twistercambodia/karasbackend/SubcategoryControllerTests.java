@@ -2,6 +2,9 @@ package com.twistercambodia.karasbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.twistercambodia.karasbackend.auth.dto.UserDto;
+import com.twistercambodia.karasbackend.auth.entity.UserRole;
+import com.twistercambodia.karasbackend.config.TestSecurityConfig;
 import com.twistercambodia.karasbackend.inventory.dto.CategoryDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
@@ -27,6 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,15 +59,43 @@ public class SubcategoryControllerTests {
 
     private CategoryDto categoryDto;
 
+    private UserDto userDto;
+
     @BeforeEach
     public void setup() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .apply(springSecurity())
+                .build();
+
         this.objectMapper = new ObjectMapper();
+
+        // Create User
+        this.userDto = new UserDto();
+
+        userDto.setUsername("Service Person A");
+        userDto.setRole(UserRole.ADMIN);
+        userDto.setEmail("admin@example.com");
+
+        String json = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                                .with(TestSecurityConfig.testJwt("admin", "USER", "ADMIN"))
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+
+        userDto.setId(id);
 
         categoryDto = new CategoryDto();
         categoryDto.setName("Engine Oil");
 
-        String json = objectMapper.writeValueAsString(categoryDto);
+        json = objectMapper.writeValueAsString(categoryDto);
         MockMultipartFile file = new MockMultipartFile(
                 "data",
                 json,
@@ -71,12 +103,14 @@ public class SubcategoryControllerTests {
                 json.getBytes()
         );
 
-        MvcResult mvcResult = this.mockMvc.perform(
+        mvcResult = this.mockMvc.perform(
                 multipart("/categories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+
         ).andReturn();
 
-        String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
+        id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         categoryDto.setId(id);
     }
@@ -99,6 +133,7 @@ public class SubcategoryControllerTests {
         this.mockMvc.perform(
                         multipart("/subcategories")
                                 .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -110,6 +145,7 @@ public class SubcategoryControllerTests {
                         get("/categories/" + categoryDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.subcategoryCount")
@@ -123,6 +159,7 @@ public class SubcategoryControllerTests {
         // check if subcategory exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/subcategory?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -164,11 +201,13 @@ public class SubcategoryControllerTests {
         this.mockMvc.perform(
                 multipart("/subcategories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         );
 
         this.mockMvc.perform(
                         multipart("/subcategories")
                                 .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(
@@ -180,6 +219,7 @@ public class SubcategoryControllerTests {
                         get("/categories/" + categoryDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.subcategoryCount")
@@ -205,6 +245,7 @@ public class SubcategoryControllerTests {
         MvcResult mvcResult = this.mockMvc.perform(
                 multipart("/subcategories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -225,6 +266,7 @@ public class SubcategoryControllerTests {
                         multipart("/subcategories/" + id)
                                 .file(file)
                                 .with(req -> { req.setMethod("PUT"); return req; })
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -249,6 +291,7 @@ public class SubcategoryControllerTests {
         // check if subcategory exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/subcategory?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -290,6 +333,7 @@ public class SubcategoryControllerTests {
         MvcResult mvcResult = this.mockMvc.perform(
                 multipart("/subcategories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -298,6 +342,7 @@ public class SubcategoryControllerTests {
 
         this.mockMvc.perform(
                         delete("/subcategories/" + id)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -318,6 +363,7 @@ public class SubcategoryControllerTests {
         // check if subcategory exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/subcategory?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
