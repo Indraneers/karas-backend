@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +68,10 @@ public class UnitControllerTests {
     @BeforeEach
     public void setup() throws Exception {
         this.objectMapper = new ObjectMapper();
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .apply(springSecurity())
+                .build();
 
         // Create User
         this.userDto = new UserDto();
@@ -105,6 +109,7 @@ public class UnitControllerTests {
         mvcResult = this.mockMvc.perform(
                 multipart("/categories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -126,6 +131,7 @@ public class UnitControllerTests {
         mvcResult = this.mockMvc.perform(
                 multipart("/subcategories")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -148,6 +154,7 @@ public class UnitControllerTests {
         mvcResult = this.mockMvc.perform(
                 multipart("/products")
                         .file(file)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -171,6 +178,7 @@ public class UnitControllerTests {
                         post("/units")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -194,6 +202,7 @@ public class UnitControllerTests {
                         get("/products/" + productRequestDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.unitCount")
@@ -203,6 +212,7 @@ public class UnitControllerTests {
         // check if subcategory exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/unit?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -241,6 +251,7 @@ public class UnitControllerTests {
                 post("/units")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
@@ -258,6 +269,7 @@ public class UnitControllerTests {
                         put("/units/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -280,6 +292,7 @@ public class UnitControllerTests {
         // check if unit exists in audit
         this.mockMvc.perform(
                         get("/audits/audit-service/unit?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -318,14 +331,16 @@ public class UnitControllerTests {
                 post("/units")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
         ).andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
         this.mockMvc.perform(
-                        delete("/audits/audit-service/units/" + id)
+                        delete("/units/" + id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -349,6 +364,7 @@ public class UnitControllerTests {
                         get("/products/" + productRequestDto.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.unitCount")
@@ -357,7 +373,8 @@ public class UnitControllerTests {
 
         // check if unit exists in audit
         this.mockMvc.perform(
-                        get("/audits/unit?page=0")
+                        get("/audits/audit-service/unit?page=0")
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
