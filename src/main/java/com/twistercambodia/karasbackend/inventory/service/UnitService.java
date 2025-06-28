@@ -11,11 +11,17 @@ import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.inventory.exception.InvalidVariableUnit;
 import com.twistercambodia.karasbackend.inventory.repository.UnitRepository;
 import com.twistercambodia.karasbackend.sale.entity.Item;
+import com.twistercambodia.karasbackend.storage.service.StorageService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,11 +31,17 @@ public class UnitService {
     private final UnitRepository unitRepository;
     private final ProductService productService;
     private final ModelMapper modelMapper;
+    private final StorageService storageService;
 
-    public UnitService(UnitRepository unitRepository, ProductService productService, ModelMapper modelMapper) {
+    public UnitService(
+            UnitRepository unitRepository,
+            ProductService productService,
+            ModelMapper modelMapper,
+            StorageService storageService) {
         this.unitRepository = unitRepository;
         this.productService = productService;
         this.modelMapper = modelMapper;
+        this.storageService = storageService;
     }
 
     public Page<Unit> findAll(String query, String productId, int page) {
@@ -45,7 +57,8 @@ public class UnitService {
                 .orElseThrow(() -> new NotFoundException("Unit Not Found with ID=" + id));
     }
 
-    public Unit create(UnitRequestDto unitRequestDto) {
+    @Transactional
+    public Unit create(UnitRequestDto unitRequestDto, MultipartFile image) throws IOException {
         Unit unit = this.convertToUnit(unitRequestDto);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
@@ -57,10 +70,19 @@ public class UnitService {
             throw new InvalidVariableUnit();
         }
 
-        return this.unitRepository.save(unit);
+        // save unit first
+        unit = this.unitRepository.save(unit);
+
+        if (image != null) {
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            unit.setImg(uploadUnitImg(unit.getId(), ext, image.getInputStream()));
+            unit = this.unitRepository.save(unit);
+        }
+
+        return unit;
     }
 
-    public Unit update(String id, UnitRequestDto unitRequestDto) throws RuntimeException {
+    public Unit update(String id, UnitRequestDto unitRequestDto, MultipartFile image) throws RuntimeException, IOException {
         Unit unit = findByIdOrThrowError(id);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
@@ -83,6 +105,11 @@ public class UnitService {
         unit.setToBaseUnit(unitRequestDto.getToBaseUnit());
         unit.setProduct(product);
 
+        if (image != null) {
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            unit.setImg(uploadUnitImg(unit.getId(), ext, image.getInputStream()));
+        }
+
         return this.unitRepository.save(unit);
     }
 
@@ -94,18 +121,40 @@ public class UnitService {
     }
 
     public UnitResponseDto convertToUnitDto(Unit unit) {
-        return new UnitResponseDto(unit);
+        UnitResponseDto unitDto = new UnitResponseDto(unit);
+        if (!unitDto.getImg().isEmpty()) {
+            unitDto.setImg(
+                    storageService.generatePresignedUrl(
+                            unitDto.getImg(),
+                            Duration.ofHours(1)
+                    )
+            );
+        }
+        return unitDto;
     }
 
     public List<UnitResponseDto> convertToUnitDto(List<Unit> units) {
         return units
                 .stream()
-                .map(UnitResponseDto::new)
+                .map(this::convertToUnitDto)
                 .collect(Collectors.toList());
     }
 
     public Unit convertToUnit(UnitRequestDto unitRequestDto) {
         return modelMapper.map(unitRequestDto, Unit.class);
+    }
+
+    public String getUnitImgUrl(String objectName, String ext) {
+        return "/products/" + objectName + "." + ext;
+    }
+
+    public String uploadUnitImg(String id, String ext, InputStream inputStream) {
+        String filename = getUnitImgUrl(id, ext);
+        storageService.uploadFile(
+                filename,
+                inputStream
+        );
+        return filename;
     }
 
     public void batchStockUpdate(List<Item> items, StockUpdate stockUpdate) {

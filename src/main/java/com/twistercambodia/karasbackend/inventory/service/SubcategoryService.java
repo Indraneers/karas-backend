@@ -107,8 +107,7 @@ public class SubcategoryService {
         String filename = getSubcategoryIcon(id);
         storageService.uploadFile(
                 filename,
-                inputStream,
-                "image/svg+xml"
+                inputStream
         );
         return filename;
     }

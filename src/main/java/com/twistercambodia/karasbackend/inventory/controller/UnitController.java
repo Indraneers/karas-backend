@@ -8,6 +8,7 @@ import com.twistercambodia.karasbackend.audit.entity.HttpMethod;
 import com.twistercambodia.karasbackend.audit.entity.ServiceEnum;
 import com.twistercambodia.karasbackend.audit.service.AuditService;
 import com.twistercambodia.karasbackend.auth.entity.User;
+import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductResponseDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.UnitResponseDto;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,11 +61,12 @@ public class UnitController {
     }
 
     @PostMapping
-    public UnitResponseDto createUnit(
-            @RequestBody UnitRequestDto unitRequestDto,
+    public UnitResponseDto create(
+            @RequestPart(name = "data", required = true) UnitRequestDto unitRequestDto,
+            @RequestParam(name = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
-        Unit unit = this.unitService.create(unitRequestDto);
+        Unit unit = this.unitService.create(unitRequestDto, file);
         this.logger.info("Creating unit={}", unit);
 
         UnitResponseDto unitResponseDto =
@@ -95,15 +98,16 @@ public class UnitController {
     }
 
     @PutMapping("{id}")
-    public UnitResponseDto updateUnit(
-            @RequestBody UnitRequestDto unitRequestDto,
+    public UnitResponseDto update(
+            @RequestPart(name = "data", required = true) UnitRequestDto unitRequestDto,
+            @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id,
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {
         Unit oldUnit = this.unitService.findByIdOrThrowError(id);
         UnitResponseDto oldUnitResponseDto = this.unitService.convertToUnitDto(oldUnit);
 
-        Unit unit = this.unitService.update(id, unitRequestDto);
+        Unit unit = this.unitService.update(id, unitRequestDto, file);
         this.logger.info("Updating unit={}", unit);
 
         UnitResponseDto unitResponseDto =
@@ -136,7 +140,7 @@ public class UnitController {
     }
 
     @DeleteMapping("{id}")
-    public UnitResponseDto deleteUnit(
+    public UnitResponseDto delete(
             @PathVariable("id") String id,
             @AuthenticationPrincipal Jwt jwt
     ) throws RuntimeException, IOException {

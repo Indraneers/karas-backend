@@ -12,6 +12,7 @@ public class UnitResponseDto {
     private String subcategory;
     private String subcategoryImg;
     private String category;
+    private String img;
     private int price;
     private long toBaseUnit;
 
@@ -29,6 +30,7 @@ public class UnitResponseDto {
         this.category = unit.getCategoryName();
         this.price = unit.getPrice();
         this.toBaseUnit = unit.getToBaseUnit();
+        this.img = unit.getImg();
     }
 
     public String getId() {
@@ -109,5 +111,13 @@ public class UnitResponseDto {
 
     public void setToBaseUnit(long toBaseUnit) {
         this.toBaseUnit = toBaseUnit;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

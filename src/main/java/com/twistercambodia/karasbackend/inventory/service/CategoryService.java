@@ -49,7 +49,8 @@ public class CategoryService {
         Category category = this.convertToCategory(categoryDto);
         category = this.categoryRepository.save(category);
         if (image != null) {
-            category.setImg(uploadCategoryIcon(category.getId(), image.getInputStream()));
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            category.setImg(uploadCategoryIcon(category.getId(), ext, image.getInputStream()));
             category = this.categoryRepository.save(category);
         }
         return category;
@@ -60,8 +61,8 @@ public class CategoryService {
         Category category = findByIdOrThrowError(id);
 
         if (image != null) {
-            System.out.println("UPDATE");
-            category.setImg(uploadCategoryIcon(category.getId(), image.getInputStream()));
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            category.setImg(uploadCategoryIcon(category.getId(), ext, image.getInputStream()));
         }
 
         category.setName(categoryDto.getName());
@@ -96,16 +97,16 @@ public class CategoryService {
         return modelMapper.map(categoryDto, Category.class);
     }
 
-    public String getCategoryIcon(String id) {
-        return "/categories/" + id + "-" + System.currentTimeMillis() + ".svg";
+    public String getCategoryIcon(String id, String ext) {
+
+        return "/categories/" + id + '.' + ext;
     }
 
-    public String uploadCategoryIcon(String id, InputStream inputStream) {
-        String filename = getCategoryIcon(id);
+    public String uploadCategoryIcon(String id, String ext, InputStream inputStream) {
+        String filename = getCategoryIcon(id, ext);
         storageService.uploadFile(
                 filename,
-                inputStream,
-                "image/svg+xml"
+                inputStream
         );
         return filename;
     }

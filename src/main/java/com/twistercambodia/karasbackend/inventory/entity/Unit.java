@@ -32,6 +32,9 @@ public class Unit {
     @Column
     private long toBaseUnit;
 
+    @Column
+    private String img;
+
     @Transient
     public String getSubcategoryName() {
         return product.getSubcategory() != null ? product.getSubcategory().getName() : "";
@@ -102,6 +105,22 @@ public class Unit {
         this.toBaseUnit = toBaseUnit;
     }
 
+    public List<RestockItem> getRestockItems() {
+        return restockItems;
+    }
+
+    public void setRestockItems(List<RestockItem> restockItems) {
+        this.restockItems = restockItems;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
@@ -110,6 +129,7 @@ public class Unit {
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", toBaseUnit=" + toBaseUnit +
+                ", img='" + img + '\'' +
                 '}';
     }
 }

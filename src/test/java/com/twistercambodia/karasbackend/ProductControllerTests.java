@@ -13,8 +13,11 @@ import com.twistercambodia.karasbackend.storage.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -28,11 +31,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -61,6 +70,9 @@ public class ProductControllerTests {
     private SubcategoryRequestDto subcategoryRequestDto;
 
     private UserDto userDto;
+
+    @Value("${minio.url}")
+    private String minioUrl;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -363,4 +375,74 @@ public class ProductControllerTests {
                                 .value("PRODUCT")
                 );
     }
+
+//    @Test
+//    void createAndUpdateProduct_ShouldUploadImage_status200() throws Exception {
+//        ProductRequestDto productRequestDto = new ProductRequestDto();
+//
+//        productRequestDto.setName("Twister Engine Oil A");
+//        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
+//
+//        String json = objectMapper.writeValueAsString(productRequestDto);
+//        MockMultipartFile data = new MockMultipartFile(
+//                "data",
+//                json,
+//                String.valueOf(MediaType.APPLICATION_JSON),
+//                json.getBytes()
+//        );
+//
+//        // assert image existence
+//        ClassPathResource imageResource = new ClassPathResource("256x256.jpg");
+//        byte[] imageBytes = StreamUtils.copyToByteArray(imageResource.getInputStream());
+//
+//        assertNotNull(imageBytes);
+//        assertTrue(imageBytes.length > 0);
+//
+//        // put it in a file
+//        MockMultipartFile file = new MockMultipartFile(
+//                "file",
+//                "256x256.jpg",
+//                "image/jpeg",
+//                getClass().getClassLoader().getResourceAsStream("256x256.jpg")
+//        );
+//
+//        // send post request
+//        json = this.mockMvc.perform(
+//                multipart("/products")
+//                        .file(file)
+//                        .file(data)
+//                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+//        )
+//                .andExpect(status().isOk())
+//                .andExpect(
+//                        MockMvcResultMatchers.jsonPath("$.subcategory.id")
+//                                .value((productRequestDto.getSubcategoryId()))
+//                )
+//                .andExpect(
+//                        MockMvcResultMatchers.jsonPath("$.name")
+//                                .value((productRequestDto.getName()))
+//                )
+//                .andExpect(
+//                        MockMvcResultMatchers.jsonPath("$.img").isNotEmpty()
+//                )
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString();
+//
+//        String imageUrl = minioUrl + JsonPath.read(json, "$.img");
+//
+//        System.out.println(imageUrl);
+//
+//        // Then fetch the actual image
+//        byte[] downloadedImage = mockMvc.perform(get(imageUrl))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.IMAGE_JPEG))
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsByteArray();
+//
+//        // Compare with original
+//        byte[] originalImage = new ClassPathResource("256x256.jpg").getInputStream().readAllBytes();
+//        assertArrayEquals(originalImage, downloadedImage);
+//    }
 }
