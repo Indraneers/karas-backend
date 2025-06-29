@@ -118,7 +118,7 @@ public class ProductService {
 
     public ProductResponseDto convertToProductDto(Product product) {
         ProductResponseDto productResponseDto = modelMapper.map(product, ProductResponseDto.class);
-        if (!product.getImg().isEmpty()) {
+        if (product.getImg() != null && !product.getImg().isEmpty()) {
             productResponseDto.setImg(
                     storageService.generatePresignedUrl(
                             product.getImg(),

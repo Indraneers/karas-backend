@@ -130,7 +130,7 @@ public class UnitService {
 
     public UnitResponseDto convertToUnitDto(Unit unit) {
         UnitResponseDto unitDto = new UnitResponseDto(unit);
-        if (!unitDto.getImg().isEmpty()) {
+        if (unitDto.getImg() != null && !unitDto.getImg().isEmpty()) {
             unitDto.setImg(
                     storageService.generatePresignedUrl(
                             unitDto.getImg(),
