@@ -97,6 +97,10 @@ public class ProductService {
 
         if (image != null) {
             String ext = storageService.getExtension(image.getOriginalFilename());
+            String oldExt = storageService.getExtension(product.getImg());
+            if (!ext.equals(oldExt)) {
+                deleteProductImg(product.getImg());
+            }
             product.setImg(uploadProductImg(product.getId(), ext, image.getInputStream()));
         }
 

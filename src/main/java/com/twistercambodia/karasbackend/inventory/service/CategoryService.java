@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,8 +51,10 @@ public class CategoryService {
         category = this.categoryRepository.save(category);
         if (image != null) {
             String ext = storageService.getExtension(image.getOriginalFilename());
-            category.setImg(uploadCategoryIcon(category.getId(), ext, image.getInputStream()));
-            category = this.categoryRepository.save(category);
+            if (ext == "svg") {
+                category.setImg(uploadCategoryIcon(category.getId(), image.getInputStream()));
+                category = this.categoryRepository.save(category);
+            }
         }
         return category;
     }
@@ -62,7 +65,9 @@ public class CategoryService {
 
         if (image != null) {
             String ext = storageService.getExtension(image.getOriginalFilename());
-            category.setImg(uploadCategoryIcon(category.getId(), ext, image.getInputStream()));
+            if (ext == "svg") {
+                category.setImg(uploadCategoryIcon(category.getId(), image.getInputStream()));
+            }
         }
 
         category.setName(categoryDto.getName());
@@ -83,13 +88,23 @@ public class CategoryService {
 
 
     public CategoryDto convertToCategoryDto(Category category) {
-        return modelMapper.map(category, CategoryDto.class);
+        CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
+        if (!category.getImg().isEmpty()) {
+            categoryDto.setImg(
+                    storageService.generatePresignedUrl(
+                            category.getImg(),
+                            Duration.ofHours(1)
+                    )
+            );
+        }
+
+        return categoryDto;
     }
 
     public List<CategoryDto> convertToCategoryDto(List<Category> categories) {
         return categories
                 .stream()
-                .map((category) -> modelMapper.map(category, CategoryDto.class))
+                .map(this::convertToCategoryDto)
                 .collect(Collectors.toList());
     }
 
@@ -97,13 +112,13 @@ public class CategoryService {
         return modelMapper.map(categoryDto, Category.class);
     }
 
-    public String getCategoryIcon(String id, String ext) {
+    public String getCategoryIcon(String id) {
 
-        return "/categories/" + id + '.' + ext;
+        return "/categories/" + id + ".svg";
     }
 
-    public String uploadCategoryIcon(String id, String ext, InputStream inputStream) {
-        String filename = getCategoryIcon(id, ext);
+    public String uploadCategoryIcon(String id, InputStream inputStream) {
+        String filename = getCategoryIcon(id);
         storageService.uploadFile(
                 filename,
                 inputStream

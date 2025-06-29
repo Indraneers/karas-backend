@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +53,11 @@ public class SubcategoryService {
         Subcategory subcategory = this.convertToSubcategory(subcategoryRequestDto);
         subcategory = this.subcategoryRepository.save(subcategory);
         if (image != null) {
-            subcategory.setImg(uploadSubcategoryIcon(subcategory.getId(), image.getInputStream()));
-            subcategory = this.subcategoryRepository.save(subcategory);
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            if (ext == "svg") {
+                subcategory.setImg(uploadSubcategoryIcon(subcategory.getId(), image.getInputStream()));
+                subcategory = this.subcategoryRepository.save(subcategory);
+            }
         }
 
         return subcategory;
@@ -65,7 +69,10 @@ public class SubcategoryService {
         Category category = categoryService.findByIdOrThrowError(subcategoryRequestDto.getCategoryId());
 
         if (image != null) {
-            subcategory.setImg(uploadSubcategoryIcon(subcategory.getId(), image.getInputStream()));
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            if (ext.equals("svg")) {
+                subcategory.setImg(uploadSubcategoryIcon(subcategory.getId(), image.getInputStream()));
+            }
         }
 
         subcategory.setName(subcategoryRequestDto.getName());
@@ -85,13 +92,18 @@ public class SubcategoryService {
     }
 
     public SubcategoryResponseDto convertToSubcategoryDto(Subcategory subcategory) {
-        return new SubcategoryResponseDto(subcategory);
+        SubcategoryResponseDto subcategoryResponseDto =  new SubcategoryResponseDto(subcategory);
+        if (subcategory.getImg() != null && !subcategory.getImg().isEmpty()) {
+            subcategoryResponseDto.setImg(
+                    storageService.generatePresignedUrl(subcategory.getImg(), Duration.ofHours(1)));
+        }
+        return subcategoryResponseDto;
     }
 
     public List<SubcategoryResponseDto> convertToSubcategoryDto(List<Subcategory> subcategories) {
         return subcategories
                 .stream()
-                .map(SubcategoryResponseDto::new)
+                .map(this::convertToSubcategoryDto)
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +112,7 @@ public class SubcategoryService {
     }
 
     public String getSubcategoryIcon(String id) {
-        return "/subcategories/" + id + "-" + System.currentTimeMillis() + ".svg";
+        return "/subcategories/" + id + ".svg";
     }
 
     public String uploadSubcategoryIcon(String id, InputStream inputStream) {

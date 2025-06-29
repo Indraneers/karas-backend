@@ -107,6 +107,10 @@ public class UnitService {
 
         if (image != null) {
             String ext = storageService.getExtension(image.getOriginalFilename());
+            String oldExt = storageService.getExtension(unit.getImg());
+            if (!ext.equals(oldExt)) {
+                deleteUnitIcon(unit.getImg());
+            }
             unit.setImg(uploadUnitImg(unit.getId(), ext, image.getInputStream()));
         }
 
@@ -115,8 +119,12 @@ public class UnitService {
 
     public Unit delete(String id) throws RuntimeException {
         Unit unit = this.findByIdOrThrowError(id);
-
         this.unitRepository.delete(unit);
+
+        if (!unit.getImg().isEmpty()) {
+            deleteUnitIcon(unit.getImg());
+        }
+
         return unit;
     }
 
@@ -190,5 +198,11 @@ public class UnitService {
         }
 
         return unit;
+    }
+
+    public void deleteUnitIcon(String filename) {
+        storageService.deleteFile(
+                filename
+        );
     }
 }

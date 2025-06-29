@@ -4,9 +4,11 @@ import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;
 import jakarta.annotation.PostConstruct;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
@@ -17,12 +19,14 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class StorageService {
     private final MinioClient minioClient;
+    private final Tika tika;
 
     @Value("${minio.bucket.name}")
     private String bucketName;
 
     public StorageService(MinioClient minioClient) {
         this.minioClient = minioClient;
+        this.tika = new Tika();
     }
 
     @PostConstruct  // Runs after dependency injection is complete
@@ -68,16 +72,21 @@ public class StorageService {
 
     public void uploadFile(String fileName, InputStream inputStream) {
         try {
+            // Read the stream fully into memory
+            byte[] data = inputStream.readAllBytes();
+            String contentType = tika.detect(new ByteArrayInputStream(data), fileName);
+
             minioClient.putObject(
                     PutObjectArgs
                             .builder()
                             .bucket(bucketName)
                             .object(fileName)
                             .stream(
-                                    inputStream,
-                                    inputStream.available(),
+                                    new ByteArrayInputStream(data),
+                                    data.length, // Exact size
                                     -1
                             )
+                            .contentType(contentType)
                             .build()
             );
         } catch (Exception e) {
