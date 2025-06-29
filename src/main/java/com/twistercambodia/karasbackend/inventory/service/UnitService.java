@@ -138,6 +138,16 @@ public class UnitService {
                     )
             );
         }
+
+        if (unitDto.getSubcategoryImg() != null && !unitDto.getSubcategoryImg().isEmpty()) {
+            unitDto.setSubcategoryImg(
+                    storageService.generatePresignedUrl(
+                            unitDto.getSubcategoryImg(),
+                            Duration.ofHours(1)
+                    )
+            );
+        }
+
         return unitDto;
     }
 
