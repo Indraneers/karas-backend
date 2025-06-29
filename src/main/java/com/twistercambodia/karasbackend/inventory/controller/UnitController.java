@@ -50,7 +50,7 @@ public class UnitController {
             @RequestParam(value = "page", required = true) int page
     ) {
         return this.unitService.findAll(q, productId, page)
-                .map(UnitResponseDto::new);
+                .map(this.unitService::convertToUnitDto);
     }
 
     @GetMapping("{id}")

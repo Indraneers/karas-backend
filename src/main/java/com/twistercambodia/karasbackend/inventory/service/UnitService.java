@@ -108,7 +108,7 @@ public class UnitService {
         if (image != null) {
             String ext = storageService.getExtension(image.getOriginalFilename());
             String oldExt = storageService.getExtension(unit.getImg());
-            if (!ext.equals(oldExt)) {
+            if (oldExt != null && !oldExt.isEmpty() && !ext.equals(oldExt)) {
                 deleteUnitIcon(unit.getImg());
             }
             unit.setImg(uploadUnitImg(unit.getId(), ext, image.getInputStream()));
@@ -153,7 +153,7 @@ public class UnitService {
     }
 
     public String getUnitImgUrl(String objectName, String ext) {
-        return "/products/" + objectName + "." + ext;
+        return "/units/" + objectName + "." + ext;
     }
 
     public String uploadUnitImg(String id, String ext, InputStream inputStream) {
