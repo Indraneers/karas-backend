@@ -20,7 +20,12 @@ public interface SaleRepository extends CrudRepository<Sale, Long>, JpaSpecifica
 
     @Query("""
         SELECT DATE(s.createdAt) AS date, 
-               SUM((i.price * i.quantity) - i.discount) AS totalRevenue
+               SUM(
+                   CASE 
+                       WHEN i.unit.product.variable = true THEN i.price * (i.quantity / 1000)
+                       ELSE i.price * (i.quantity / i.unit.toBaseUnit)
+                   END - i.discount
+               ) AS totalRevenue
         FROM Sale s 
         JOIN s.items i 
         WHERE s.createdAt >= :startDate
@@ -28,4 +33,5 @@ public interface SaleRepository extends CrudRepository<Sale, Long>, JpaSpecifica
         ORDER BY date ASC
     """)
     List<Object[]> getDailyRevenue(@Param("startDate") LocalDateTime startDate);
+
 }
