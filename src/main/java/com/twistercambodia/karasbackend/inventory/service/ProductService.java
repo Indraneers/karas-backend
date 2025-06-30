@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -68,7 +69,8 @@ public class ProductService {
         product = this.productRepository.save(product);
 
         if (image != null) {
-            product.setImg(uploadProductImg(product.getId(), image.getInputStream()));
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            product.setImg(uploadProductImg(product.getId(), ext, image.getInputStream()));
             product = this.productRepository.save(product);
         }
         return product;
@@ -94,7 +96,12 @@ public class ProductService {
         product.setIdentifier(productRequestDto.getIdentifier());
 
         if (image != null) {
-            product.setImg(uploadProductImg(product.getId(), image.getInputStream()));
+            String ext = storageService.getExtension(image.getOriginalFilename());
+            String oldExt = storageService.getExtension(product.getImg());
+            if (oldExt != null && !oldExt.isEmpty() && !ext.equals(oldExt)) {
+                deleteProductImg(product.getImg());
+            }
+            product.setImg(uploadProductImg(product.getId(), ext, image.getInputStream()));
         }
 
         return this.productRepository.save(product);
@@ -110,13 +117,22 @@ public class ProductService {
     }
 
     public ProductResponseDto convertToProductDto(Product product) {
-        return modelMapper.map(product, ProductResponseDto.class);
+        ProductResponseDto productResponseDto = modelMapper.map(product, ProductResponseDto.class);
+        if (product.getImg() != null && !product.getImg().isEmpty()) {
+            productResponseDto.setImg(
+                    storageService.generatePresignedUrl(
+                            product.getImg(),
+                            Duration.ofHours(1)
+                    )
+            );
+        }
+        return productResponseDto;
     }
 
     public List<ProductResponseDto> convertToProductDto(List<Product> products) {
         return products
                 .stream()
-                .map((product) -> modelMapper.map(product, ProductResponseDto.class))
+                .map(this::convertToProductDto)
                 .collect(Collectors.toList());
     }
 
@@ -124,16 +140,15 @@ public class ProductService {
         return modelMapper.map(productRequestDto, Product.class);
     }
 
-    public String getProductImg(String id, String ext) {
-        return "/products/" + id + "-" + System.currentTimeMillis() + "." + ext;
+    public String getProductImgUrl(String objectName, String ext) {
+        return "/products/" + objectName + '.' + ext;
     }
 
-    public String uploadProductImg(String id, InputStream inputStream) {
-        String filename = getProductImg(id, "png");
+    public String uploadProductImg(String id, String ext, InputStream inputStream) {
+        String filename = getProductImgUrl(id, ext);
         storageService.uploadFile(
                 filename,
-                inputStream,
-                "image/png"
+                inputStream
         );
         return filename;
     }

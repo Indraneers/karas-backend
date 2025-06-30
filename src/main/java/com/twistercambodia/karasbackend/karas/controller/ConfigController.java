@@ -51,8 +51,7 @@ public class ConfigController {
             appConfig.setLogo("/karas/logo.png");
             storageService.uploadFile(
                     "/karas/logo.png",
-                    file.getInputStream(),
-                    "image/png"
+                    file.getInputStream()
             );
         }
         appConfig.setPhoneNumbers(karasAppConfig.getPhoneNumbers());

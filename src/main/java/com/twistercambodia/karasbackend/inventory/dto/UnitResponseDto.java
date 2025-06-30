@@ -8,10 +8,10 @@ public class UnitResponseDto {
     private String name;
     private long quantity;
     private ProductRequestDto product;
-    private String productImg;
     private String subcategory;
     private String subcategoryImg;
     private String category;
+    private String img;
     private int price;
     private long toBaseUnit;
 
@@ -23,12 +23,12 @@ public class UnitResponseDto {
         this.name = unit.getName();
         this.quantity = unit.getQuantity();
         this.product = mapper.map(unit.getProduct(), ProductRequestDto.class);
-        this.productImg = unit.getProduct().getImg();
         this.subcategory = unit.getSubcategoryName();
         this.subcategoryImg = unit.getSubcategoryImg();
         this.category = unit.getCategoryName();
         this.price = unit.getPrice();
         this.toBaseUnit = unit.getToBaseUnit();
+        this.img = unit.getImg();
     }
 
     public String getId() {
@@ -61,14 +61,6 @@ public class UnitResponseDto {
 
     public void setProduct(ProductRequestDto product) {
         this.product = product;
-    }
-
-    public String getProductImg() {
-        return productImg;
-    }
-
-    public void setProductImg(String productImg) {
-        this.productImg = productImg;
     }
 
     public String getSubcategory() {
@@ -109,5 +101,13 @@ public class UnitResponseDto {
 
     public void setToBaseUnit(long toBaseUnit) {
         this.toBaseUnit = toBaseUnit;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }
