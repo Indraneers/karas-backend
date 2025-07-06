@@ -1,43 +1,64 @@
 # Karas Backend
-A backend application for Karas POS, Inventory and Garage Management System. Built with love and coffeeee.
 
-## Getting Started
-You will most likely need to deploy and run this using docker and docker-compose on your local machine. See deployment
-section for deploying this on a live system
-### Prerequisites
-Requirements to deploy and run this project
+A robust backend application powering **Karas POS, Inventory, and Garage Management System** — built with love, coffee, and clean code.
+
+---
+
+## 🚀 Getting Started
+
+This project is designed to run in a containerized environment using **Docker** and **Docker Compose**. Follow the steps below to set up the application locally or deploy it to a live system.
+
+---
+
+## ⚙️ Prerequisites
+
+Make sure you have the following installed:
+
 - [JDK 17 LTS (Eclipse Temurin)](https://adoptium.net/temurin/releases/?version=17)
 - [Docker](https://www.docker.com/)
-- [Maven 3](https://maven.apache.org/)
+- [Maven 3+](https://maven.apache.org/)
 
-Consider using an IDE like [IntelliJ](https://www.jetbrains.com/idea/download/) to configure everything above. 
-Really, it has everything outside the box. It is recommended to get the ultimate version through a student license
-by registering with your student email
-### Running the application locally
-Use `.env.example` to create and fill a file named `.env.developmental` in the project root directory.
-You can ask the maintainer of this project obtain a pre-existing env config to it up and running quickly.
+### Recommended IDE
 
-If you are using an IDE like IntelliJ or any other equivalent IDE. Set it to run
-```docker-compose.dev.yaml``` and everything will be handled for you.
+We recommend using [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) — it supports all tools mentioned above out of the box.  
+If you're a student, you can get the **Ultimate Edition** for free by registering with your student email.
 
-Otherwise, you can use your terminal to deploy. From the project root directory, simply run
-```BASH
-docker compose -f docker-compose.dev.yaml up -d
-```
+---
 
-There is hot-swapping (or hot reloading), so you don't need to redeploy the container image every time you made some 
-changes.
+## 🧪 Running the Application Locally
 
-To rebuild the container image and deploy it, run
-```BASH
-docker compose -f docker-compose.dev.yml up -d --build
-```
+1. **Environment Variables**  
+   Copy `.env.example` and rename it to `.env.developmental`.  
+   Fill in the required values. If you need help, contact the project maintainer for a pre-configured version.
 
-## Postman Collection
-Contact the owner of this repository to gain access to the Postman's collection of routes for testing purposes.
+2. **Start with IntelliJ (or any modern IDE)**  
+   Configure your IDE to run `docker-compose.dev.yaml` and the containers will spin up automatically.
 
-## Deployment
-TBA
+3. **Or use the terminal**  
+   From the project root directory, run:
 
-## License
-TBA
+       docker compose -f docker-compose.dev.yaml up -d
+
+4. **Rebuilding with hot reload support**  
+   The project supports **hot swapping**, so changes in the code are reflected without rebuilding the image.  
+   To rebuild the image manually, use:
+
+       docker compose -f docker-compose.dev.yaml up -d --build
+
+---
+
+## 📬 Postman Collection
+
+To test the available API endpoints, contact the repository maintainer to get access to the official **Postman Collection**.
+
+---
+
+## 🛠 Deployment
+
+To deploy on a live system, refer to the `docker-compose.prod.yaml` file (or similar). Make sure to update environment variables and configure services appropriately for production use.
+
+---
+
+## 💬 Contact
+
+Need help or want to contribute? Reach out to the maintainer or open an issue in the repository.
