@@ -1,6 +1,6 @@
 # Karas Backend
 
-A robust backend application powering **Karas POS, Inventory, and Garage Management System** — built with love, coffee, and clean code.
+A robust backend application powering **Karas POS, Inventory, and Garage Management System** — built with love, coffee, and not so clean code.
 
 ---
 
