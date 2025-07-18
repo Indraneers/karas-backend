@@ -2,6 +2,7 @@ package com.twistercambodia.karasbackend.inventory.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -34,6 +35,12 @@ public class Unit {
 
     @Column
     private String img;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
 
     @Transient
     public String getSubcategoryName() {
@@ -121,6 +128,22 @@ public class Unit {
         this.img = img;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
@@ -130,6 +153,8 @@ public class Unit {
                 ", price=" + price +
                 ", toBaseUnit=" + toBaseUnit +
                 ", img='" + img + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

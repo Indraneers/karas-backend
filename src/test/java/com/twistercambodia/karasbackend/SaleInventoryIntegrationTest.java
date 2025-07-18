@@ -408,7 +408,6 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
@@ -468,7 +467,6 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
@@ -543,7 +541,6 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);

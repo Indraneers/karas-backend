@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -104,6 +105,7 @@ public class UnitService {
         unit.setPrice(unitRequestDto.getPrice());
         unit.setToBaseUnit(unitRequestDto.getToBaseUnit());
         unit.setProduct(product);
+        unit.setUpdatedAt(LocalDateTime.now());
 
         if (image != null) {
             String ext = storageService.getExtension(image.getOriginalFilename());

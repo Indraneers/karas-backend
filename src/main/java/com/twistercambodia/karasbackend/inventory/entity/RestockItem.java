@@ -3,6 +3,8 @@ package com.twistercambodia.karasbackend.inventory.entity;
 import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class RestockItem {
     @Id
@@ -22,6 +24,12 @@ public class RestockItem {
 
     @Column(nullable = false)
     private StockUpdate status;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
 
     public RestockItem() {}
 
@@ -65,11 +73,32 @@ public class RestockItem {
         this.status = status;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "RestockItem{" +
                 "id='" + id + '\'' +
+                ", restock=" + restock +
+                ", unit=" + unit +
+                ", quantity=" + quantity +
                 ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

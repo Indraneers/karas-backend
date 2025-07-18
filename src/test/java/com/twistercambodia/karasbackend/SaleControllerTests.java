@@ -47,6 +47,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -322,7 +323,6 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
@@ -365,7 +365,6 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setCreatedAt(LocalDateTime.now().toString());
         saleRequestDto.setDueAt(LocalDateTime.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
@@ -388,6 +387,12 @@ public class SaleControllerTests {
 
         String json = objectMapper.writeValueAsString(saleRequestDto);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        String expectedWithoutSeconds = LocalDateTime.now()
+                .format(formatter)
+                .replaceAll(":\\d{2}(?=\\D*$)", ""); // removes seconds
+
         this.mockMvc.perform(
                 post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -401,7 +406,7 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(saleRequestDto.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.createdAt")
-                        .value(saleRequestDto.getCreatedAt()),
+                        .value(containsString(expectedWithoutSeconds)),
                 MockMvcResultMatchers.jsonPath("$.dueAt")
                         .value(saleRequestDto.getDueAt()),
                 MockMvcResultMatchers.jsonPath("$.discount")
@@ -510,6 +515,13 @@ public class SaleControllerTests {
 
         json = objectMapper.writeValueAsString(updatedSale);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        String expectedWithoutSeconds = LocalDateTime.now()
+                .format(formatter)
+                .replaceAll(":\\d{2}(?=\\D*$)", ""); // removes seconds
+
+
         this.mockMvc.perform(
                 put("/sales/" + saleId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -523,7 +535,7 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(updatedSale.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.createdAt")
-                        .value(updatedSale.getCreatedAt()),
+                        .value(containsString(expectedWithoutSeconds)),
                 MockMvcResultMatchers.jsonPath("$.dueAt")
                         .value(updatedSale.getDueAt()),
                 MockMvcResultMatchers.jsonPath("$.discount")

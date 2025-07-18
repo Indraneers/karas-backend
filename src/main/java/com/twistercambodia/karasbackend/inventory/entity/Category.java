@@ -3,6 +3,7 @@ package com.twistercambodia.karasbackend.inventory.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,12 @@ public class Category {
 
     @Column
     private String color = "";
+
+    @Column
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
 
     public String getId() {
         return id;
@@ -75,15 +82,32 @@ public class Category {
         this.color = color;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", subcategories=" + subcategories +
                 ", subcategoryCount=" + subcategoryCount +
-                ", img=" + img +
-                ", color=" + color +
+                ", img='" + img + '\'' +
+                ", color='" + color + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

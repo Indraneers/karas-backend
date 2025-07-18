@@ -49,6 +49,9 @@ public class Sale {
     @Column(nullable = false)
     private PaymentType paymentType;
 
+    @Column()
+    private LocalDateTime updatedAt;
+
     public Long getId() {
         return id;
     }
@@ -141,11 +144,20 @@ public class Sale {
         this.paymentType = paymentType;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Sale{" +
                 "id=" + id +
-                ", created=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
                 ", dueDate=" + dueAt +
                 ", discount=" + discount +
                 ", items=" + items +
