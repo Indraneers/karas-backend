@@ -34,7 +34,17 @@ public class AnalyticController {
     }
 
     @GetMapping("vehicles/month")
-    public List<AnalyticDto> totalMonthsThisWeek() {
+    public List<AnalyticDto> totalVehiclesThisMonth() {
         return analyticService.getTotalVehiclesFromDate(LocalDateTime.now().minusMonths(1));
+    }
+
+    @GetMapping("customers/week")
+    public List<AnalyticDto> totalCustomersThisWeek() {
+        return analyticService.getTotalCustomersFromDate(LocalDateTime.now().minusWeeks(1));
+    }
+
+    @GetMapping("customers/month")
+    public List<AnalyticDto> totalCustomersThisMonth() {
+        return analyticService.getTotalCustomersFromDate(LocalDateTime.now().minusMonths(1));
     }
 }
