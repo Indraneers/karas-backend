@@ -50,7 +50,7 @@ public class RestockService {
         User user = this.userService.findByIdOrThrowError(restockRequestDto.getUserId());
         restock.setUser(user);
         restock.getItems().clear();
-        restock.setCreatedAt(LocalDateTime.parse(restockRequestDto.getCreatedAt()));
+        restock.setCreatedAt(LocalDateTime.now());
 
         for (RestockItemRequestDto item : restockRequestDto.getItems()) {
             RestockItem restockItem = this.objectMapper.map(item, RestockItem.class);

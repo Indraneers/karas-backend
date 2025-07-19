@@ -87,6 +87,7 @@ public class SaleService {
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
+        sale.setCreatedAt(LocalDateTime.now());
 
         List<Item> items = new ArrayList<>();
 
