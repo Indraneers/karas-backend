@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class SaleRequestDto {
     private String id;
-    private String createdAt;
     private String dueAt;
     private int discount;
     private List<ItemRequestDto> items;
@@ -25,7 +24,6 @@ public class SaleRequestDto {
 
     public SaleRequestDto(Sale sale) {
         this.id = sale.getFormattedId();
-        this.createdAt = sale.getCreatedAt().toString();
         this.dueAt = sale.getDueAt().toString();
         this.discount = sale.getDiscount();
 
@@ -51,14 +49,6 @@ public class SaleRequestDto {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getDueAt() {
@@ -137,7 +127,6 @@ public class SaleRequestDto {
     public String toString() {
         return "SaleRequestDto{" +
                 "id='" + id + '\'' +
-                ", created='" + createdAt + '\'' +
                 ", dueDate='" + dueAt + '\'' +
                 ", discount=" + discount +
                 ", items=" + items +

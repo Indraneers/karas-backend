@@ -244,7 +244,6 @@ public class RestockUnitIntegrationTest {
     public void createRestock_ShouldRestockStock_status200() throws Exception {
         RestockRequestDto restockRequestDto = new RestockRequestDto();
 
-        restockRequestDto.setCreatedAt(LocalDateTime.now().toString());
         restockRequestDto.setUserId(userDto.getId());
 
         RestockItemRequestDto itemOne = new RestockItemRequestDto();
@@ -296,7 +295,6 @@ public class RestockUnitIntegrationTest {
     public void createRestock_ShouldDeductStock_status200() throws Exception {
         RestockRequestDto restockRequestDto = new RestockRequestDto();
 
-        restockRequestDto.setCreatedAt(LocalDateTime.now().toString());
         restockRequestDto.setUserId(userDto.getId());
 
         RestockItemRequestDto itemOne = new RestockItemRequestDto();
@@ -368,7 +366,6 @@ public class RestockUnitIntegrationTest {
     public void createRestock_CompositeStatusSuccess_status200() throws Exception {
         RestockRequestDto restockRequestDto = new RestockRequestDto();
 
-        restockRequestDto.setCreatedAt(LocalDateTime.now().toString());
         restockRequestDto.setUserId(userDto.getId());
 
         RestockItemRequestDto itemOne = new RestockItemRequestDto();

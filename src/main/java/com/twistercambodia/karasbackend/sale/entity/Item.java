@@ -3,6 +3,8 @@ package com.twistercambodia.karasbackend.sale.entity;
 import com.twistercambodia.karasbackend.inventory.entity.Unit;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "item")
 public class Item {
@@ -26,6 +28,12 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "unit_id")
     private Unit unit;
+
+    @Column()
+    private LocalDateTime createdAt;
+
+    @Column()
+    private LocalDateTime updatedAt;
 
     public String getId() {
         return id;
@@ -75,6 +83,21 @@ public class Item {
         this.unit = unit;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     @Override
     public String toString() {
@@ -83,7 +106,10 @@ public class Item {
                 ", price=" + price +
                 ", quantity=" + quantity +
                 ", discount=" + discount +
+                ", sale=" + sale +
                 ", unit=" + unit +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

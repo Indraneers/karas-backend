@@ -5,6 +5,7 @@ import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,12 @@ public class Customer {
     @OneToMany
     @JoinColumn(name="customer_id")
     private List<Sale> sales;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
 
     public Customer() {}
 
@@ -92,13 +99,41 @@ public class Customer {
         this.vehicles = vehicles;
     }
 
+    public List<Sale> getSales() {
+        return sales;
+    }
+
+    public void setSales(List<Sale> sales) {
+        this.sales = sales;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", note='" + note + '\'' +
+                ", address='" + address + '\'' +
+                ", contact='" + contact + '\'' +
                 ", vehicles=" + vehicles +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

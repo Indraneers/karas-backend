@@ -3,6 +3,9 @@ package com.twistercambodia.karasbackend.vehicle.entity;
 import com.twistercambodia.karasbackend.customer.entity.Customer;
 import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -42,6 +45,12 @@ public class Vehicle {
     @Convert(converter = VehicleTypeConverter.class)
     @Column()
     private VehicleType vehicleType;
+
+    @Column()
+    private LocalDateTime createdAt;
+
+    @Column()
+    private LocalDateTime updatedAt;
 
     public String getId() {
         return id;
@@ -131,6 +140,22 @@ public class Vehicle {
         this.vehicleType = vehicleType;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Vehicle{" +
@@ -143,6 +168,9 @@ public class Vehicle {
                 ", makeAndModel='" + makeAndModel + '\'' +
                 ", futureMaintenance=" + futureMaintenance +
                 ", maintenances=" + maintenances +
+                ", vehicleType=" + vehicleType +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

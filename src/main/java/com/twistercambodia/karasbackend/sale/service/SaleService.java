@@ -83,11 +83,11 @@ public class SaleService {
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setCreatedAt(LocalDateTime.parse(saleRequestDto.getCreatedAt()));
         sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
+        sale.setCreatedAt(LocalDateTime.now());
 
         List<Item> items = new ArrayList<>();
 
@@ -125,7 +125,6 @@ public class SaleService {
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setCreatedAt(LocalDateTime.parse(saleRequestDto.getCreatedAt()));
         sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);

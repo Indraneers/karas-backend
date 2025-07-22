@@ -9,7 +9,6 @@ public class RestockRequestDto {
     private String id;
     private List<RestockItemRequestDto> items;
     private String userId;
-    private String createdAt;
 
     public RestockRequestDto() {}
 
@@ -35,13 +34,5 @@ public class RestockRequestDto {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
     }
 }
