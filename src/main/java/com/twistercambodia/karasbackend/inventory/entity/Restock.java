@@ -67,6 +67,17 @@ public class Restock {
         this.createdAt = createdAt;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
+
     @Override
     public String toString() {
         return "Restock{" +

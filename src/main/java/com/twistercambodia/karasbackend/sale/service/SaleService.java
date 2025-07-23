@@ -190,7 +190,6 @@ public class SaleService {
     }
 
     public SaleResponseDto convertToSaleResponseDto(Sale sale) {
-        System.out.println(sale);
         return new SaleResponseDto(sale);
     }
 
