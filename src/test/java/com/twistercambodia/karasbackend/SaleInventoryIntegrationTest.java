@@ -43,7 +43,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -408,7 +408,7 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setPaymentType(PaymentType.BANK);
@@ -467,7 +467,7 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setPaymentType(PaymentType.BANK);
@@ -541,7 +541,7 @@ public class SaleInventoryIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setPaymentType(PaymentType.BANK);

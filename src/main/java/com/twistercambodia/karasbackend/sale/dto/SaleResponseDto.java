@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class SaleResponseDto {
     private String id;
     private String createdAt;
+    private String updatedAt;
     private String dueAt;
     private int discount;
     private List<ItemResponseDto> items;
@@ -32,6 +33,7 @@ public class SaleResponseDto {
         ModelMapper mapper = new ModelMapper();
         this.id = sale.getFormattedId();
         this.createdAt = sale.getCreatedAt().toString();
+        this.updatedAt = sale.getUpdatedAt().toString();
         this.dueAt = sale.getDueAt().toString();
         this.discount = sale.getDiscount();
 
@@ -132,6 +134,14 @@ public class SaleResponseDto {
 
     public PaymentType getPaymentType() {
         return paymentType;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public void setPaymentType(PaymentType paymentType) {

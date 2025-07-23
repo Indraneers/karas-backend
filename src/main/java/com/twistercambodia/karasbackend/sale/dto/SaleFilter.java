@@ -3,30 +3,30 @@ package com.twistercambodia.karasbackend.sale.dto;
 import com.twistercambodia.karasbackend.sale.entity.PaymentType;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class SaleFilter {
-    private LocalDateTime createdAtFrom;
-    private LocalDateTime createdAtTo;
+    private Instant createdAtFrom;
+    private Instant createdAtTo;
     private String customerId;
     private String vehicleId;
     private String userId;
     private SaleStatus status;
     private PaymentType paymentType;
 
-    public LocalDateTime getCreatedAtFrom() {
+    public Instant getCreatedAtFrom() {
         return createdAtFrom;
     }
 
-    public void setCreatedAtFrom(LocalDateTime createdAtFrom) {
+    public void setCreatedAtFrom(Instant createdAtFrom) {
         this.createdAtFrom = createdAtFrom;
     }
 
-    public LocalDateTime getCreatedAtTo() {
+    public Instant getCreatedAtTo() {
         return createdAtTo;
     }
 
-    public void setCreatedAtTo(LocalDateTime createdAtTo) {
+    public void setCreatedAtTo(Instant createdAtTo) {
         this.createdAtTo = createdAtTo;
     }
 

@@ -46,7 +46,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -323,7 +324,7 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setPaymentType(PaymentType.BANK);
@@ -365,7 +366,7 @@ public class SaleControllerTests {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(100); // $1 Discount
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setPaymentType(PaymentType.BANK);
@@ -389,9 +390,9 @@ public class SaleControllerTests {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        String expectedWithoutSeconds = LocalDateTime.now()
+        String expectedWithoutSeconds = ZonedDateTime.now()
                 .format(formatter)
-                .replaceAll(":\\d{2}(?=\\D*$)", ""); // removes seconds
+                .replaceAll(":\\d{2}(?=\\D*$)", "");
 
         this.mockMvc.perform(
                 post("/sales")
@@ -516,11 +517,9 @@ public class SaleControllerTests {
         json = objectMapper.writeValueAsString(updatedSale);
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
-        String expectedWithoutSeconds = LocalDateTime.now()
+        String expectedWithoutSeconds = ZonedDateTime.now()
                 .format(formatter)
-                .replaceAll(":\\d{2}(?=\\D*$)", ""); // removes seconds
-
+                .replaceAll(":\\d{2}(?=\\D*$)", "");
 
         this.mockMvc.perform(
                 put("/sales/" + saleId)

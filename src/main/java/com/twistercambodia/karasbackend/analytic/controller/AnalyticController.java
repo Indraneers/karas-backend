@@ -6,13 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
 @RequestMapping("analytics")
 public class AnalyticController {
     private final AnalyticService analyticService;
+    private static final ZoneId PHNOM_PENH_ZONE = ZoneId.of("Asia/Phnom_Penh");
 
     public AnalyticController(AnalyticService analyticService) {
         this.analyticService = analyticService;
@@ -20,31 +24,56 @@ public class AnalyticController {
 
     @GetMapping("sales/week")
     public List<AnalyticDto> totalSalesThisWeek() {
-        return analyticService.getTotalSalesFromDate(LocalDateTime.now().minusWeeks(1));
+        Instant oneWeekAgo = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(1, ChronoUnit.WEEKS)
+                .toInstant();
+        return analyticService.getTotalSalesFromDate(oneWeekAgo);
     }
 
     @GetMapping("sales/month")
     public List<AnalyticDto> totalSalesThisMonth() {
-        return analyticService.getTotalSalesFromDate(LocalDateTime.now().minusMonths(1));
+        Instant oneMonthAgo = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(1, ChronoUnit.MONTHS)
+                .toInstant();
+        return analyticService.getTotalSalesFromDate(oneMonthAgo);
     }
 
     @GetMapping("vehicles/week")
     public List<AnalyticDto> totalVehiclesThisWeek() {
-        return analyticService.getTotalVehiclesFromDate(LocalDateTime.now().minusWeeks(1));
+        Instant oneWeekAgo = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(1, ChronoUnit.WEEKS)
+                .toInstant();
+        return analyticService.getTotalVehiclesFromDate(oneWeekAgo);
     }
 
     @GetMapping("vehicles/month")
     public List<AnalyticDto> totalVehiclesThisMonth() {
-        return analyticService.getTotalVehiclesFromDate(LocalDateTime.now().minusMonths(1));
+        Instant oneMonthAgo = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(1, ChronoUnit.MONTHS)
+                .toInstant();
+        return analyticService.getTotalVehiclesFromDate(oneMonthAgo);
     }
 
     @GetMapping("customers/week")
     public List<AnalyticDto> totalCustomersThisWeek() {
-        return analyticService.getTotalCustomersFromDate(LocalDateTime.now().minusWeeks(1));
+        Instant oneWeekAgo = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(1, ChronoUnit.WEEKS)
+                .toInstant();
+        return analyticService.getTotalCustomersFromDate(oneWeekAgo);
     }
 
     @GetMapping("customers/month")
     public List<AnalyticDto> totalCustomersThisMonth() {
-        return analyticService.getTotalCustomersFromDate(LocalDateTime.now().minusMonths(1));
+        Instant oneMonthAgo = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(1, ChronoUnit.MONTHS)
+                .toInstant();
+        return analyticService.getTotalVehiclesFromDate(oneMonthAgo);
+    }
+
+    // Helper methods to reduce code duplication (optional refactor)
+    private Instant getDateInPhnomPenhTime(long amount, ChronoUnit unit) {
+        return ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(amount, unit)
+                .toInstant();
     }
 }

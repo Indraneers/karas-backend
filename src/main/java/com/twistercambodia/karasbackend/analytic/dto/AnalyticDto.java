@@ -1,6 +1,6 @@
 package com.twistercambodia.karasbackend.analytic.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Date;
 
 public class AnalyticDto {

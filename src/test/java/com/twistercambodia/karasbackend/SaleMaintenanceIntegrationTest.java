@@ -40,7 +40,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -214,7 +214,7 @@ public class SaleMaintenanceIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setItems(new ArrayList<>());
@@ -222,7 +222,7 @@ public class SaleMaintenanceIntegrationTest {
 
         MaintenanceDto maintenanceDto = new MaintenanceDto();
 
-        maintenanceDto.setCreatedAt(LocalDateTime.now().toString());
+        maintenanceDto.setCreatedAt(Instant.now().toString());
         maintenanceDto.setMileage(70000);
         maintenanceDto.setNote("Test");
         maintenanceDto.setVehicleId(vehicleDto.getId());
@@ -296,7 +296,7 @@ public class SaleMaintenanceIntegrationTest {
         saleRequestDto.setCustomerId(customerDto.getId());
         saleRequestDto.setVehicleId(vehicleDto.getId());
         saleRequestDto.setUserId(userDto.getId());
-        saleRequestDto.setDueAt(LocalDateTime.now().toString());
+        saleRequestDto.setDueAt(Instant.now().toString());
         saleRequestDto.setDiscount(0);
         saleRequestDto.setStatus(SaleStatus.PAID);
         saleRequestDto.setItems(new ArrayList<>());
@@ -304,7 +304,7 @@ public class SaleMaintenanceIntegrationTest {
 
         MaintenanceDto maintenanceDto = new MaintenanceDto();
 
-        maintenanceDto.setCreatedAt(LocalDateTime.now().toString());
+        maintenanceDto.setCreatedAt(Instant.now().toString());
         maintenanceDto.setMileage(70000);
         maintenanceDto.setNote("Test");
         maintenanceDto.setVehicleId(vehicleDto.getId());

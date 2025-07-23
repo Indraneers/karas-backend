@@ -2,15 +2,15 @@ package com.twistercambodia.karasbackend.maintenance.dto;
 
 import com.twistercambodia.karasbackend.maintenance.entity.VehicleMaintenance;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class VehicleMaintenanceDto {
     private String id;
     private int nextMilage;
-    private LocalDateTime nextDate;
-    private LocalDateTime createdAt;
+    private Instant nextDate;
+    private Instant createdAt;
     private String vehicleId;
     private Set<MaintenanceAutoServiceDto> services;
     private String note;
@@ -49,19 +49,19 @@ public class VehicleMaintenanceDto {
         this.nextMilage = nextMilage;
     }
 
-    public LocalDateTime getNextDate() {
+    public Instant getNextDate() {
         return nextDate;
     }
 
-    public void setNextDate(LocalDateTime nextDate) {
+    public void setNextDate(Instant nextDate) {
         this.nextDate = nextDate;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 

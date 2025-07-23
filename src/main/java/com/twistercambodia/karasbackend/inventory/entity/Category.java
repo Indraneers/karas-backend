@@ -3,7 +3,7 @@ package com.twistercambodia.karasbackend.inventory.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -29,10 +29,10 @@ public class Category {
     private String color = "";
 
     @Column
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public String getId() {
         return id;
@@ -82,19 +82,19 @@ public class Category {
         this.color = color;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 

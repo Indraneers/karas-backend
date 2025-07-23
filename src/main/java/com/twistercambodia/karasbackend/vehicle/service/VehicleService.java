@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -69,7 +69,7 @@ public class VehicleService {
         vehicle.setMakeAndModel(vehicleDto.getMakeAndModel());
         vehicle.setCustomer(customer);
         vehicle.setVehicleType(vehicleDto.getVehicleType());
-        vehicle.setUpdatedAt(LocalDateTime.now());
+        vehicle.setUpdatedAt(Instant.now());
 
         return this.vehicleRepository.save(vehicle);
     }
