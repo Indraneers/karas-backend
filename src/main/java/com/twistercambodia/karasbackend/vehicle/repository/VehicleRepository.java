@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface VehicleRepository extends CrudRepository<Vehicle, String> {
@@ -43,5 +43,5 @@ public interface VehicleRepository extends CrudRepository<Vehicle, String> {
         GROUP BY DATE(v.createdAt)
         ORDER BY date ASC
     """)
-    List<Object[]> getDailyVehicleCreation(@Param("startDate") LocalDateTime startDate);
+    List<Object[]> getDailyVehicleCreation(@Param("startDate") Instant startDate);
 }

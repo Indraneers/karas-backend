@@ -12,7 +12,7 @@ import com.twistercambodia.karasbackend.vehicle.service.VehicleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class MaintenanceService {
 
     public Maintenance create(MaintenanceDto maintenanceDto) {
         Maintenance maintenance = convertToMaintenance(maintenanceDto);
-        maintenance.setCreatedAt(LocalDateTime.parse(maintenanceDto.getCreatedAt()));
+        maintenance.setCreatedAt(Instant.parse(maintenanceDto.getCreatedAt()));
         maintenance.getServices().forEach(ms -> ms.setMaintenance(maintenance));
 
         return maintenanceRepository.save(maintenance);
@@ -51,7 +51,7 @@ public class MaintenanceService {
 
         Vehicle vehicle = vehicleService.findByIdOrThrowException(maintenanceDto.getVehicleId());
 
-        maintenance.setCreatedAt(LocalDateTime.parse(maintenanceDto.getCreatedAt()));
+        maintenance.setCreatedAt(Instant.parse(maintenanceDto.getCreatedAt()));
         maintenance.setMileage(maintenanceDto.getMileage());
         maintenance.setNote(maintenanceDto.getNote());
         maintenance.setVehicle(vehicle);

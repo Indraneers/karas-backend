@@ -6,7 +6,8 @@ import com.twistercambodia.karasbackend.maintenance.entity.Maintenance;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -17,10 +18,10 @@ public class Sale {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column
-    private LocalDateTime dueAt;
+    private Instant dueAt;
 
     @Column
     private int discount;
@@ -49,8 +50,7 @@ public class Sale {
     @Column(nullable = false)
     private PaymentType paymentType;
 
-    @Column()
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public Long getId() {
         return id;
@@ -64,19 +64,19 @@ public class Sale {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime created) {
+    public void setCreatedAt(Instant created) {
         this.createdAt = created;
     }
 
-    public LocalDateTime getDueAt() {
+    public Instant getDueAt() {
         return dueAt;
     }
 
-    public void setDueAt(LocalDateTime dueDate) {
+    public void setDueAt(Instant dueDate) {
         this.dueAt = dueDate;
     }
 
@@ -144,11 +144,11 @@ public class Sale {
         this.paymentType = paymentType;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 

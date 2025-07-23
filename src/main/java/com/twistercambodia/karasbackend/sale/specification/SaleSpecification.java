@@ -6,7 +6,7 @@ import com.twistercambodia.karasbackend.sale.entity.Sale;
 import com.twistercambodia.karasbackend.sale.entity.SaleStatus;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class SaleSpecification {
     public static final String CREATEDAT = "createdAt";
@@ -30,14 +30,14 @@ public class SaleSpecification {
                 .and(hasSaleStatus(saleFilter.getStatus()));
     }
 
-    private static Specification<Sale> hasCreatedAtGreaterThan(LocalDateTime createdAtFrom) {
+    private static Specification<Sale> hasCreatedAtGreaterThan(Instant createdAtFrom) {
         return (root, query, cb) -> createdAtFrom == null ?
                 cb.conjunction()
                 :
                 cb.greaterThan(root.get(CREATEDAT), createdAtFrom);
     }
 
-    private static Specification<Sale> hasCreatedAtLessThan(LocalDateTime createdAtTo) {
+    private static Specification<Sale> hasCreatedAtLessThan(Instant createdAtTo) {
         return (root, query, cb) -> createdAtTo == null ?
                 cb.conjunction()
                 :

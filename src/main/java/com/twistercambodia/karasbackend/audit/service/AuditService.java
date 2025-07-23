@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 
 
@@ -47,7 +47,7 @@ public class AuditService {
     public Audit create(AuditDTO auditDTO) throws IOException {
         Audit audit = new Audit();
         // For Cambodia time (UTC+7)
-        LocalDateTime cambodiaTime = LocalDateTime.now(ZoneId.of("Asia/Phnom_Penh"));
+        Instant cambodiaTime = Instant.now();
         audit.setTimestamp(cambodiaTime);
         audit.setHttpMethod(auditDTO.getHttpMethod());
         audit.setName(auditDTO.getName());

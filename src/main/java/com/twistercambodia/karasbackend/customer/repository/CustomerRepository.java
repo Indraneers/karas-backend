@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface CustomerRepository extends CrudRepository<Customer, String> {
@@ -27,5 +27,5 @@ public interface CustomerRepository extends CrudRepository<Customer, String> {
         GROUP BY DATE(c.createdAt)
         ORDER BY date ASC
     """)
-    List<Object[]> getDailyCustomerCreation(@Param("startDate") LocalDateTime startDate);
+    List<Object[]> getDailyCustomerCreation(@Param("startDate") Instant startDate);
 }

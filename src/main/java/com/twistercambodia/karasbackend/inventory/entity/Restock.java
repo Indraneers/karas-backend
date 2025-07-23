@@ -3,7 +3,7 @@ package com.twistercambodia.karasbackend.inventory.entity;
 import com.twistercambodia.karasbackend.auth.entity.User;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -22,10 +22,10 @@ public class Restock {
     private User user;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column()
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public String getId() {
         return id;
@@ -51,19 +51,19 @@ public class Restock {
         this.user = user;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 

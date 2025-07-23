@@ -4,7 +4,7 @@ import com.twistercambodia.karasbackend.auth.entity.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 public class Audit {
@@ -13,7 +13,7 @@ public class Audit {
     private String id;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
     @Column(nullable = false)
     private String name;
@@ -48,11 +48,11 @@ public class Audit {
         this.id = id;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

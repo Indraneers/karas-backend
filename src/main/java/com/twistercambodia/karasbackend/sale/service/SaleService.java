@@ -28,7 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,11 +83,11 @@ public class SaleService {
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
+        sale.setDueAt(Instant.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
-        sale.setCreatedAt(LocalDateTime.now());
+        sale.setCreatedAt(Instant.now());
 
         List<Item> items = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class SaleService {
         Customer customer = this.customerService.findByIdOrThrowError(saleRequestDto.getCustomerId());
         Vehicle vehicle = this.vehicleService.findByIdOrThrowException(saleRequestDto.getVehicleId());
 
-        sale.setDueAt(LocalDateTime.parse(saleRequestDto.getDueAt()));
+        sale.setDueAt(Instant.parse(saleRequestDto.getDueAt()));
         sale.setUser(user);
         sale.setCustomer(customer);
         sale.setVehicle(vehicle);
@@ -190,6 +190,7 @@ public class SaleService {
     }
 
     public SaleResponseDto convertToSaleResponseDto(Sale sale) {
+        System.out.println(sale);
         return new SaleResponseDto(sale);
     }
 

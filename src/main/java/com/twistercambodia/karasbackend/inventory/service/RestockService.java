@@ -16,7 +16,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -50,7 +50,7 @@ public class RestockService {
         User user = this.userService.findByIdOrThrowError(restockRequestDto.getUserId());
         restock.setUser(user);
         restock.getItems().clear();
-        restock.setCreatedAt(LocalDateTime.now());
+        restock.setCreatedAt(Instant.now());
 
         for (RestockItemRequestDto item : restockRequestDto.getItems()) {
             RestockItem restockItem = this.objectMapper.map(item, RestockItem.class);

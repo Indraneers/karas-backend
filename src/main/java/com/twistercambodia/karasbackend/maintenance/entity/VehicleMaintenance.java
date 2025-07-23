@@ -3,7 +3,7 @@ package com.twistercambodia.karasbackend.maintenance.entity;
 import com.twistercambodia.karasbackend.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -16,10 +16,10 @@ public class VehicleMaintenance {
     private int nextMileage;
 
     @Column(nullable = false)
-    private LocalDateTime nextDate;
+    private Instant nextDate;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private Vehicle vehicle;
@@ -46,19 +46,19 @@ public class VehicleMaintenance {
         this.nextMileage = nextMileage;
     }
 
-    public LocalDateTime getNextDate() {
+    public Instant getNextDate() {
         return nextDate;
     }
 
-    public void setNextDate(LocalDateTime nextDate) {
+    public void setNextDate(Instant nextDate) {
         this.nextDate = nextDate;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 

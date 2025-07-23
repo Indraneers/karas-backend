@@ -12,7 +12,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface SaleRepository extends CrudRepository<Sale, Long>, JpaSpecificationExecutor<Sale> {
@@ -32,6 +32,6 @@ public interface SaleRepository extends CrudRepository<Sale, Long>, JpaSpecifica
         GROUP BY DATE(s.createdAt)
         ORDER BY date ASC
     """)
-    List<Object[]> getDailyRevenue(@Param("startDate") LocalDateTime startDate);
+    List<Object[]> getDailyRevenue(@Param("startDate") Instant startDate);
 
 }
