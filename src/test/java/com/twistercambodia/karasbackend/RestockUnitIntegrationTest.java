@@ -27,6 +27,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -53,6 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
 @TestPropertySource(properties = "server.port=0")
 @TestPropertySource(locations="classpath:application.properties")
+@ActiveProfiles("test")
 public class RestockUnitIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;

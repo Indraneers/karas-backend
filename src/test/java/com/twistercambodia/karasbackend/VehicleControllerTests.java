@@ -48,6 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
 @TestPropertySource(locations="classpath:application.properties")
+@ActiveProfiles("test")
 public class VehicleControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
