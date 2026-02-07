@@ -174,10 +174,17 @@ public class UnitControllerTests {
 
         String json = objectMapper.writeValueAsString(unitRequestDto);
 
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
+
         this.mockMvc.perform(
-                        post("/units")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                        multipart("/units")
+                                .file(file)
                                 .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
@@ -247,12 +254,19 @@ public class UnitControllerTests {
 
         String json = objectMapper.writeValueAsString(unitRequestDto);
 
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/units")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-        ).andReturn();
+                        multipart("/units")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
@@ -265,11 +279,18 @@ public class UnitControllerTests {
 
         json = objectMapper.writeValueAsString(unitRequestDto);
 
+        file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
         this.mockMvc.perform(
-                        put("/units/" + id)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
-                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                    multipart("/units/" + id)
+                        .file(file)
+                        .with(req -> { req.setMethod("PUT"); return req; })
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -327,12 +348,19 @@ public class UnitControllerTests {
 
         String json = objectMapper.writeValueAsString(unitRequestDto);
 
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/units")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-        ).andReturn();
+                        multipart("/units")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 

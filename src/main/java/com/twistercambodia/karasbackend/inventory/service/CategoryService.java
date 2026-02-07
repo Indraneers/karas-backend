@@ -91,7 +91,7 @@ public class CategoryService {
 
     public CategoryDto convertToCategoryDto(Category category) {
         CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
-        if (!category.getImg().isEmpty()) {
+        if (category.getImg() != null && !category.getImg().isEmpty()) {
             categoryDto.setImg(
                     storageService.generatePresignedUrl(
                             category.getImg(),

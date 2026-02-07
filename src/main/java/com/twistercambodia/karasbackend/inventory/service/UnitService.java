@@ -123,7 +123,7 @@ public class UnitService {
         Unit unit = this.findByIdOrThrowError(id);
         this.unitRepository.delete(unit);
 
-        if (!unit.getImg().isEmpty()) {
+        if (unit.getImg() != null && !unit.getImg().isEmpty()) {
             deleteUnitIcon(unit.getImg());
         }
 

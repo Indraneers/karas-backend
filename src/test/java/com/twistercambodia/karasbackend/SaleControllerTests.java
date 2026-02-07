@@ -136,14 +136,22 @@ public class SaleControllerTests {
         for (ProductRequestDto productRequestDto : productRequestDtos) {
             for (UnitRequestDto unitRequestDto : mockedUnitRequestDtos) {
                 unitRequestDto.setProductId(productRequestDto.getId());
+
                 String json = objectMapper.writeValueAsString(unitRequestDto);
 
+                MockMultipartFile file = new MockMultipartFile(
+                        "data",
+                        json,
+                        String.valueOf(MediaType.APPLICATION_JSON),
+                        json.getBytes()
+                );
+
                 MvcResult mvcResult = this.mockMvc.perform(
-                        post("/units")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
-                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-                ).andReturn();
+                                multipart("/units")
+                                        .file(file)
+                                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                        )
+                        .andReturn();
 
                 String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
@@ -354,6 +362,7 @@ public class SaleControllerTests {
         ).andReturn();
 
         SaleResponseDto saleResponseDto = this.modelMapper.map(saleRequestDto, SaleResponseDto.class);
+        saleResponseDto.setCreatedAt(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.createdAt"));
         saleResponseDto.setId(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id"));
 
         return saleResponseDto;
@@ -390,9 +399,9 @@ public class SaleControllerTests {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        String expectedWithoutSeconds = ZonedDateTime.now()
-                .format(formatter)
-                .replaceAll(":\\d{2}(?=\\D*$)", "");
+        String expectedWithoutSeconds = Instant.now()
+                .toString()
+                .replaceAll("\\d{2}\\.\\d+Z$", "");
 
         this.mockMvc.perform(
                 post("/sales")
@@ -517,9 +526,10 @@ public class SaleControllerTests {
         json = objectMapper.writeValueAsString(updatedSale);
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        String expectedWithoutSeconds = ZonedDateTime.now()
-                .format(formatter)
-                .replaceAll(":\\d{2}(?=\\D*$)", "");
+
+        String expectedWithoutSeconds = Instant.now()
+                .toString()
+                .replaceAll("\\d{2}\\.\\d+Z$", "");
 
         this.mockMvc.perform(
                 put("/sales/" + saleId)
@@ -534,7 +544,7 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(updatedSale.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.createdAt")
-                        .value(containsString(expectedWithoutSeconds)),
+                        .value(startsWith(expectedWithoutSeconds)),
                 MockMvcResultMatchers.jsonPath("$.dueAt")
                         .value(updatedSale.getDueAt()),
                 MockMvcResultMatchers.jsonPath("$.discount")
