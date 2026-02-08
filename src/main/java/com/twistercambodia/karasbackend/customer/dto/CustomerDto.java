@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CustomerDto {
-    private String id;
+    private String id = null;
     private String name;
     private String note;
     private String address;
@@ -20,7 +20,7 @@ public class CustomerDto {
     public CustomerDto() {}
 
     public CustomerDto(Customer customer) {
-        this.name = customer.getId();
+        this.id = customer.getId();
         this.name = customer.getName();
         this.note = customer.getNote();
         this.address = customer.getAddress();

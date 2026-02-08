@@ -60,6 +60,7 @@ public class UnitService {
 
     @Transactional
     public Unit create(UnitRequestDto unitRequestDto, MultipartFile image) throws IOException {
+        unitRequestDto.setId(null);
         Unit unit = this.convertToUnit(unitRequestDto);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 

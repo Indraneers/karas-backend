@@ -77,6 +77,7 @@ public class SaleService {
 
     @Transactional
     public Sale create(SaleRequestDto saleRequestDto) throws Exception {
+        saleRequestDto.setId(null);
         Sale sale = this.convertToSale(saleRequestDto);
 
         User user = this.userService.findByIdOrThrowError(saleRequestDto.getUserId());

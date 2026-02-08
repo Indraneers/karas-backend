@@ -48,6 +48,7 @@ public class CategoryService {
 
     @Transactional
     public Category create(CategoryDto categoryDto, MultipartFile image) throws RuntimeException, IOException {
+        categoryDto.setId(null);
         Category category = this.convertToCategory(categoryDto);
         category = this.categoryRepository.save(category);
         if (image != null) {

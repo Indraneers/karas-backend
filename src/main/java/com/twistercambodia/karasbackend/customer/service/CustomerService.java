@@ -38,6 +38,7 @@ public class CustomerService {
     }
 
     public Customer create(CustomerDto customerDto) {
+        customerDto.setId(null);
         Customer customer = this.convertToCustomer(customerDto);
         return this.customerRepository.save(customer);
     }
