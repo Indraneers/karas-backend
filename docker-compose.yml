@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   postgres:
     build:
@@ -11,11 +17,13 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - '5431:5432' 
+      - '5431:5432'
     volumes:
-      - postgres-data:/var/lib/postgresql/data  # Main data persistence
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - nginx_network
+    logging: *default-logging
+
   backend:
     container_name: karas-backend-spring-boot
     build:
@@ -49,6 +57,8 @@ services:
     working_dir: /app
     networks:
       - nginx_network
+    logging: *default-logging
+
   keycloak:
     container_name: karas-keycloak
     build:
@@ -88,6 +98,8 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - nginx_network
+    logging: *default-logging
+
   minio:
     image: quay.io/minio/minio
     command: server /data --console-address ":9001"
@@ -103,10 +115,12 @@ services:
     networks:
       - nginx_network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 10s
       timeout: 5s
       retries: 10
+    logging: *default-logging
+
   create-buckets:
     image: minio/mc
     depends_on:
@@ -114,7 +128,7 @@ services:
         condition: service_healthy
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}  # Pass the variable here
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
@@ -124,16 +138,21 @@ services:
       "
     networks:
       - nginx_network
+    logging: *default-logging
+
   backup:
     image: "docker.io/tiredofit/db-backup:latest"
     env_file: '.env'
     volumes:
-      - ./backups:/backup   # CRITICAL: Maps the backup folder to your host machine
+      - ./backups:/backup
     networks:
       - nginx_network
     restart: always
+    logging: *default-logging
+
 networks:
   nginx_network:
     external: true
+
 volumes:
-  postgres-data: {}  # This is the crucial fix - properly define the volume
+  postgres-data: {}
