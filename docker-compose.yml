@@ -49,6 +49,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_ACCESS_SECRET: ${MINIO_ACCESS_SECRET}
       MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN}
     image: "ghcr.io/chheangg/karas-backend/karas-backend:latest"
     user: 1000:1000
     depends_on:
@@ -142,7 +143,15 @@ services:
 
   backup:
     image: "docker.io/tiredofit/db-backup:latest"
-    env_file: '.env'
+    environment:
+      DB01_TYPE: ${DB01_TYPE}
+      DB01_HOST: ${DB01_HOST}
+      DB01_NAME: ${DB01_NAME}
+      DB01_USER: ${DB01_USER}
+      DB01_PASS: ${DB01_PASS}
+      DEFAULT_BACKUP_INTERVAL: ${DEFAULT_BACKUP_INTERVAL}
+      DEFAULT_BACKUP_BEGIN: ${DEFAULT_BACKUP_BEGIN}
+      CONTAINER_ENABLE_MONITORING: ${CONTAINER_ENABLE_MONITORING}
     volumes:
       - ./backups:/backup
     networks:
