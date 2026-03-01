@@ -62,10 +62,7 @@ public class SecurityConfig {
     JwtAuthenticationConverter authenticationConverter(
             Converter<Map<String, Object>, Collection<GrantedAuthority>> authoritiesConverter) {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter
-                .setJwtGrantedAuthoritiesConverter(jwt -> {
-                    return authoritiesConverter.convert(jwt.getClaims());
-                });
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> authoritiesConverter.convert(jwt.getClaims()));
         return jwtAuthenticationConverter;
     }
 
@@ -86,27 +83,23 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain resourceServerSecurityFilterChain(
             HttpSecurity http,
-            Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter) throws Exception {
+            Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter,
+            CorsConfigurationSource corsConfigurationSource) throws Exception {
 
-        // Enable CORS
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource));
 
-        http.oauth2ResourceServer(resourceServer -> {
-            resourceServer.jwt(jwtDecoder -> {
-                jwtDecoder.jwtAuthenticationConverter(jwtAuthenticationConverter);
-            });
-        });
+        http.oauth2ResourceServer(resourceServer ->
+                resourceServer.jwt(jwtDecoder ->
+                        jwtDecoder.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 
-        http.sessionManagement(sessions -> {
-            sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        }).csrf(AbstractHttpConfigurer::disable);
+        http.sessionManagement(sessions ->
+                        sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable);
 
-        http.authorizeHttpRequests(requests -> {
-            requests
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/login").permitAll()
-                    .anyRequest().hasRole("USER");
-        });
+        http.authorizeHttpRequests(requests -> requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/login").permitAll()
+                .anyRequest().hasRole("USER"));
 
         return http.build();
     }
