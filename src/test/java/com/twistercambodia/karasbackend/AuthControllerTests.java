@@ -55,6 +55,7 @@ public class AuthControllerTests {
 
     @BeforeEach
     public void setup() throws Exception {
+        System.out.println("DON'T CALL PLEASE");
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         this.objectMapper = new ObjectMapper();
     }
