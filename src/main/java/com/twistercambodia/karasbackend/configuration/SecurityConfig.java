@@ -1,5 +1,7 @@
 package com.twistercambodia.karasbackend.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +34,7 @@ import java.util.Arrays;
 @EnableMethodSecurity
 @Profile("!test")
 public class SecurityConfig {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${allowed.origin}")
     private String allowedOrigin;
@@ -69,7 +72,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        System.out.println(allowedOrigin);
+        logger.info("Allowed Origin: {}", allowedOrigin);
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
