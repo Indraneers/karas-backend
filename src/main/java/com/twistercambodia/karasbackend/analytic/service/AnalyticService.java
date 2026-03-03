@@ -37,13 +37,16 @@ public class AnalyticService {
                 .collect(Collectors.toMap(
                         row -> {
                             Object dateObj = row[0];
-                            if (dateObj instanceof java.sql.Date) {
-                                // Convert java.sql.Date to start of day as Instant (UTC)
+                            if (dateObj instanceof java.time.LocalDate) {
+                                // Handle LocalDate returned directly by JPA/Hibernate
+                                return ((java.time.LocalDate) dateObj)
+                                        .atStartOfDay()
+                                        .toInstant(java.time.ZoneOffset.UTC);
+                            } else if (dateObj instanceof java.sql.Date) {
                                 return ((java.sql.Date) dateObj).toLocalDate()
                                         .atStartOfDay()
                                         .toInstant(java.time.ZoneOffset.UTC);
                             } else if (dateObj instanceof java.sql.Timestamp) {
-                                // Convert Timestamp directly to Instant
                                 return ((java.sql.Timestamp) dateObj).toInstant();
                             } else {
                                 throw new IllegalArgumentException("Unexpected date type: " + dateObj.getClass());
