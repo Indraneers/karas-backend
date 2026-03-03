@@ -40,6 +40,7 @@ public class UserService {
     }
 
     public User create(UserDto userDto) {
+        userDto.setId(null);
         User user = this.convertToUser(userDto);
         return this.userRepository.save(user);
     }

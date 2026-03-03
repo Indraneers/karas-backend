@@ -90,6 +90,7 @@ public class CustomerController {
             @RequestBody CustomerDto customerDto,
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
+        customerDto.setId(null);
         Customer customer = this.customerService.create(customerDto);
         this.logger.info("Creating customer={}", customer);
 

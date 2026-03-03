@@ -29,14 +29,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -64,6 +65,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations="classpath:application.properties")
 @Import(TestSecurityConfig.class)
 @SpringBootTest()
+@ActiveProfiles("test")
 public class SaleControllerTests {
 
     @Autowired
@@ -72,13 +74,13 @@ public class SaleControllerTests {
     @Autowired
     private TestSecurityConfig testSecurityConfig;
 
-    @MockBean
+    @MockitoBean
     private JwtDecoder jwtDecoder;
 
-    @MockBean
+    @MockitoBean
     private MinioConfig minioConfig; // Mock the MinIO configuration bean.
 
-    @MockBean
+    @MockitoBean
     private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
@@ -136,14 +138,22 @@ public class SaleControllerTests {
         for (ProductRequestDto productRequestDto : productRequestDtos) {
             for (UnitRequestDto unitRequestDto : mockedUnitRequestDtos) {
                 unitRequestDto.setProductId(productRequestDto.getId());
+
                 String json = objectMapper.writeValueAsString(unitRequestDto);
 
+                MockMultipartFile file = new MockMultipartFile(
+                        "data",
+                        json,
+                        String.valueOf(MediaType.APPLICATION_JSON),
+                        json.getBytes()
+                );
+
                 MvcResult mvcResult = this.mockMvc.perform(
-                        post("/units")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
-                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-                ).andReturn();
+                                multipart("/units")
+                                        .file(file)
+                                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                        )
+                        .andReturn();
 
                 String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
@@ -354,6 +364,7 @@ public class SaleControllerTests {
         ).andReturn();
 
         SaleResponseDto saleResponseDto = this.modelMapper.map(saleRequestDto, SaleResponseDto.class);
+        saleResponseDto.setCreatedAt(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.createdAt"));
         saleResponseDto.setId(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id"));
 
         return saleResponseDto;
@@ -390,9 +401,9 @@ public class SaleControllerTests {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        String expectedWithoutSeconds = ZonedDateTime.now()
-                .format(formatter)
-                .replaceAll(":\\d{2}(?=\\D*$)", "");
+        String expectedWithoutSeconds = Instant.now()
+                .toString()
+                .replaceAll("\\d{2}\\.\\d+Z$", "");
 
         this.mockMvc.perform(
                 post("/sales")
@@ -517,9 +528,10 @@ public class SaleControllerTests {
         json = objectMapper.writeValueAsString(updatedSale);
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        String expectedWithoutSeconds = ZonedDateTime.now()
-                .format(formatter)
-                .replaceAll(":\\d{2}(?=\\D*$)", "");
+
+        String expectedWithoutSeconds = Instant.now()
+                .toString()
+                .replaceAll("\\d{2}\\.\\d+Z$", "");
 
         this.mockMvc.perform(
                 put("/sales/" + saleId)
@@ -534,7 +546,7 @@ public class SaleControllerTests {
                 MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(updatedSale.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.createdAt")
-                        .value(containsString(expectedWithoutSeconds)),
+                        .value(startsWith(expectedWithoutSeconds)),
                 MockMvcResultMatchers.jsonPath("$.dueAt")
                         .value(updatedSale.getDueAt()),
                 MockMvcResultMatchers.jsonPath("$.discount")

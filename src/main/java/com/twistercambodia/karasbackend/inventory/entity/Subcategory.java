@@ -19,8 +19,7 @@ public class Subcategory {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="subcategory_id")
+    @OneToMany(mappedBy = "subcategory", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Product> products;
 
     @Formula("(select count(*) from product p where p.subcategory_id = id)")

@@ -18,9 +18,7 @@ public class Product {
     @Column
     private String identifier;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name="product_id")
+    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Unit> units;
 
     @Formula("(select count(*) from unit u where u.product_id = id)")

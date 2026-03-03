@@ -31,6 +31,7 @@ public class AutoServiceService {
     }
 
     public AutoService create(AutoServiceDto autoServiceDto) {
+        autoServiceDto.setId(null);
         AutoService autoService = this.convertToAutoService(autoServiceDto);
         return this.autoServiceRepository.save(autoService);
     }

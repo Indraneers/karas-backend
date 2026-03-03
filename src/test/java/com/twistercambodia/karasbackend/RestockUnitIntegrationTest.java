@@ -1,34 +1,30 @@
 package com.twistercambodia.karasbackend;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 import com.twistercambodia.karasbackend.auth.dto.UserDto;
 import com.twistercambodia.karasbackend.auth.entity.UserRole;
-import com.twistercambodia.karasbackend.autoService.dto.AutoServiceDto;
 import com.twistercambodia.karasbackend.config.TestSecurityConfig;
-import com.twistercambodia.karasbackend.customer.dto.CustomerDto;
 import com.twistercambodia.karasbackend.inventory.dto.*;
 import com.twistercambodia.karasbackend.inventory.enums.StockUpdate;
 import com.twistercambodia.karasbackend.storage.config.MinioConfig;
 import com.twistercambodia.karasbackend.storage.service.StorageService;
-import com.twistercambodia.karasbackend.vehicle.dto.VehicleDto;
 import org.h2.tools.Server;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,17 +49,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
 @TestPropertySource(properties = "server.port=0")
 @TestPropertySource(locations="classpath:application.properties")
+@ActiveProfiles("test")
 public class RestockUnitIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @MockBean
+    @MockitoBean
     private JwtDecoder jwtDecoder;
 
-    @MockBean
+    @MockitoBean
     private MinioConfig minioConfig; // Mock the MinIO configuration bean.
 
-    @MockBean
+    @MockitoBean
     private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
@@ -117,12 +114,19 @@ public class RestockUnitIntegrationTest {
             unitRequestDto.setProductId(productRequestDto.getId());
             String json = objectMapper.writeValueAsString(unitRequestDto);
 
+            MockMultipartFile file = new MockMultipartFile(
+                    "data",
+                    json,
+                    String.valueOf(MediaType.APPLICATION_JSON),
+                    json.getBytes()
+            );
+
             MvcResult mvcResult = this.mockMvc.perform(
-                    post("/units")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(json)
-                            .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-            ).andReturn();
+                            multipart("/units")
+                                    .file(file)
+                                    .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                    )
+                    .andReturn();
 
             String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
