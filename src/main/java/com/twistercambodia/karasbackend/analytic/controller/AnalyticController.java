@@ -1,9 +1,12 @@
 package com.twistercambodia.karasbackend.analytic.controller;
 
 import com.twistercambodia.karasbackend.analytic.dto.AnalyticDto;
+import com.twistercambodia.karasbackend.analytic.dto.RevenueBreakdownDto;
+import com.twistercambodia.karasbackend.analytic.dto.TopProductDto;
 import com.twistercambodia.karasbackend.analytic.service.AnalyticService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
@@ -68,6 +71,56 @@ public class AnalyticController {
                 .minus(1, ChronoUnit.MONTHS)
                 .toInstant();
         return analyticService.getTotalVehiclesFromDate(oneMonthAgo);
+    }
+
+    @GetMapping("products/top")
+    public List<TopProductDto> topProductsByRevenue(
+            @RequestParam(name = "days", defaultValue = "30") int days,
+            @RequestParam(name = "limit", defaultValue = "5") int limit
+    ) {
+        Instant since = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(days, ChronoUnit.DAYS)
+                .toInstant();
+        return analyticService.getTopProductsByRevenue(since, limit);
+    }
+
+    @GetMapping("sales/aov")
+    public List<AnalyticDto> averageOrderValue(
+            @RequestParam(name = "days", defaultValue = "30") int days
+    ) {
+        Instant since = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(days, ChronoUnit.DAYS)
+                .toInstant();
+        return analyticService.getDailyAverageOrderValue(since);
+    }
+
+    @GetMapping("customers/top")
+    public List<RevenueBreakdownDto> topCustomersByRevenue(
+            @RequestParam(name = "days", defaultValue = "30") int days,
+            @RequestParam(name = "limit", defaultValue = "5") int limit
+    ) {
+        Instant since = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(days, ChronoUnit.DAYS).toInstant();
+        return analyticService.getTopCustomersByRevenue(since, limit);
+    }
+
+    @GetMapping("sales/payment-types")
+    public List<RevenueBreakdownDto> paymentTypeBreakdown(
+            @RequestParam(name = "days", defaultValue = "30") int days
+    ) {
+        Instant since = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(days, ChronoUnit.DAYS).toInstant();
+        return analyticService.getPaymentTypeBreakdown(since);
+    }
+
+    @GetMapping("staff/top")
+    public List<RevenueBreakdownDto> revenueByStaff(
+            @RequestParam(name = "days", defaultValue = "30") int days,
+            @RequestParam(name = "limit", defaultValue = "5") int limit
+    ) {
+        Instant since = ZonedDateTime.now(PHNOM_PENH_ZONE)
+                .minus(days, ChronoUnit.DAYS).toInstant();
+        return analyticService.getRevenueByStaff(since, limit);
     }
 
     // Helper methods to reduce code duplication (optional refactor)

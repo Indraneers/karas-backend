@@ -2,6 +2,8 @@
 package com.twistercambodia.karasbackend.analytic.service;
 
 import com.twistercambodia.karasbackend.analytic.dto.AnalyticDto;
+import com.twistercambodia.karasbackend.analytic.dto.RevenueBreakdownDto;
+import com.twistercambodia.karasbackend.analytic.dto.TopProductDto;
 import com.twistercambodia.karasbackend.customer.repository.CustomerRepository;
 import com.twistercambodia.karasbackend.sale.repository.SaleRepository;
 import com.twistercambodia.karasbackend.vehicle.repository.VehicleRepository;
@@ -99,5 +101,79 @@ public class AnalyticService {
         List<Object[]> rawObjects = this.customerRepository.getDailyCustomerCreation(startDateTime);
         Map<Instant, Integer> dataMap = convertRawObjectsToMap(rawObjects);
         return aggregateFromStartDate(startDateTime, dataMap);
+    }
+
+    public List<TopProductDto> getTopProductsByRevenue(Instant startDateTime, int limit) {
+        List<Object[]> rows = this.saleRepository.getTopProductsByRevenue(startDateTime);
+        return rows.stream()
+                .limit(limit)
+                .map(row -> new TopProductDto(
+                        (String) row[0],
+                        (String) row[1],
+                        ((Number) row[2]).longValue(),
+                        ((Number) row[3]).longValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<RevenueBreakdownDto> getTopCustomersByRevenue(Instant startDateTime, int limit) {
+        return this.saleRepository.getTopCustomersByRevenue(startDateTime).stream()
+                .limit(limit)
+                .map(row -> new RevenueBreakdownDto(
+                        row[0] == null ? "walkin" : (String) row[0],
+                        (String) row[1],
+                        ((Number) row[2]).longValue(),
+                        ((Number) row[3]).longValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<RevenueBreakdownDto> getPaymentTypeBreakdown(Instant startDateTime) {
+        return this.saleRepository.getPaymentTypeBreakdown(startDateTime).stream()
+                .map(row -> {
+                    String label = row[0] == null ? "Unknown" : row[0].toString();
+                    return new RevenueBreakdownDto(
+                            label,
+                            label,
+                            ((Number) row[2]).longValue(),
+                            ((Number) row[1]).longValue()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<RevenueBreakdownDto> getRevenueByStaff(Instant startDateTime, int limit) {
+        return this.saleRepository.getRevenueByStaff(startDateTime).stream()
+                .limit(limit)
+                .map(row -> new RevenueBreakdownDto(
+                        row[0] == null ? "unknown" : (String) row[0],
+                        (String) row[1],
+                        ((Number) row[2]).longValue(),
+                        ((Number) row[3]).longValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<AnalyticDto> getDailyAverageOrderValue(Instant startDateTime) {
+        List<Object[]> rows = this.saleRepository.getDailyAverageOrderValue(startDateTime);
+        Map<Instant, Integer> aovMap = rows.stream().collect(Collectors.toMap(
+                row -> {
+                    Object dateObj = row[0];
+                    if (dateObj instanceof LocalDate) {
+                        return ((LocalDate) dateObj).atStartOfDay().toInstant(java.time.ZoneOffset.UTC);
+                    } else if (dateObj instanceof java.sql.Date) {
+                        return ((java.sql.Date) dateObj).toLocalDate().atStartOfDay().toInstant(java.time.ZoneOffset.UTC);
+                    } else if (dateObj instanceof java.sql.Timestamp) {
+                        return ((java.sql.Timestamp) dateObj).toInstant();
+                    }
+                    throw new IllegalArgumentException("Unexpected date type: " + dateObj.getClass());
+                },
+                row -> {
+                    long revenue = ((Number) row[1]).longValue();
+                    long orderCount = ((Number) row[2]).longValue();
+                    return orderCount == 0 ? 0 : (int) (revenue / orderCount);
+                }
+        ));
+        return aggregateFromStartDate(startDateTime, aovMap);
     }
 }
