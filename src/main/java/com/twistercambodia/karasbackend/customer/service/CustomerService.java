@@ -25,10 +25,8 @@ public class CustomerService {
     }
 
     public Page<Customer> findAll(String query, int page) {
-        if (Objects.equals(query, "")) {
-            return this.customerRepository.findAll(null, PageRequest.of(page, 10));
-        }
-        return this.customerRepository.findAll(query, PageRequest.of(page, 10));
+        String q = query == null ? "" : query.trim();
+        return this.customerRepository.findAll(q, PageRequest.of(page, 10));
     }
 
     public Customer findByIdOrThrowError(String id) throws RuntimeException {
