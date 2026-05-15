@@ -52,24 +52,36 @@ public class UnitService {
         return this.unitRepository.findAll(query, productId, PageRequest.of(page, 10));
     }
 
+    public List<Unit> fuzzySearch(String query, int limit) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+        return this.unitRepository.fuzzySearch(query.trim(), Math.max(1, Math.min(limit, 50)));
+    }
+
     public Unit findByIdOrThrowError(String id) throws RuntimeException {
         return this.unitRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Unit Not Found with ID=" + id));
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public Unit create(UnitRequestDto unitRequestDto, MultipartFile image) throws IOException {
         unitRequestDto.setId(null);
         Unit unit = this.convertToUnit(unitRequestDto);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
+        boolean isInvalidToBaseUnit = unitRequestDto.getToBaseUnit() == 0;
         boolean invalidVariableUnit =
                 product.isVariable()
-                && unitRequestDto.getToBaseUnit() == 0;
+                        && isInvalidToBaseUnit;
 
         if (invalidVariableUnit) {
             throw new InvalidVariableUnit();
+        }
+
+        if (isInvalidToBaseUnit) {
+            throw new BadRequestException("Invalid to base unit field, it must be greater than 0");
         }
 
         // save unit first
@@ -193,7 +205,6 @@ public class UnitService {
                 .map((i) -> stockUpdate(i.getUnit(), i.getQuantity(), i.getStatus()))
                 .toList();
 
-        System.out.println(batchUnit);
         this.unitRepository.saveAll(batchUnit);
     }
 

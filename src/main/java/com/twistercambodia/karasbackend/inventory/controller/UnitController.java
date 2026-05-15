@@ -54,6 +54,14 @@ public class UnitController {
                 .map(this.unitService::convertToUnitDto);
     }
 
+    @GetMapping("search")
+    public List<UnitResponseDto> searchUnits(
+            @RequestParam(value = "q") String q,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") int limit
+    ) {
+        return this.unitService.convertToUnitDto(this.unitService.fuzzySearch(q, limit));
+    }
+
     @GetMapping("{id}")
     public UnitResponseDto getUnitById(@PathVariable("id") String id) throws RuntimeException {
         return this.unitService.convertToUnitDto(
@@ -175,10 +183,6 @@ public class UnitController {
 
         Audit audit = this.auditService.create(auditDTO);
         this.logger.info("Adding audit log for unit={}", audit);
-
-        this.logger.info("HEY");
-        this.logger.info(unitResponseDto.toString());
-        this.logger.info("HEY 2");
 
         return unitResponseDto;
     }
