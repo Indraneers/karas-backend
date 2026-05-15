@@ -6,4 +6,5 @@ public enum ExceptionType {
     InvalidVariableProduct,
     InvalidVariableUnit,
     BadRequestException,
+    ValidationError,
 }

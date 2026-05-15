@@ -1,17 +1,26 @@
 package com.twistercambodia.karasbackend.exception.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.Map;
 
 public class ExceptionResponse {
     private int statusCode;
     private ExceptionType code;
     private String message;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Map<String, String> fieldErrors;
+
     public ExceptionResponse(int statusCode, ExceptionType exceptionType, String message) {
+        this(statusCode, exceptionType, message, null);
+    }
+
+    public ExceptionResponse(int statusCode, ExceptionType exceptionType, String message, Map<String, String> fieldErrors) {
         this.statusCode = statusCode;
         this.code = exceptionType;
         this.message = message;
+        this.fieldErrors = fieldErrors;
     }
 
     public int getStatusCode() {
@@ -36,6 +45,14 @@ public class ExceptionResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Map<String, String> getFieldErrors() {
+        return fieldErrors;
+    }
+
+    public void setFieldErrors(Map<String, String> fieldErrors) {
+        this.fieldErrors = fieldErrors;
     }
 }
 
