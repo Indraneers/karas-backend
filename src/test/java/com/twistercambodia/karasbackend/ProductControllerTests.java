@@ -446,4 +446,54 @@ public class ProductControllerTests {
 //        byte[] originalImage = new ClassPathResource("256x256.jpg").getInputStream().readAllBytes();
 //        assertArrayEquals(originalImage, downloadedImage);
 //    }
+
+    @Test
+    void createProduct_BlankNameAndMissingSubcategory_ReturnsValidationError() throws Exception {
+        ProductRequestDto productRequestDto = new ProductRequestDto();
+        // name + subcategoryId intentionally left blank/null
+
+        String json = objectMapper.writeValueAsString(productRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
+        this.mockMvc.perform(
+                        multipart("/products")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ValidationError"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fieldErrors.name").value("Name is required"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fieldErrors.subcategoryId").value("Subcategory is required"));
+    }
+
+    @Test
+    void createProduct_NameTooShort_ReturnsSizeError() throws Exception {
+        ProductRequestDto productRequestDto = new ProductRequestDto();
+        productRequestDto.setName("A");
+        productRequestDto.setSubcategoryId(this.subcategoryRequestDto.getId());
+
+        String json = objectMapper.writeValueAsString(productRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
+        this.mockMvc.perform(
+                        multipart("/products")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ValidationError"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fieldErrors.name")
+                        .value("Name must be between 2 and 150 characters"));
+    }
 }

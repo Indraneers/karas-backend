@@ -388,4 +388,54 @@ public class SubcategoryControllerTests {
                                 .value("SUBCATEGORY")
                 );
     }
+
+    @Test
+    void createSubcategory_BlankNameAndMissingCategory_ReturnsValidationError() throws Exception {
+        SubcategoryRequestDto subcategoryRequestDto = new SubcategoryRequestDto();
+        // name + categoryId intentionally left blank/null
+
+        String json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
+        this.mockMvc.perform(
+                        multipart("/subcategories")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ValidationError"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fieldErrors.name").value("Name is required"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fieldErrors.categoryId").value("Category is required"));
+    }
+
+    @Test
+    void createSubcategory_NameTooShort_ReturnsSizeError() throws Exception {
+        SubcategoryRequestDto subcategoryRequestDto = new SubcategoryRequestDto();
+        subcategoryRequestDto.setName("A");
+        subcategoryRequestDto.setCategoryId(categoryDto.getId());
+
+        String json = objectMapper.writeValueAsString(subcategoryRequestDto);
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
+        this.mockMvc.perform(
+                        multipart("/subcategories")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ValidationError"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fieldErrors.name")
+                        .value("Name must be between 2 and 50 characters"));
+    }
 }

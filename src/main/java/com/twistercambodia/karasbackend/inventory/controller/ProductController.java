@@ -11,6 +11,7 @@ import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.service.ProductService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,7 @@ public class ProductController {
 
     @PostMapping
     public ProductResponseDto createProduct(
-            @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
+            @Valid @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal Jwt jwt
     ) throws IOException {
@@ -98,7 +99,7 @@ public class ProductController {
 
     @PutMapping("{id}")
     public ProductResponseDto updateProduct(
-            @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
+            @Valid @RequestPart(name = "data", required = true) ProductRequestDto productRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id,
             @AuthenticationPrincipal Jwt jwt

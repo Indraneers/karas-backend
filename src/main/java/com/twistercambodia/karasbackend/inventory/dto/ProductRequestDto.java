@@ -1,13 +1,21 @@
 package com.twistercambodia.karasbackend.inventory.dto;
 
 import com.twistercambodia.karasbackend.inventory.entity.Product;
-import org.modelmapper.ModelMapper;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class ProductRequestDto {
     private String id;
+
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 150, message = "Name must be between 2 and 150 characters")
     private String name;
+
     private String identifier;
+
+    @NotBlank(message = "Subcategory is required")
     private String subcategoryId;
+
     private int unitCount;
     private String baseUnit;
     private boolean variable;
@@ -15,7 +23,6 @@ public class ProductRequestDto {
     public ProductRequestDto() {}
 
     public ProductRequestDto(Product product) {
-        ModelMapper mapper = new ModelMapper();
         this.id = product.getId();
         this.name = product.getName();
         this.identifier = product.getIdentifier();

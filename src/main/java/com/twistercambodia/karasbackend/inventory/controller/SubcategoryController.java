@@ -13,6 +13,7 @@ import com.twistercambodia.karasbackend.inventory.dto.SubcategoryRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.SubcategoryResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Subcategory;
 import com.twistercambodia.karasbackend.inventory.service.SubcategoryService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,7 +62,7 @@ public class SubcategoryController {
 
     @PostMapping
     public SubcategoryResponseDto createSubcategory(
-            @RequestPart(value = "data", required = true) SubcategoryRequestDto subcategoryRequestDto,
+            @Valid @RequestPart(value = "data", required = true) SubcategoryRequestDto subcategoryRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal User user
     ) throws IOException {
@@ -94,7 +95,7 @@ public class SubcategoryController {
 
     @PutMapping("{id}")
     public SubcategoryResponseDto updateSubcategory(
-            @RequestPart(value = "data", required = true) SubcategoryRequestDto subcategoryRequestDto,
+            @Valid @RequestPart(value = "data", required = true) SubcategoryRequestDto subcategoryRequestDto,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @PathVariable("id") String id,
             @AuthenticationPrincipal User user
