@@ -57,7 +57,7 @@ public class Sale {
     }
 
     public String getFormattedId() {
-        return String.format("TW-%08d", id);
+        return String.format("GR-%08d", id);
     }
 
     public void setId(Long id) {
