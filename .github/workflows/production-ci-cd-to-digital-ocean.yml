@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        env: [v1, v2]
+        env: [v2] # v1 sunset
     steps:
       - uses: actions/checkout@v3
 
