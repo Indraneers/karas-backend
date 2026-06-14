@@ -199,10 +199,10 @@ public class SaleService {
     }
 
     public static Long extractNumber(String formattedId) {
-        if (formattedId == null || !formattedId.startsWith("TW-") || formattedId.length() != 11) {
-            throw new IllegalArgumentException("Invalid TW ID format: " + formattedId);
+        if (formattedId == null || !formattedId.startsWith("GR-") || formattedId.length() != 11) {
+            throw new IllegalArgumentException("Invalid GR ID format: " + formattedId);
         }
-        // Extract the numeric part (8 digits after "TW-")
+        // Extract the numeric part (8 digits after "GR-")
         return Long.parseLong(formattedId.substring(3));
     }
 
