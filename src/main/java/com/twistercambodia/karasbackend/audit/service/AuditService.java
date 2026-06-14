@@ -48,6 +48,7 @@ public class AuditService {
         Audit audit = new Audit();
         // For Cambodia time (UTC+7)
         Instant cambodiaTime = Instant.now();
+        audit.setId(null);
         audit.setTimestamp(cambodiaTime);
         audit.setHttpMethod(auditDTO.getHttpMethod());
         audit.setName(auditDTO.getName());

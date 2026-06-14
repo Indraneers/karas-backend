@@ -45,6 +45,7 @@ public class RestockService {
 
     @Transactional
     public Restock create(RestockRequestDto restockRequestDto) throws Exception {
+        restockRequestDto.setId(null);
         Restock restock = convertToRestock(restockRequestDto);
 
         User user = this.userService.findByIdOrThrowError(restockRequestDto.getUserId());

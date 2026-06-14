@@ -55,7 +55,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker system prune -a --volumes
+            docker system prune -a
             docker network create nginx_network
             cd karas-backend
 

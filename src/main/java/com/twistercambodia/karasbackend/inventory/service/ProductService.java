@@ -58,6 +58,7 @@ public class ProductService {
 
     @Transactional
     public Product create(ProductRequestDto productRequestDto, MultipartFile image) throws IOException {
+        productRequestDto.setId(null);
         Product product = this.convertToProduct(productRequestDto);
         boolean invalidVariableProduct =
                 productRequestDto.isVariable()

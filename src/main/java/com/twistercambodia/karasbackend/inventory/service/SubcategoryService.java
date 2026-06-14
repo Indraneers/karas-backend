@@ -51,6 +51,7 @@ public class SubcategoryService {
 
     @Transactional
     public Subcategory create(SubcategoryRequestDto subcategoryRequestDto, MultipartFile image) throws IOException {
+        subcategoryRequestDto.setId(null);
         Subcategory subcategory = this.convertToSubcategory(subcategoryRequestDto);
         subcategory = this.subcategoryRepository.save(subcategory);
         if (image != null) {

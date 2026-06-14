@@ -60,6 +60,7 @@ public class UnitService {
 
     @Transactional
     public Unit create(UnitRequestDto unitRequestDto, MultipartFile image) throws IOException {
+        unitRequestDto.setId(null);
         Unit unit = this.convertToUnit(unitRequestDto);
         Product product = this.productService.findByIdOrThrowError(unitRequestDto.getProductId());
 
@@ -123,7 +124,7 @@ public class UnitService {
         Unit unit = this.findByIdOrThrowError(id);
         this.unitRepository.delete(unit);
 
-        if (!unit.getImg().isEmpty()) {
+        if (unit.getImg() != null && !unit.getImg().isEmpty()) {
             deleteUnitIcon(unit.getImg());
         }
 

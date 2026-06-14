@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -174,6 +175,10 @@ public class UnitController {
 
         Audit audit = this.auditService.create(auditDTO);
         this.logger.info("Adding audit log for unit={}", audit);
+
+        this.logger.info("HEY");
+        this.logger.info(unitResponseDto.toString());
+        this.logger.info("HEY 2");
 
         return unitResponseDto;
     }

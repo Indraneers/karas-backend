@@ -32,18 +32,18 @@ If you're a student, you can get the **Ultimate Edition** for free by registerin
    Fill in the required values. If you need help, contact the project maintainer for a pre-configured version.
 
 2. **Start with IntelliJ (or any modern IDE)**  
-   Configure your IDE to run `docker-compose.dev.yaml` and the containers will spin up automatically.
+   Configure your IDE to run `docker-compose.dev.yml` and the containers will spin up automatically.
 
 3. **Or use the terminal**  
    From the project root directory, run:
 
-       docker compose -f docker-compose.dev.yaml up -d
+       docker compose -f docker-compose.dev.yml up -d
 
 4. **Rebuilding with hot reload support**  
    The project supports **hot swapping**, so changes in the code are reflected without rebuilding the image.  
    To rebuild the image manually, use:
 
-       docker compose -f docker-compose.dev.yaml up -d --build
+       docker compose -f docker-compose.dev.yml up -d --build
 
 ---
 
@@ -55,7 +55,7 @@ To test the available API endpoints, contact the repository maintainer to get ac
 
 ## 🛠 Deployment
 
-To deploy on a live system, refer to the `docker-compose.prod.yaml` file (or similar). Make sure to update environment variables and configure services appropriately for production use.
+To deploy on a live system, refer to the `docker-compose.prod.yml` file (or similar). Make sure to update environment variables and configure services appropriately for production use.
 
 ---
 

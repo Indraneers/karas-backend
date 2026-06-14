@@ -39,9 +39,13 @@ public class MaintenanceService {
     }
 
     public Maintenance create(MaintenanceDto maintenanceDto) {
+        maintenanceDto.setId(null);
         Maintenance maintenance = convertToMaintenance(maintenanceDto);
         maintenance.setCreatedAt(Instant.parse(maintenanceDto.getCreatedAt()));
-        maintenance.getServices().forEach(ms -> ms.setMaintenance(maintenance));
+        maintenance.getServices().forEach(ms -> {
+            ms.setId(null);
+            ms.setMaintenance(maintenance);
+        });
 
         return maintenanceRepository.save(maintenance);
     }

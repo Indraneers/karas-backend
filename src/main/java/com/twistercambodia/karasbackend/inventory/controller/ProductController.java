@@ -1,6 +1,5 @@
 package com.twistercambodia.karasbackend.inventory.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twistercambodia.karasbackend.audit.dto.AuditDTO;
 import com.twistercambodia.karasbackend.audit.entity.Audit;
@@ -10,10 +9,8 @@ import com.twistercambodia.karasbackend.audit.service.AuditService;
 import com.twistercambodia.karasbackend.auth.entity.User;
 import com.twistercambodia.karasbackend.inventory.dto.ProductRequestDto;
 import com.twistercambodia.karasbackend.inventory.dto.ProductResponseDto;
-import com.twistercambodia.karasbackend.inventory.dto.SubcategoryResponseDto;
 import com.twistercambodia.karasbackend.inventory.entity.Product;
 import com.twistercambodia.karasbackend.inventory.service.ProductService;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

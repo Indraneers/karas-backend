@@ -48,6 +48,7 @@ public class CategoryService {
 
     @Transactional
     public Category create(CategoryDto categoryDto, MultipartFile image) throws RuntimeException, IOException {
+        categoryDto.setId(null);
         Category category = this.convertToCategory(categoryDto);
         category = this.categoryRepository.save(category);
         if (image != null) {
@@ -91,7 +92,7 @@ public class CategoryService {
 
     public CategoryDto convertToCategoryDto(Category category) {
         CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
-        if (!category.getImg().isEmpty()) {
+        if (category.getImg() != null && !category.getImg().isEmpty()) {
             categoryDto.setImg(
                     storageService.generatePresignedUrl(
                             category.getImg(),

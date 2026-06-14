@@ -65,6 +65,14 @@ services:
       - 9001:9001
     networks:
       - nginx_network
+  backup:
+    image: "docker.io/tiredofit/db-backup:latest"
+    env_file: '.env.developmental'
+    volumes:
+      - ./backups:/backup   # CRITICAL: Maps the backup folder to your host machine
+    networks:
+      - nginx_network
+    restart: always
 networks:
   nginx_network:
     external: true

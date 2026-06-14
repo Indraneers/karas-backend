@@ -15,14 +15,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,17 +43,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin", roles={"USER", "ADMIN"})
 @TestPropertySource(locations="classpath:application.properties")
+@ActiveProfiles("test")
 public class UnitControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @MockBean
+    @MockitoBean
     private JwtDecoder jwtDecoder;
 
-    @MockBean
+    @MockitoBean
     private MinioConfig minioConfig; // Mock the MinIO configuration bean.
 
-    @MockBean
+    @MockitoBean
     private StorageService storageService; // Mock the StorageService.
 
     private ObjectMapper objectMapper;
@@ -174,10 +176,17 @@ public class UnitControllerTests {
 
         String json = objectMapper.writeValueAsString(unitRequestDto);
 
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
+
         this.mockMvc.perform(
-                        post("/units")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
+                        multipart("/units")
+                                .file(file)
                                 .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
@@ -247,12 +256,19 @@ public class UnitControllerTests {
 
         String json = objectMapper.writeValueAsString(unitRequestDto);
 
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/units")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-        ).andReturn();
+                        multipart("/units")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
@@ -265,11 +281,18 @@ public class UnitControllerTests {
 
         json = objectMapper.writeValueAsString(unitRequestDto);
 
+        file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
         this.mockMvc.perform(
-                        put("/units/" + id)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json)
-                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                    multipart("/units/" + id)
+                        .file(file)
+                        .with(req -> { req.setMethod("PUT"); return req; })
+                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -327,12 +350,19 @@ public class UnitControllerTests {
 
         String json = objectMapper.writeValueAsString(unitRequestDto);
 
+        MockMultipartFile file = new MockMultipartFile(
+                "data",
+                json,
+                String.valueOf(MediaType.APPLICATION_JSON),
+                json.getBytes()
+        );
+
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/units")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
-        ).andReturn();
+                        multipart("/units")
+                                .file(file)
+                                .with(TestSecurityConfig.testJwt(userDto.getId(), "USER", "ADMIN"))
+                )
+                .andReturn();
 
         String id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.id");
 
