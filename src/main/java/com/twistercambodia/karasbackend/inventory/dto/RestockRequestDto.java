@@ -9,6 +9,7 @@ public class RestockRequestDto {
     private String id;
     private List<RestockItemRequestDto> items;
     private String userId;
+    private String note;
 
     public RestockRequestDto() {}
 
@@ -34,5 +35,13 @@ public class RestockRequestDto {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

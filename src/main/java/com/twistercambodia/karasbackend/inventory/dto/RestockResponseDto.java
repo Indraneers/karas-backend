@@ -10,6 +10,7 @@ public class RestockResponseDto {
     private String id;
     private List<RestockItemResponseDto> items;
     private UserDto user;
+    private String note;
     private String createdAt;
 
     public RestockResponseDto() {}
@@ -17,6 +18,7 @@ public class RestockResponseDto {
     public RestockResponseDto(Restock restock) {
         this.id = restock.getId();
         this.user = new UserDto(restock.getUser());
+        this.note = restock.getNote();
         this.createdAt = restock.getCreatedAt().toString();
         this.items = restock
                 .getItems()
@@ -47,6 +49,14 @@ public class RestockResponseDto {
 
     public void setUser(UserDto user) {
         this.user = user;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getCreatedAt() {

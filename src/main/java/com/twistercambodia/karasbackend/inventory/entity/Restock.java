@@ -21,6 +21,9 @@ public class Restock {
     )
     private User user;
 
+    @Column(columnDefinition = "text")
+    private String note;
+
     @Column(nullable = false)
     private Instant createdAt;
 
@@ -49,6 +52,14 @@ public class Restock {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Instant getCreatedAt() {
