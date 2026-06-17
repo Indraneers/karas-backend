@@ -16,6 +16,9 @@ public class SaleSpecification {
     public static final String PAYMENTTYPE = "paymentType";
     public static final String SALESTATUS = "status";
     public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String MAKEANDMODEL = "makeAndModel";
+    public static final String PLATENUMBER = "plateNumber";
 
     private SaleSpecification() {}
 
@@ -27,7 +30,27 @@ public class SaleSpecification {
                 .and(hasUserId(saleFilter.getUserId()))
                 .and(hasVehicleId(saleFilter.getVehicleId()))
                 .and(hasPaymentType(saleFilter.getPaymentType()))
-                .and(hasSaleStatus(saleFilter.getStatus()));
+                .and(hasSaleStatus(saleFilter.getStatus()))
+                .and(matchesQuery(saleFilter.getQ()));
+    }
+
+    private static Specification<Sale> matchesQuery(String q) {
+        return (root, query, cb) -> {
+            if (q == null || q.isBlank()) {
+                return cb.conjunction();
+            }
+
+            String like = "%" + q.trim().toLowerCase() + "%";
+
+            var predicate = cb.or(
+                    cb.like(cb.lower(root.get(CUSTOMER).get(NAME)), like),
+                    cb.like(cb.lower(root.get(VEHICLE).get(MAKEANDMODEL)), like),
+                    cb.like(cb.lower(root.get(VEHICLE).get(PLATENUMBER)), like),
+                    cb.like(cb.lower(root.get(ID).as(String.class)), like)
+            );
+
+            return predicate;
+        };
     }
 
     private static Specification<Sale> hasCreatedAtGreaterThan(Instant createdAtFrom) {

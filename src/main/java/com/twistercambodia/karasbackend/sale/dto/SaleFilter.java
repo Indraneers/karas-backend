@@ -13,6 +13,7 @@ public class SaleFilter {
     private String userId;
     private SaleStatus status;
     private PaymentType paymentType;
+    private String q;
 
     public Instant getCreatedAtFrom() {
         return createdAtFrom;
@@ -70,6 +71,14 @@ public class SaleFilter {
         this.vehicleId = vehicleId;
     }
 
+    public String getQ() {
+        return q;
+    }
+
+    public void setQ(String q) {
+        this.q = q;
+    }
+
     @Override
     public String toString() {
         return "SaleFilter{" +
@@ -80,6 +89,7 @@ public class SaleFilter {
                 ", userId='" + userId + '\'' +
                 ", status=" + status +
                 ", paymentType=" + paymentType +
+                ", q='" + q + '\'' +
                 '}';
     }
 }
